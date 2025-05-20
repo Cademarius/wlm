@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AiOutlineUser } from "react-icons/ai";
 import { FaHeart, FaHeartBroken } from "react-icons/fa";
 import Image from "next/image";
 import welcomeLogo from "../../../public/assets/login/welcome.png";
