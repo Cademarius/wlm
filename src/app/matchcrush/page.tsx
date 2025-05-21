@@ -2,25 +2,20 @@
 
 import Header from "../components/header";
 import Footer from "../components/footer";
+import MobileNavBar from "../components/mobile-nav-bar";
 import Image from 'next/image';
 
 const MatchWithACrush = () => {
   return (
     <div 
-    className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
-    style={{ 
-      backgroundImage: "url('/images/ui/bg-pattern.webp')",
-    }}
+      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
+      style={{ 
+        backgroundImage: "url('/images/ui/bg-pattern.webp')",
+      }}
     >
       <Header />
 
-      <section className="w-full max-w-[1572px] mx-auto border-b border-[#A8A8A8] pb-2 px-4 sm:px-8 mt-[41px] flex items-center justify-start">
-        <h1 className="text-white text-[28px] sm:text-[40px] font-bold leading-[100%] tracking-[1%]">
-          Qui m&apos;a crushé ?
-        </h1>
-      </section>
-
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-8">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-8 pb-24 md:pb-8">
         <Image 
           src="/images/ui/illustration.webp" 
           alt="Illustration Match" 
@@ -30,7 +25,8 @@ const MatchWithACrush = () => {
           priority
         />
       </main>
-      <Footer />
+      <Footer className="hidden md:block" />
+      <MobileNavBar className="block md:hidden" activePage="matchcrush" />
     </div>
   );
 };

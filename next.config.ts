@@ -5,24 +5,21 @@ const isDev = process.env.NODE_ENV === "development";
 
 const baseConfig: NextConfig = {
   reactStrictMode: true,
-  experimental: {
-    turbo: {}, // Turbopack options (currently no known options to disable)
-  },
   images: {
-  remotePatterns: [
-    {
-      protocol: "https",
-      hostname: "ton-domaine.com",
-      port: "",
-      pathname: "/**"
-    }
-  ]
-}
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ton-domaine.com",
+        port: "",
+        pathname: "/**"
+      }
+    ]
+  }
 };
 
 export default withPWA({
   dest: "public",
-  disable: isDev, // désactive le service worker en développement
+  disable: isDev,
   register: true,
   skipWaiting: true,
 })(baseConfig);
