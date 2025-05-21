@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import Image from "next/image";
-
+import { FcGoogle } from "react-icons/fc";
+import { FaInstagram } from "react-icons/fa";
 
 interface AddModalProps {
   showAddModal: boolean;
@@ -10,13 +11,14 @@ interface AddModalProps {
 }
 
 const AddModal: React.FC<AddModalProps> = ({ showAddModal, handleCloseAddCrushModal }) => {
-  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/callback&response_type=code&scope=email profile`;
-  console.log(process.env.GOOGLE_CLIENT_ID);  // Vérifie que la valeur du client_id est bien lue
-
+  // URLs d'authentification
+  const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/callback&response_type=code&scope=email profile`;
+  const instagramAuthUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/instagram`;
 
   const [name, setName] = useState("");
   const [selectedNetwork, setSelectedNetwork] = useState("Instagram");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [authProvider, setAuthProvider] = useState("instagram"); // instagram ou google
 
   const networks = [
     { name: "Instagram", logo: "/assets/networks/instagram.svg" },
@@ -25,6 +27,11 @@ const AddModal: React.FC<AddModalProps> = ({ showAddModal, handleCloseAddCrushMo
     { name: "Twitter", logo: "/assets/networks/twitter.png" },
     { name: "TikTok", logo: "/assets/networks/tiktok.svg" },
   ];
+
+  // Fonction pour obtenir l'URL d'authentification en fonction du fournisseur sélectionné
+  const getAuthUrl = () => {
+    return authProvider === "google" ? googleAuthUrl : instagramAuthUrl;
+  };
 
   if (!showAddModal) return null;
 
@@ -66,7 +73,7 @@ const AddModal: React.FC<AddModalProps> = ({ showAddModal, handleCloseAddCrushMo
                 <BsChevronDown className="ml-2" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-2 bg-[#e04370] border border-gray-300 rounded-lg shadow-lg w-40">
+                <div className="absolute right-0 mt-2 bg-[#e04370] border border-gray-300 rounded-lg shadow-lg w-40 z-50">
                   {networks.map((network) => (
                     <div
                       key={network.name}
@@ -84,11 +91,33 @@ const AddModal: React.FC<AddModalProps> = ({ showAddModal, handleCloseAddCrushMo
               )}
             </div>
           </div>
+
+          {/* Sélecteur d'authentification */}
+          <div className="flex gap-2 mb-4 justify-center">
+            <button
+              type="button"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${authProvider === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent' : 'border-gray-300 text-white'}`}
+              onClick={() => setAuthProvider("instagram")}
+            >
+              <FaInstagram className="text-xl" />
+              <span>Instagram</span>
+            </button>
+            
+            <button
+              type="button"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${authProvider === 'google' ? 'bg-white text-black border-transparent' : 'border-gray-300 text-white'}`}
+              onClick={() => setAuthProvider("google")}
+            >
+              <FcGoogle className="text-xl" />
+              <span>Google</span>
+            </button>
+          </div>
+
           <a
-            href={authUrl}
+            href={getAuthUrl()}
             className="flex items-center justify-center bg-[#FF4F81] text-white py-2 px-4 rounded-lg hover:bg-[#e04370] cursor-pointer w-full text-sm sm:text-base"
           >
-            <span>Ajouter un crush</span>
+            <span>Ajouter un crush via {authProvider === "google" ? "Google" : "Instagram"}</span>
           </a>
         </form>
       </div>
