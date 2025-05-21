@@ -1,0 +1,16 @@
+# Supabase configuration
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_service_key
+
+# Instagram API configuration
+INSTAGRAM_CLIENT_ID=your_instagram_client_id
+INSTAGRAM_CLIENT_SECRET=your_instagram_client_secret
+INSTAGRAM_REDIRECT_URI=http://localhost:8000/auth/instagram/callback
+
+# Frontend configuration
+FRONTEND_CALLBACK_URL=http://localhost:3000/callback
+
+# JWT configuration
+JWT_SECRET=your_jwt_secret_key
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
