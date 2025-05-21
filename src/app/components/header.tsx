@@ -1,66 +1,223 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Menu } from "lucide-react"; 
-import { NotificationBing } from "iconsax-react"; 
+import { 
+  Menu, 
+  SearchNormal, 
+  CloseCircle, 
+  Notification, 
+  Home, 
+  HeartTick, 
+  ProfileCircle 
+} from "iconsax-react";
+import { Search, X } from "lucide-react"; 
 
 const NAV_LINKS = [
-  { id: "mes-crushs", label: "Mes Crushs", href: "/addcrush" },
-  { id: "qui-ma-crush", label: "Qui m'a crush", href: "/matchcrush" },
+  { id: "mon-fil", label: "Mon fil", href: "/feed", icon: Home },
+  { id: "mes-crushs", label: "Mes Crushs", href: "/addcrush", icon: HeartTick },
+  { id: "qui-ma-crush", label: "Qui m'a crush", href: "/matchcrush", icon: ProfileCircle },
 ];
 
 const Header = () => {
   const pathname = usePathname();
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const toggleSearch = () => {
+    setIsSearchActive(!isSearchActive);
+  };
+  
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
-    <header className="w-full max-w-[1576px] h-[80px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between border-b-2 border-[#FF4F81] lg:h-[120px] md:h-[80px]">
+    <header className="sticky top-0 z-50 w-full max-w-[1576px] h-[70px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between border-b-2 border-[#FF4F81] lg:h-[100px] md:h-[80px]">
+      {/* Logo */}
+      <Link href="/">
+        <Image
+          src="/images/branding/wholikeme-desktop-logo.webp"
+          alt="WhoLikeMe Logo"
+          width={211}
+          height={80}
+          className="hidden lg:block cursor-pointer"
+        />
+        <Image
+          src="/images/branding/wholikeme-mobile-logo.webp"
+          alt="WhoLikeMe Logo"
+          width={79}
+          height={24}
+          className="lg:hidden cursor-pointer"
+        />
+      </Link>
 
-      <Image
-        src="/images/branding/wholikeme-desktop-logo.webp"
-        alt="WhoLikeMe Logo"
-        width={211}
-        height={80}
-        className="hidden lg:block cursor-pointer"
-      />
-      <Image
-        src="/images/branding/wholikeme-mobile-logo.webp"
-        alt="WhoLikeMe Logo"
-        width={79}
-        height={24}
-        className="lg:hidden cursor-pointer"
-      />
-
-      <nav className="hidden lg:flex gap-10">
-        {NAV_LINKS.map(({ id, label, href }) => (
+      {/* Desktop Navigation */}
+      <nav className="hidden lg:flex gap-8">
+        {NAV_LINKS.map(({ id, label, href, icon: Icon }) => (
           <Link key={id} href={href}>
             <span
-              className={`text-[24px] font-medium cursor-pointer transition-colors duration-300 ${
+              className={`flex items-center gap-2 text-xl font-medium cursor-pointer transition-colors duration-300 ${
                 pathname === href ? "text-[#FF4F81]" : "text-white hover:text-[#FF4F81]"
               }`}
             >
+              <Icon 
+                size={24} 
+                variant={pathname === href ? "Bold" : "Linear"} 
+                color={pathname === href ? "#FF4F81" : "white"}
+              />
               {label}
             </span>
           </Link>
         ))}
       </nav>
 
-      <div className="hidden lg:flex items-center gap-4">
-        <button className="p-2 cursor-pointer">
-          <NotificationBing size={44} color="white" />
-        </button>
-        <button
-          className="w-12 h-12 rounded-full overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer"
-          onClick={() => console.log("Open login overlay")}
+      {/* Desktop Search and User Controls */}
+      <div className="hidden lg:flex items-center gap-4 relative">
+        {isSearchActive ? (
+          <div className="flex items-center bg-gradient-to-r from-gray-900 to-gray-800 rounded-full overflow-hidden transition-all duration-300 ease-in-out shadow-lg border border-gray-700">
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              className="bg-transparent text-white pl-5 pr-2 py-3 w-64 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 placeholder-gray-400"
+              autoFocus
+            />
+            <button
+              onClick={toggleSearch}
+              className="p-2 text-gray-400 hover:text-[#FF4F81] transition-colors duration-200"
+              aria-label="Fermer la recherche"
+            >
+              <X size={20} />
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={toggleSearch} 
+            className="p-2 cursor-pointer hover:text-[#FF4F81] text-white transition-transform duration-200 hover:scale-110"
+            aria-label="Rechercher"
+          >
+            <SearchNormal size={26} color="white" variant="Linear" />
+          </button>
+        )}
+        
+        <button 
+          className="p-2 cursor-pointer text-white hover:text-[#FF4F81]"
+          aria-label="Notifications"
         >
-          <Image src="/images/users/avatar.webp" alt="User Avatar" width={50} height={50} />
+          <Notification size={32} color="white" variant="Linear" />
+        </button>
+        
+        <button
+          className="w-10 h-10 rounded-full overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer"
+          onClick={() => console.log("Open login overlay")}
+          aria-label="Profil utilisateur"
+        >
+          <Image 
+            src="/images/users/avatar.webp" 
+            alt="User Avatar" 
+            width={50} 
+            height={50} 
+            className="object-cover"
+          />
         </button>
       </div>
 
-      <button className="lg:hidden">
-        <Menu size={24} color="white" />
-      </button>
+       {/* Mobile Search */}
+        <div className="flex items-center gap-3 lg:hidden">
+          {isSearchActive ? (
+            <div className="absolute inset-0 flex items-center bg-black/95 backdrop-blur-sm px-4 z-50 animate-fadeIn">
+              <div className="flex items-center w-full bg-gradient-to-r from-gray-900 to-gray-800 rounded-full overflow-hidden border border-gray-700 shadow-lg">
+                <input
+                  type="text"
+                  placeholder="Rechercher..."
+                  className="bg-transparent text-white px-5 py-3 flex-1 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 placeholder-gray-400"
+                  autoFocus
+                />
+                <button
+                  onClick={toggleSearch}
+                  className="px-4 text-gray-400 hover:text-[#FF4F81] transition-colors duration-200"
+                  aria-label="Fermer la recherche"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+          ) : (
+          <>
+            <button 
+              onClick={toggleSearch}
+              className="p-1 cursor-pointer text-white"
+              aria-label="Rechercher"
+            >
+              <Search size={24} />
+            </button>
+            
+            <button 
+              className="p-1 cursor-pointer text-white"
+              aria-label="Notifications"
+            >
+              <Notification size={24} color="white" variant="Linear" />
+            </button>
+            
+            <button
+              onClick={toggleMobileMenu}
+              className="p-1 cursor-pointer text-white"
+              aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            >
+              {isMobileMenuOpen ? <CloseCircle size={24} color="white" /> : <Menu size={24} color="white" />}
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 top-[70px] z-40 pt-4 px-6 bg-black">
+          <nav className="flex flex-col gap-6">
+            {NAV_LINKS.map(({ id, label, href, icon: Icon }) => (
+              <Link 
+                key={id} 
+                href={href}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <span
+                  className={`flex items-center gap-3 text-xl font-medium block py-2 ${
+                    pathname === href ? "text-[#FF4F81]" : "text-white"
+                  }`}
+                >
+                  <Icon 
+                    size={24}
+                    variant={pathname === href ? "Bold" : "Linear"}
+                    color={pathname === href ? "#FF4F81" : "white"}
+                  />
+                  {label}
+                </span>
+              </Link>
+            ))}
+            
+            <div className="pt-6 pb-4 flex items-center gap-4">
+              <button
+                className="w-10 h-10 rounded-full overflow-hidden"
+                onClick={() => {
+                  console.log("Open login overlay");
+                  setIsMobileMenuOpen(false);
+                }}
+              >
+                <Image 
+                  src="/images/users/avatar.webp" 
+                  alt="User Avatar" 
+                  width={50} 
+                  height={50} 
+                  className="object-cover" 
+                />
+              </button>
+              <span className="text-white text-lg">Mon Profil</span>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
