@@ -43,7 +43,7 @@ const AddACrush = () => {
     <div
       className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
       style={{
-        backgroundImage: "url('/assets/ui/bg-pattern.webp')",
+        backgroundImage: "url('/images/ui/bg-pattern.webp')",
       }}
     >
       <Header />
@@ -56,7 +56,7 @@ const AddACrush = () => {
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8">
         <Image
-        src="/assets/illustration.png"
+        src="/images/ui/illustration.webp"
         alt="Illustration Match"
         width={500}
         height={500}

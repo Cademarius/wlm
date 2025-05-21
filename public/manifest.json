@@ -1,0 +1,17 @@
+{
+  "name": "WhoLikeMe",
+  "short_name": "WLM",
+  "description": "Découvre qui t'aime en secret",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1C1F3F",
+  "theme_color": "#1C1F3F",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "images/icons/icons.png",
+      "sizes": "85x32",
+      "type": "image/png"
+    }
+  ]
+}

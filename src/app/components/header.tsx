@@ -18,14 +18,14 @@ const Header = () => {
     <header className="w-full max-w-[1576px] h-[80px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between border-b-2 border-[#FF4F81] lg:h-[120px] md:h-[80px]">
 
       <Image
-        src="/assets/header/computer-logo.png"
+        src="/images/branding/wholikeme-desktop-logo.webp"
         alt="WhoLikeMe Logo"
         width={211}
         height={80}
         className="hidden lg:block cursor-pointer"
       />
       <Image
-        src="/assets/header/mobile-logo.png"
+        src="/images/branding/wholikeme-mobile-logo.webp"
         alt="WhoLikeMe Logo"
         width={79}
         height={24}
@@ -54,7 +54,7 @@ const Header = () => {
           className="w-12 h-12 rounded-full overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer"
           onClick={() => console.log("Open login overlay")}
         >
-          <Image src="/assets/header/avatar.png" alt="User Avatar" width={50} height={50} />
+          <Image src="/images/users/avatar.webp" alt="User Avatar" width={50} height={50} />
         </button>
       </div>
 
