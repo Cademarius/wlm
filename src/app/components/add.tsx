@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import Image from "next/image";
-import googleLogo from "../../../public/assets/login/google.png";
+
 
 interface AddModalProps {
   showAddModal: boolean;
@@ -89,7 +89,6 @@ const AddModal: React.FC<AddModalProps> = ({ showAddModal, handleCloseAddCrushMo
             className="flex items-center justify-center bg-[#FF4F81] text-white py-2 px-4 rounded-lg hover:bg-[#e04370] cursor-pointer w-full text-sm sm:text-base"
           >
             <span>Ajouter un crush</span>
-            <Image src={googleLogo} alt="Google" width={24} height={24} className="ml-3" />
           </a>
         </form>
       </div>

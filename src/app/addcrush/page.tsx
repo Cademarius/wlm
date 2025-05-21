@@ -43,7 +43,7 @@ const AddACrush = () => {
     <div
       className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
       style={{
-        backgroundImage: "url('/assets/background.webp')",
+        backgroundImage: "url('/assets/ui/bg-pattern.webp')",
       }}
     >
       <Header />

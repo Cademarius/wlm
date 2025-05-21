@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { FaHeart, FaHeartBroken } from "react-icons/fa";
 import Image from "next/image";
-import welcomeLogo from "../../../public/assets/login/welcome.png";
-import step1Img from "../../../public/assets/login/step1.png";
-import step2Img from "../../../public/assets/login/step2.png";
-import step3Img from "../../../public/assets/login/step3.png";
+import welcomeLogo from "../../../public/images/ui/welcome.png";
+import step1Img from "../../../public/images/ui/step1.png";
+import step2Img from "../../../public/images/ui/step2.png";
+import step3Img from "../../../public/images/ui/step3.png";
 
 interface MultiStepModalProps {
   showWelcomeModal: boolean;
