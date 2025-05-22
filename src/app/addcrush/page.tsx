@@ -48,25 +48,50 @@ const AddACrush = () => {
       }}
     >
       <Header />
+      
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col items-center w-full">
+          <div className="relative w-full aspect-[4/3] max-w-3xl mx-auto mb-12">
+            <Image
+              src="/images/ui/illustration.svg"
+              alt="Illustration Match"
+              fill
+              className="object-contain animate-float"
+              priority
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 60vw"
+            />
+          </div>
+          
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
+              Aucun crush pour le moment
+            </h2>
+            
+            <p className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8">
+              Commencez par ajouter les personnes qui vous intéressent pour découvrir vos matchs potentiels
+            </p>
 
-     
-
-      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 py-8 pb-24 md:pb-8">
-        <Image
-          src="/images/ui/illustration.webp"
-          alt="Illustration Match"
-          width={500}
-          height={500}
-          className="w-[80%] sm:w-[50%] max-w-[500px] h-auto object-contain"
-          priority
-        />
-
-        <button
-          onClick={handleOpenAddCrushModal}
-          className="bg-[#FF4F81] text-white font-medium text-base sm:text-lg md:text-xl lg:text-2xl px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-lg shadow-md hover:bg-[#e04370] transition-all cursor-pointer mt-8"
-        >
-          Ajouter un crush
-        </button>
+            <button
+              onClick={handleOpenAddCrushModal}
+              className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50"
+            >
+              <svg 
+                className="w-6 h-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              Ajouter un crush
+            </button>
+          </div>
+        </div>
       </main>
 
       <Footer className="hidden md:block" />

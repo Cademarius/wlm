@@ -14,16 +14,28 @@ const Feed = () => {
       }}
     >
       <Header />
-      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-8 pb-24 md:pb-8">
-        <Image
-          src="/images/ui/illustration.webp"
-          alt="Illustration Match"
-          width={500}
-          height={500}
-          className="w-[80%] sm:w-[50%] max-w-[500px] h-auto object-contain"
-          priority
-        />
+
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+             <div className="flex flex-col items-center w-full">
+               <div className="relative w-full aspect-[4/3] max-w-3xl mx-auto mb-12">
+                 <Image
+                   src="/images/ui/illustration.svg"
+                   alt="Illustration Match"
+                   fill
+                   className="object-contain animate-float"
+                   priority
+                   sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 60vw"
+                 />
+               </div>
+               
+               <div className="text-center max-w-2xl mx-auto">
+                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
+                   Bientôt disponible
+                 </h2>
+               </div>
+             </div>
       </main>
+
       <Footer className="hidden md:block" />
       <MobileNavBar className="block md:hidden" activePage="feed" />
     </div>

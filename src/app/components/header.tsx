@@ -18,7 +18,7 @@ import { Search, X } from "lucide-react";
 const NAV_LINKS = [
   { id: "mon-fil", label: "Mon fil", href: "/feed", icon: Home },
   { id: "mes-crushs", label: "Mes Crushs", href: "/addcrush", icon: HeartTick },
-  { id: "qui-ma-crush", label: "Qui m'a crush", href: "/matchcrush", icon: ProfileCircle },
+  { id: "qui-ma-crush", label: "Mes adminirateurs", href: "/matchcrush", icon: ProfileCircle },
 ];
 
 const Header = () => {
