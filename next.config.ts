@@ -11,15 +11,15 @@ const baseConfig: NextConfig = {
         protocol: "https",
         hostname: "ton-domaine.com",
         port: "",
-        pathname: "/**"
-      }
-    ]
-  }
+        pathname: "/**",
+      },
+    ],
+  },
 };
 
-export default withPWA({
+const nextConfig = withPWA({
   dest: "public",
   disable: isDev,
-  register: true,
-  skipWaiting: true,
 })(baseConfig);
+
+export default nextConfig;

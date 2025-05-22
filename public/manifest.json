@@ -1,17 +1,47 @@
 {
-  "name": "WhoLikeMe",
-  "short_name": "WLM",
-  "description": "Découvre qui t'aime en secret",
+  "id": "/",
   "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1C1F3F",
-  "theme_color": "#1C1F3F",
-  "orientation": "portrait-primary",
+  "theme_color": "#8936FF",
+  "background_color": "#2EC6FE",
   "icons": [
     {
-      "src": "images/icons/icons.png",
-      "sizes": "85x32",
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
       "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "192x192",
+      "src": "favicon.png",
+      "type": "image/png"
+    }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "fr-FR",
+  "name": "WhoLikeMe",
+  "short_name": "WLM",
+  "description": "WhoLikeMe est une application sociale pour découvrir si ton crush t'aime en retour. Ajoute ton crush en toute discrétion, s'il te crush aussi c'est un match. Sinon, vois ceux qui t'aiment en secret.",
+  "screenshots": [
+    {
+      "src": "/screenshots/a.webp",
+      "sizes": "540x960",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/b.webp",
+      "sizes": "1200x800",
+      "type": "image/webp",
+      "form_factor": "wide"
     }
   ]
 }

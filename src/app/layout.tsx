@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
+import ServiceWorkerWrapper from "./components/ServiceWorkerWrapper";
 
 // Configuration des métadonnées
 export const metadata: Metadata = {
@@ -88,6 +89,7 @@ export default function RootLayout({
         <main className="relative flex min-h-screen flex-col">
           {children}
         </main>
+        <ServiceWorkerWrapper />
         <Analytics />
         <SpeedInsights />
       </body>
