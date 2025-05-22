@@ -4,25 +4,27 @@ import { useEffect, useState } from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 import MobileNavBar from "../components/mobile-nav-bar";
-import AddModal from "../components/add";
+// import AddModal from "../components/add";
 import WelcomeModal from "../components/welcome";
 import Image from 'next/image';
+import LoginModal from "../components/login";
 
 const AddACrush = () => {
-  const [showAddModal, setShowAddModal] = useState(false);
+  // const [showAddModal, setShowAddModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
-  const handleOpenAddCrushModal = () => {
-    setShowAddModal(true);
-  };
+  // const handleOpenAddCrushModal = () => {
+  //   setShowAddModal(true);
+  // };
 
   const handleOpenWelcomeModal = () => {
     setShowWelcomeModal(true);
   };
 
-  const handleCloseAddCrushModal = () => {
-    setShowAddModal(false);
-  };
+  // const handleCloseAddCrushModal = () => {
+  //   setShowAddModal(false);
+  // };
 
   const handleCloseWelcomeModal = () => {
     setShowWelcomeModal(false);
@@ -32,6 +34,13 @@ const AddACrush = () => {
   const handleCloseWelcomeModalWithoutCookie = () => {
     setShowWelcomeModal(false);
   };
+
+  const handleOpenLoginModal = () => {
+    setShowLoginModal(true);
+  };
+  // const handleCloseLoginModal = () => {
+  //   setShowLoginModal(false);
+  // };
 
   useEffect(() => {
     const beginner = localStorage.getItem("beginner");
@@ -72,7 +81,7 @@ const AddACrush = () => {
             </p>
 
             <button
-              onClick={handleOpenAddCrushModal}
+              onClick={handleOpenLoginModal}
               className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50"
             >
               <svg 
@@ -96,9 +105,13 @@ const AddACrush = () => {
 
       <Footer className="hidden md:block" />
       <MobileNavBar className="block md:hidden" activePage="addcrush" />
-      <AddModal
+      {/* <AddModal
         showAddModal={showAddModal}
         handleCloseAddCrushModal={handleCloseAddCrushModal}
+      /> */}
+      <LoginModal 
+        showLoginModal={showLoginModal}
+        handleCloseLoginModal={() => setShowLoginModal(false)}
       />
       <WelcomeModal
         showWelcomeModal={showWelcomeModal}

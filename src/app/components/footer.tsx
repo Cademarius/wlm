@@ -11,10 +11,8 @@ type FooterLink = {
 
 // Configuration des liens
 const footerLinks: FooterLink[] = [
-  { href: "/terms", label: "Termes & Conditions" },
   { href: "/legal", label: "Mentions légales" },
   { href: "/privacy", label: "Confidentialité" },
-  { href: "/contact", label: "Contact" },
 ];
 
 const Footer = ({ className = "" }) => {
