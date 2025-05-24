@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -14,17 +14,25 @@ import {
   ProfileCircle 
 } from "iconsax-react";
 import { Search, X } from "lucide-react"; 
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { type Language } from '@/lib/i18n/setting';
 
-const NAV_LINKS = [
-  { id: "mon-fil", label: "Mon fil", href: "/feed", icon: Home },
-  { id: "mes-crushs", label: "Mes Crushs", href: "/addcrush", icon: HeartTick },
-  { id: "qui-ma-crush", label: "Mes adminirateurs", href: "/matchcrush", icon: ProfileCircle },
-];
+type HeaderProps = {
+  lang: Language;
+};
 
-const Header = () => {
+const Header = ({ lang }: HeaderProps) => {
+  const t = getTranslation(lang);
   const pathname = usePathname();
+  const router = useRouter();
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const NAV_LINKS = [
+    { id: "mon-fil", label: t.header.navigation.myFeed, href: `/${lang}/feed`, icon: Home },
+    { id: "mes-crushs", label: t.header.navigation.myCrushes, href: `/${lang}/addcrush`, icon: HeartTick },
+    { id: "qui-ma-crush", label: t.header.navigation.myAdmirers, href: `/${lang}/matchcrush`, icon: ProfileCircle },
+  ];
   
   const toggleSearch = () => {
     setIsSearchActive(!isSearchActive);
@@ -34,10 +42,17 @@ const Header = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const switchLanguage = (newLang: Language) => {
+    // Remplacer la langue dans l'URL actuelle
+    const currentPath = pathname.replace(`/${lang}`, '');
+    const newPath = `/${newLang}${currentPath}`;
+    router.push(newPath);
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full max-w-[1576px] h-[70px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between border-b-2 border-[#FF4F81] lg:h-[100px] md:h-[80px] bg-[#1C1F3F]/95 backdrop-blur-sm">
       {/* Logo */}
-      <Link href="/">
+      <Link href={`/${lang}`}>
         <Image
           src="/images/branding/wholikeme-desktop-logo.webp"
           alt="WhoLikeMe Logo"
@@ -76,18 +91,44 @@ const Header = () => {
 
       {/* Desktop Search and User Controls */}
       <div className="hidden lg:flex items-center gap-4 relative">
+        {/* Language Selector */}
+        <div className="relative">
+          <div className="flex items-center bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full p-1 border border-[#FF4F81]/30 shadow-lg">
+            <button
+              onClick={() => switchLanguage('fr')}
+              className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                lang === 'fr' 
+                  ? 'bg-[#FF4F81] text-white shadow-lg transform scale-105' 
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              FR
+            </button>
+            <button
+              onClick={() => switchLanguage('en')}
+              className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                lang === 'en' 
+                  ? 'bg-[#FF4F81] text-white shadow-lg transform scale-105' 
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              EN
+            </button>
+          </div>
+        </div>
+
         {isSearchActive ? (
           <div className="flex items-center bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full overflow-hidden transition-all duration-300 ease-in-out shadow-lg border border-[#FF4F81]/30">
             <input
               type="text"
-              placeholder="Rechercher..."
+              placeholder={t.header.search.placeholder}
               className="bg-transparent text-white pl-5 pr-2 py-3 w-64 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 placeholder-white/60"
               autoFocus
             />
             <button
               onClick={toggleSearch}
               className="p-2 text-white/70 hover:text-[#FF4F81] transition-colors duration-200"
-              aria-label="Fermer la recherche"
+              aria-label={t.header.search.close}
             >
               <X size={20} />
             </button>
@@ -96,7 +137,7 @@ const Header = () => {
           <button 
             onClick={toggleSearch} 
             className="p-2 cursor-pointer hover:text-[#FF4F81] text-white transition-transform duration-200 hover:scale-110"
-            aria-label="Rechercher"
+            aria-label={t.header.search.label}
           >
             <SearchNormal size={26} color="white" variant="Linear" />
           </button>
@@ -104,7 +145,7 @@ const Header = () => {
         
         <button 
           className="p-2 cursor-pointer text-white hover:text-[#FF4F81] transition-colors duration-200"
-          aria-label="Notifications"
+          aria-label={t.header.notifications.label}
         >
           <Notification size={32} color="white" variant="Linear" />
         </button>
@@ -112,7 +153,7 @@ const Header = () => {
         <button
           className="w-10 h-10 rounded-full overflow-hidden transition-transform duration-300 hover:scale-110 cursor-pointer border-2 border-transparent hover:border-[#FF4F81]"
           onClick={() => console.log("Open login overlay")}
-          aria-label="Profil utilisateur"
+          aria-label={t.header.profile.userProfile}
         >
           <Image 
             src="/images/users/avatar.webp" 
@@ -124,21 +165,21 @@ const Header = () => {
         </button>
       </div>
 
-       {/* Mobile Search */}
+       {/* Mobile Search and Controls */}
       <div className="flex items-center gap-3 lg:hidden">
         {isSearchActive ? (
           <div className="absolute inset-0 flex items-center bg-[#1C1F3F]/98 backdrop-blur-md px-4 z-50 animate-fadeIn border-b-2 border-[#FF4F81]">
             <div className="flex items-center w-full bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full overflow-hidden border border-[#FF4F81]/40 shadow-lg">
               <input
                 type="text"
-                placeholder="Rechercher..."
+                placeholder={t.header.search.placeholder}
                 className="bg-transparent text-white px-5 py-3 flex-1 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 placeholder-white/60"
                 autoFocus
               />
               <button
                 onClick={toggleSearch}
                 className="px-4 text-white/70 hover:text-[#FF4F81] transition-colors duration-200"
-                aria-label="Fermer la recherche"
+                aria-label={t.header.search.close}
               >
                 <X size={20} />
               </button>
@@ -149,14 +190,14 @@ const Header = () => {
             <button 
               onClick={toggleSearch}
               className="p-1 cursor-pointer text-white hover:text-[#FF4F81] transition-colors duration-200"
-              aria-label="Rechercher"
+              aria-label={t.header.search.label}
             >
               <Search size={24} />
             </button>
             
             <button 
               className="p-1 cursor-pointer text-white hover:text-[#FF4F81] transition-colors duration-200"
-              aria-label="Notifications"
+              aria-label={t.header.notifications.label}
             >
               <Notification size={24} color="white" variant="Linear" />
             </button>
@@ -164,7 +205,7 @@ const Header = () => {
             <button
               onClick={toggleMobileMenu}
               className="p-1 cursor-pointer text-white hover:text-[#FF4F81] transition-colors duration-200"
-              aria-label={isMobileMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+              aria-label={isMobileMenuOpen ? t.header.menu.close : t.header.menu.open}
             >
               {isMobileMenuOpen ? <CloseCircle size={24} color="white" /> : <Menu size={24} color="white" />}
             </button>
@@ -181,7 +222,7 @@ const Header = () => {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            height: "calc(100vh - 70px)", // Assure que le fond couvre toute la hauteur
+            height: "calc(100vh - 70px)",
             width: "100%"
           }}
         >
@@ -225,7 +266,41 @@ const Header = () => {
                   className="object-cover w-full h-full" 
                 />
               </button>
-              <span className="text-white text-lg font-medium">Mon Profil</span>
+              <span className="text-white text-lg font-medium">{t.header.profile.myProfile}</span>
+            </div>
+
+            {/* Language Selector in Mobile Menu */}
+            <div className="px-4 py-3">
+              <div className="flex items-center justify-center">
+                <div className="flex items-center bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full p-1 border border-[#FF4F81]/30 shadow-lg">
+                  <button
+                    onClick={() => {
+                      switchLanguage('fr');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      lang === 'fr' 
+                        ? 'bg-[#FF4F81] text-white shadow-lg transform scale-105' 
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    Français
+                  </button>
+                  <button
+                    onClick={() => {
+                      switchLanguage('en');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      lang === 'en' 
+                        ? 'bg-[#FF4F81] text-white shadow-lg transform scale-105' 
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    English
+                  </button>
+                </div>
+              </div>
             </div>
           </nav>
         </div>

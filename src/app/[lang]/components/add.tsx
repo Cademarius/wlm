@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { AiOutlineUser } from "react-icons/ai";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { type Language } from '@/lib/i18n/setting';
 
 interface AddModalProps {
   showAddModal: boolean;
   handleCloseAddCrushModal: () => void;
+  params: { lang: Language };
 }
 
 const AddModal: React.FC<AddModalProps> = ({ 
   showAddModal, 
-  handleCloseAddCrushModal 
+  handleCloseAddCrushModal,
+  params
 }) => {
+  const t = getTranslation(params.lang);
   const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/callback&response_type=code&scope=email profile`;
 
   const [name, setName] = useState("");
@@ -82,7 +87,7 @@ const AddModal: React.FC<AddModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-white text-left text-lg sm:text-xl mb-6 border-b-2 border-white pb-4">
-          Ajouter un crush
+          {t.addModal.title}
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="relative mb-4 flex items-center border border-gray-300 rounded-lg bg-white">
@@ -90,7 +95,7 @@ const AddModal: React.FC<AddModalProps> = ({
             <input
               ref={inputRef}
               type="text"
-              placeholder="John Doe"
+              placeholder={t.addModal.placeholder}
               className="w-full pl-10 pr-4 py-2 text-black placeholder-gray-500 bg-transparent focus:outline-none"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -106,10 +111,10 @@ const AddModal: React.FC<AddModalProps> = ({
             {isLoading ? (
               <>
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                <span>Ajout en cours...</span>
+                <span>{t.addModal.loading}</span>
               </>
             ) : (
-              <span>Ajouter un crush</span>
+              <span>{t.addModal.buttonText}</span>
             )}
           </button>
         </form>
@@ -117,7 +122,7 @@ const AddModal: React.FC<AddModalProps> = ({
         {/* Note de confidentialité */}
         <div className="mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
           <p className="text-xs text-white/70 text-center">
-            🔒 Vos informations restent privées jusqu&#39;à ce qu&#39;un match soit confirmé
+            🔒 {t.addModal.privacyNote}
           </p>
         </div>
       </div>

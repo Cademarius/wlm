@@ -32,13 +32,13 @@
   "description": "WhoLikeMe est une application sociale pour découvrir si ton crush t'aime en retour. Ajoute ton crush en toute discrétion, s'il te crush aussi c'est un match. Sinon, vois ceux qui t'aiment en secret.",
   "screenshots": [
     {
-      "src": "/screenshots/a.webp",
+      "src": "/images/screenshots/a.webp",
       "sizes": "540x960",
       "type": "image/webp",
       "form_factor": "narrow"
     },
     {
-      "src": "/screenshots/b.webp",
+      "src": "/images/screenshots/b.webp",
       "sizes": "1200x800",
       "type": "image/webp",
       "form_factor": "wide"

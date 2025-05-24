@@ -1,0 +1,249 @@
+{
+  "home": {
+    "pageAriaLabel": "WhoLikeMe homepage",
+    "logoAlt": "WhoLikeMe Logo",
+    "title": "Who has a secret crush on you?",
+    "description": "Find out who has feelings for you! Add your crushes and see if it's mutual.",
+    "buttonText": "Get Started",
+    "buttonAriaLabel": "Start adding a crush"
+  },
+  "addcrush": {
+    "illustrationAlt": "Match Illustration",
+    "title": "No crushes yet",
+    "description": "Start by adding people you're interested in to discover your potential matches",
+    "buttonText": "Add a crush",
+    "buttonAriaLabel": "Add a new crush"
+  },
+  "matchcrush": {
+    "illustrationAlt": "Match Illustration",
+    "title": "No admirers yet"
+  },
+  "feed": {
+    "illustrationAlt": "Match Illustration",
+    "title": "Coming soon"
+  },
+  "footer": {
+    "ariaLabel": "Site footer",
+    "logoAlt": "WhoLikeMe Logo",
+    "homeAriaLabel": "Back to home",
+    "navAriaLabel": "Footer navigation",
+    "links": {
+      "legalNotice": "Legal Notice",
+      "privacy": "Privacy"
+    }
+  },
+   "header": {
+    "navigation": {
+      "myFeed": "My Feed",
+      "myCrushes": "My Crushes",
+      "myAdmirers": "My Admirers"
+    },
+    "search": {
+      "placeholder": "Search...",
+      "label": "Search",
+      "close": "Close search"
+    },
+    "notifications": {
+      "label": "Notifications"
+    },
+    "profile": {
+      "userProfile": "User Profile",
+      "myProfile": "My Profile"
+    },
+    "menu": {
+      "open": "Open menu",
+      "close": "Close menu"
+    }
+  },
+   "addModal": {
+    "title": "Add a crush",
+    "placeholder": "John Doe",
+    "buttonText": "Add a crush",
+    "loading": "Adding...",
+    "privacyNote": "Your information remains private until a match is confirmed"
+  },
+  "loginModal": {
+  "logoAlt": "WhoLikeMe Logo",
+  "instagramButton": "Sign in with Instagram",
+  "privacyText": {
+    "beforeTerms": "By signing in, you agree to our",
+    "termsLink": "Terms of Service",
+    "beforePrivacy": "our",
+    "privacyLink": "Privacy Policy",
+    "beforeCookies": "and our",
+    "cookiesLink": "Cookie Policy"
+  }
+},
+"mobileNavBar": {
+  "feed": "Feed",
+  "crush": "Crush",
+  "matches": "Matches"
+},
+"welcomeModal": {
+  "welcomeLogoAlt": "Welcome logo",
+  "step1": {
+    "title": "Are you new?",
+    "textBefore": "Start by",
+    "addCrushText": "Adding a crush",
+    "textAfter": "by clicking the button.",
+    "imageAlt": "Step 1 - Add a crush"
+  },
+  "step2": {
+    "title": "Then what?",
+    "textIntro": "You will then see the list of your crushes with a status:",
+    "pendingStatus": "Pending",
+    "pendingText": ": if your crush hasn't responded yet.",
+    "acceptedStatus": "Accepted",
+    "acceptedText": ": if your crush accepts.",
+    "imageAlt": "Step 2 - Crushes list with status"
+  },
+  "step3": {
+    "title": "Finally?",
+    "textBefore": "On the",
+    "crushPageText": "Who has a crush on me",
+    "textMiddle": " page, you will see the list of those who have a crush on you.",
+    "responseText": "You can respond with:",
+    "yesText": "for yes (match), and:",
+    "noText": "for no.",
+    "imageAlt": "Step 3 - Who has a crush on me page with responses"
+  },
+  "navigation": {
+    "previous": "Previous",
+    "next": "Next",
+    "start": "Get Started",
+    "totalSteps": "3"
+  }
+}, 
+"legal": {
+  "iconAlt": "Legal Icon",
+  "title": "Legal Notice",
+  "subtitle": "Legal and regulatory information",
+  "sections": {
+    "publisher": {
+      "title": "Site Publisher",
+      "fields": {
+        "company": "Company Name",
+        "legalForm": "Legal Form",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "siret": "SIRET",
+        "vat": "VAT Number"
+      },
+      "values": {
+        "company": "[Your company name]",
+        "legalForm": "[Legal form]",
+        "address": "[Complete address]",
+        "phone": "[Phone number]",
+        "email": "[Email address]",
+        "siret": "[SIRET number]",
+        "vat": "[VAT number]"
+      }
+    },
+    "director": {
+      "title": "Publication Director",
+      "fields": {
+        "name": "Name",
+        "email": "Email"
+      },
+      "values": {
+        "name": "[Director's name]",
+        "email": "[Director's email]"
+      }
+    },
+    "hosting": {
+      "title": "Hosting",
+      "fields": {
+        "host": "Host",
+        "address": "Address",
+        "phone": "Phone"
+      },
+      "values": {
+        "host": "[Host name]",
+        "address": "[Host address]",
+        "phone": "[Host phone]"
+      }
+    },
+    "intellectualProperty": {
+      "title": "Intellectual Property",
+      "paragraph1": "This entire site is subject to French and international legislation on copyright and intellectual property. All reproduction rights are reserved, including for downloadable documents and iconographic and photographic representations.",
+      "paragraph2": "The reproduction of all or part of this site on any electronic medium is strictly prohibited without express authorization from the publication director."
+    },
+    "responsibility": {
+      "title": "Responsibility",
+      "paragraph1": "The information contained on this site is as accurate as possible and the site is periodically updated, but may nevertheless contain inaccuracies, omissions or gaps.",
+      "paragraph2": "If you notice a gap, error or what appears to be a malfunction, please report it by email describing the problem as precisely as possible."
+    }
+  }
+},
+"privacy": {
+  "iconAlt": "Privacy Icon",
+  "title": "Privacy Policy",
+  "subtitle": "Protection and management of your personal data",
+  "sections": {
+    "dataCollection": {
+      "title": "1. Data Collection",
+      "intro": "We collect personal data that you provide to us directly when:",
+      "items": [
+        "Registering on our platform",
+        "Adding crush profiles",
+        "Using our matching services",
+        "Interacting with other users"
+      ]
+    },
+    "dataUsage": {
+      "title": "2. Data Usage",
+      "intro": "Your personal data is used to:",
+      "items": [
+        "Provide and improve our matching services",
+        "Personalize your user experience",
+        "Send you important notifications",
+        "Ensure platform security",
+        "Comply with our legal obligations"
+      ]
+    },
+    "dataSharing": {
+      "title": "3. Data Sharing",
+      "intro": "We do not sell, rent, or share your personal data with third parties, except in the following cases:",
+      "items": [
+        "With your explicit consent",
+        "To comply with a legal obligation",
+        "With our service providers (under strict contract)",
+        "Right to object to processing"
+      ]
+    },
+    "dataSecurity": {
+      "title": "4. Data Security",
+      "intro": "We implement appropriate technical and organizational measures to protect your data:",
+      "items": [
+        "Encryption of sensitive data",
+        "Restricted access to personal data",
+        "Continuous monitoring of our systems",
+        "Regular training of our teams"
+      ]
+    },
+    "userRights": {
+      "title": "5. Your Rights",
+      "intro": "In accordance with GDPR, you have the following rights:",
+      "items": [
+        "Right of access to your personal data",
+        "Right to rectification of inaccurate data",
+        "Right to erasure of your data",
+        "Right to data portability",
+        "Right to object to processing",
+        "Right to withdraw your consent"
+      ]
+    },
+    "dataRetention": {
+      "title": "6. Data Retention",
+      "content": "We retain your personal data only for the duration necessary for the purposes for which it was collected, or in accordance with legal obligations."
+    },
+    "contact": {
+      "title": "7. Contact",
+      "intro": "For any questions regarding this privacy policy or to exercise your rights, contact us at:",
+      "emailLabel": "Email",
+      "email": "privacy@[yourdomain].com"
+    }
+  }
+}
+}

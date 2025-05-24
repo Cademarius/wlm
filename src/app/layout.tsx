@@ -1,8 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import "./globals.css";
-import ServiceWorkerWrapper from "./components/ServiceWorkerWrapper";
+import "../../src/globals.css";
+import ServiceWorkerWrapper from "@/app/[lang]/components/ServiceWorkerWrapper";
+import { languages, type Language } from '@/lib/i18n/setting';
+import { notFound } from 'next/navigation';
+
+// Génération des paramètres statiques pour i18n
+export function generateStaticParams(): { lang: Language }[] {
+  return languages.map((lang) => ({ lang }));
+}
 
 // Configuration des métadonnées
 export const metadata: Metadata = {
@@ -70,15 +77,27 @@ export const viewport: Viewport = {
   ],
 };
 
-// Créez un fichier manifest.json dans le dossier public
-
-export default function RootLayout({
-  children,
-}: Readonly<{
+// Interface pour les props du layout avec support i18n
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+  params: Promise<{ lang: Language }>;
+}
+
+export default async function RootLayout({
+  children,
+  params
+}: RootLayoutProps) {
+  // Attendre la résolution des paramètres
+  const resolvedParams = await params;
+  const lang = resolvedParams?.lang || 'fr'; // fallback vers 'fr' si pas de paramètre
+  
+  // Vérification que la langue est supportée
+  if (resolvedParams?.lang && !languages.includes(resolvedParams.lang)) {
+    notFound();
+  }
+
   return (
-    <html lang="fr">
+    <html lang={lang}>
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="manifest" href="/manifest.json" />

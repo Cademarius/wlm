@@ -2,20 +2,25 @@
 
 import Link from "next/link";
 import { Home, Heart, User } from "lucide-react";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { type Language } from '@/lib/i18n/setting';
 
 interface MobileNavBarProps {
   className?: string;
   activePage: string;
+  params: { lang: Language };
 }
 
-const MobileNavBar = ({ className, activePage }: MobileNavBarProps) => {
+const MobileNavBar = ({ className, activePage, params }: MobileNavBarProps) => {
+  const t = getTranslation(params.lang);
+
   return (
     <nav 
       className={`fixed bottom-0 left-0 right-0 bg-[#161837] border-t border-gray-700 z-50 ${className}`}
     >
       <div className="flex justify-around items-center h-16">
         <Link 
-          href="/feed" 
+          href={`/${params.lang}/feed`}
           className={`flex flex-col items-center justify-center w-1/3 py-2 transition-colors duration-200 ${
             activePage === "feed" 
               ? "text-[#FF4F81]" 
@@ -24,11 +29,11 @@ const MobileNavBar = ({ className, activePage }: MobileNavBarProps) => {
           aria-current={activePage === "feed" ? "page" : undefined}
         >
           <Home size={24} />
-          <span className="text-xs mt-1">Feed</span>
+          <span className="text-xs mt-1">{t.mobileNavBar.feed}</span>
         </Link>
         
         <Link 
-          href="/addcrush" 
+          href={`/${params.lang}/addcrush`}
           className={`flex flex-col items-center justify-center w-1/3 py-2 transition-colors duration-200 ${
             activePage === "addcrush" 
               ? "text-[#FF4F81]" 
@@ -47,11 +52,11 @@ const MobileNavBar = ({ className, activePage }: MobileNavBarProps) => {
               className="text-white" 
             />
           </div>
-          <span className="text-xs mt-1">Crush</span>
+          <span className="text-xs mt-1">{t.mobileNavBar.crush}</span>
         </Link>
         
         <Link 
-          href="/matchcrush" 
+          href={`/${params.lang}/matchcrush`}
           className={`flex flex-col items-center justify-center w-1/3 py-2 transition-colors duration-200 ${
             activePage === "matchcrush" 
               ? "text-[#FF4F81]" 
@@ -60,7 +65,7 @@ const MobileNavBar = ({ className, activePage }: MobileNavBarProps) => {
           aria-current={activePage === "matchcrush" ? "page" : undefined}
         >
           <User size={24} />
-          <span className="text-xs mt-1">Matchs</span>
+          <span className="text-xs mt-1">{t.mobileNavBar.matches}</span>
         </Link>
       </div>
       

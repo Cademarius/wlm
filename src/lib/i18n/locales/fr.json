@@ -1,0 +1,249 @@
+{
+  "home": {
+    "pageAriaLabel": "Page d'accueil de WhoLikeMe",
+    "logoAlt": "Logo WhoLikeMe",
+    "title": "Qui t'a crushé en secret ?",
+    "description": "Découvre qui a des sentiments pour toi ! Ajoute tes crushs et vois si c'est réciproque.",
+    "buttonText": "Commencer",
+    "buttonAriaLabel": "Commencer à ajouter un crush"
+  },
+  "addcrush": {
+    "illustrationAlt": "Illustration Match",
+    "title": "Aucun crush pour le moment",
+    "description": "Commencez par ajouter les personnes qui vous intéressent pour découvrir vos matchs potentiels",
+    "buttonText": "Ajouter un crush",
+    "buttonAriaLabel": "Ajouter un nouveau crush"
+  },
+  "matchcrush": {
+    "illustrationAlt": "Illustration Match",
+    "title": "Aucun admirateur pour le moment"
+  },
+  "feed": {
+    "illustrationAlt": "Illustration Match",
+    "title": "Bientôt disponible"
+  },
+  "footer": {
+    "ariaLabel": "Pied de page du site",
+    "logoAlt": "Logo WhoLikeMe",
+    "homeAriaLabel": "Retour à l'accueil",
+    "navAriaLabel": "Navigation du pied de page",
+    "links": {
+      "legalNotice": "Mentions légales",
+      "privacy": "Confidentialité"
+    }
+  },
+  "header": {
+    "navigation": {
+      "myFeed": "Mon fil",
+      "myCrushes": "Mes Crushs",
+      "myAdmirers": "Mes admirateurs"
+    },
+    "search": {
+      "placeholder": "Rechercher...",
+      "label": "Rechercher",
+      "close": "Fermer la recherche"
+    },
+    "notifications": {
+      "label": "Notifications"
+    },
+    "profile": {
+      "userProfile": "Profil utilisateur",
+      "myProfile": "Mon Profil"
+    },
+    "menu": {
+      "open": "Ouvrir le menu",
+      "close": "Fermer le menu"
+    }
+  },
+  "addModal": {
+    "title": "Ajouter un crush",
+    "placeholder": "John Doe",
+    "buttonText": "Ajouter un crush",
+    "loading": "Ajout en cours...",
+    "privacyNote": "Vos informations restent privées jusqu'à ce qu'un match soit confirmé"
+  },
+  "loginModal": {
+  "logoAlt": "Logo WhoLikeMe",
+  "instagramButton": "Se connecter avec Instagram",
+  "privacyText": {
+    "beforeTerms": "En vous connectant, vous acceptez nos",
+    "termsLink": "Conditions d'utilisation",
+    "beforePrivacy": "notre",
+    "privacyLink": "Politique de confidentialité",
+    "beforeCookies": "et notre",
+    "cookiesLink": "Politique relative aux cookies"
+  }
+},
+"mobileNavBar": {
+  "feed": "Feed",
+  "crush": "Crush",
+  "matches": "Matchs"
+},
+"welcomeModal": {
+  "welcomeLogoAlt": "Logo de bienvenue",
+  "step1": {
+    "title": "Vous êtes nouveau ?",
+    "textBefore": "Commencez par",
+    "addCrushText": "Ajouter un crush",
+    "textAfter": "en cliquant sur le bouton.",
+    "imageAlt": "Étape 1 - Ajouter un crush"
+  },
+  "step2": {
+    "title": "Ensuite ?",
+    "textIntro": "Vous verrez ensuite la liste de vos crushs avec un status :",
+    "pendingStatus": "En attente",
+    "pendingText": " : si votre crush n'a pas encore répondu.",
+    "acceptedStatus": "Accepter",
+    "acceptedText": " : si votre crush accepte.",
+    "imageAlt": "Étape 2 - Liste des crushs avec status"
+  },
+  "step3": {
+    "title": "Enfin ?",
+    "textBefore": "Sur la page",
+    "crushPageText": "Qui ma crush",
+    "textMiddle": ", vous verrez la liste de ceux/celles qui crushs sur vous.",
+    "responseText": "Vous pouvez répondre avec :",
+    "yesText": "pour oui (matcher), et :",
+    "noText": "pour non.",
+    "imageAlt": "Étape 3 - Page qui ma crush avec réponses"
+  },
+  "navigation": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "start": "Commencer",
+    "totalSteps": "3"
+  }
+},
+"legal": {
+  "iconAlt": "Icône légale",
+  "title": "Mentions Légales",
+  "subtitle": "Informations légales et réglementaires",
+  "sections": {
+    "publisher": {
+      "title": "Éditeur du site",
+      "fields": {
+        "company": "Nom de l'entreprise",
+        "legalForm": "Forme juridique",
+        "address": "Adresse",
+        "phone": "Téléphone",
+        "email": "Email",
+        "siret": "SIRET",
+        "vat": "TVA Intracommunautaire"
+      },
+      "values": {
+        "company": "[Nom de votre entreprise]",
+        "legalForm": "[Forme juridique]",
+        "address": "[Adresse complète]",
+        "phone": "[Numéro de téléphone]",
+        "email": "[Adresse email]",
+        "siret": "[Numéro SIRET]",
+        "vat": "[Numéro TVA]"
+      }
+    },
+    "director": {
+      "title": "Directeur de la publication",
+      "fields": {
+        "name": "Nom",
+        "email": "Email"
+      },
+      "values": {
+        "name": "[Nom du directeur]",
+        "email": "[Email du directeur]"
+      }
+    },
+    "hosting": {
+      "title": "Hébergement",
+      "fields": {
+        "host": "Hébergeur",
+        "address": "Adresse",
+        "phone": "Téléphone"
+      },
+      "values": {
+        "host": "[Nom de l'hébergeur]",
+        "address": "[Adresse de l'hébergeur]",
+        "phone": "[Téléphone de l'hébergeur]"
+      }
+    },
+    "intellectualProperty": {
+      "title": "Propriété intellectuelle",
+      "paragraph1": "L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.",
+      "paragraph2": "La reproduction de tout ou partie de ce site sur un support électronique quelconque est formellement interdite sauf autorisation expresse du directeur de la publication."
+    },
+    "responsibility": {
+      "title": "Responsabilité",
+      "paragraph1": "Les informations contenues sur ce site sont aussi précises que possible et le site est périodiquement remis à jour, mais peut toutefois contenir des inexactitudes, des omissions ou des lacunes.",
+      "paragraph2": "Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email en décrivant le problème de la manière la plus précise possible."
+    }
+  }
+}, 
+"privacy": {
+  "iconAlt": "Icône de confidentialité",
+  "title": "Politique de Confidentialité",
+  "subtitle": "Protection et gestion de vos données personnelles",
+  "sections": {
+    "dataCollection": {
+      "title": "1. Collecte des données",
+      "intro": "Nous collectons les données personnelles que vous nous fournissez directement lors de :",
+      "items": [
+        "Votre inscription sur notre plateforme",
+        "L'ajout de profils de crush",
+        "L'utilisation de nos services de matching",
+        "Vos interactions avec d'autres utilisateurs"
+      ]
+    },
+    "dataUsage": {
+      "title": "2. Utilisation des données",
+      "intro": "Vos données personnelles sont utilisées pour :",
+      "items": [
+        "Fournir et améliorer nos services de matching",
+        "Personnaliser votre expérience utilisateur",
+        "Vous envoyer des notifications importantes",
+        "Assurer la sécurité de la plateforme",
+        "Respecter nos obligations légales"
+      ]
+    },
+    "dataSharing": {
+      "title": "3. Partage des données",
+      "intro": "Nous ne vendons, ne louons, ni ne partageons vos données personnelles avec des tiers, sauf dans les cas suivants :",
+      "items": [
+        "Avec votre consentement explicite",
+        "Pour respecter une obligation légale",
+        "Avec nos prestataires de services (sous contrat strict)",
+        "Droit d'opposition au traitement"
+      ]
+    },
+    "dataSecurity": {
+      "title": "4. Sécurité des données",
+      "intro": "Nous mettons en place des mesures techniques et organisationnelles appropriées pour protéger vos données :",
+      "items": [
+        "Chiffrement des données sensibles",
+        "Accès restreint aux données personnelles",
+        "Surveillance continue de nos systèmes",
+        "Formation régulière de nos équipes"
+      ]
+    },
+    "userRights": {
+      "title": "5. Vos droits",
+      "intro": "Conformément au RGPD, vous disposez des droits suivants :",
+      "items": [
+        "Droit d'accès à vos données personnelles",
+        "Droit de rectification des données inexactes",
+        "Droit à l'effacement de vos données",
+        "Droit à la portabilité de vos données",
+        "Droit d'opposition au traitement",
+        "Droit de retirer votre consentement"
+      ]
+    },
+    "dataRetention": {
+      "title": "6. Conservation des données",
+      "content": "Nous conservons vos données personnelles uniquement pendant la durée nécessaire aux finalités pour lesquelles elles ont été collectées, ou conformément aux obligations légales."
+    },
+    "contact": {
+      "title": "7. Contact",
+      "intro": "Pour toute question concernant cette politique de confidentialité ou pour exercer vos droits, contactez-nous à :",
+      "emailLabel": "Email",
+      "email": "privacy@[votredomaine].com"
+    }
+  }
+}
+}

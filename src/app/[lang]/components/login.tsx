@@ -1,16 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { AiOutlineInstagram } from "react-icons/ai";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { type Language } from '@/lib/i18n/setting';
 
 interface LoginModalProps {
   showLoginModal: boolean;
   handleCloseLoginModal: () => void;
+  params: { lang: Language };
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ 
   showLoginModal, 
-  handleCloseLoginModal 
+  handleCloseLoginModal,
+  params
 }) => {
+  const t = getTranslation(params.lang);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Gestion de l'ESC pour fermer + prévention du scroll
@@ -55,7 +60,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
         <div className="mb-8">
           <Image
             src="/images/branding/wholikeme-desktop-logo.webp"
-            alt="WhoLikeMe Logo"
+            alt={t.loginModal.logoAlt}
             width={158}
             height={60}
             className="cursor-pointer"
@@ -68,38 +73,38 @@ const LoginModal: React.FC<LoginModalProps> = ({
           className="flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-600 cursor-pointer w-full text-sm sm:text-base transition-all duration-200 transform hover:scale-105 active:scale-95 mb-8"
         >
           <AiOutlineInstagram className="mr-3" size={24} />
-          <span>Se connecter avec Instagram</span>
+          <span>{t.loginModal.instagramButton}</span>
         </button>
 
         {/* Texte de confidentialité */}
         <div className="text-center">
           <p className="text-xs text-white/70 leading-relaxed">
-            En vous connectant, vous acceptez nos{" "}
+            {t.loginModal.privacyText.beforeTerms}{" "}
             <a 
               href="/terms" 
               className="text-[#FF4F81] hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Conditions d&#39;utilisation
+              {t.loginModal.privacyText.termsLink}
             </a>
-            , notre{" "}
+            , {t.loginModal.privacyText.beforePrivacy}{" "}
             <a 
               href="/privacy" 
               className="text-[#FF4F81] hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Politique de confidentialité
+              {t.loginModal.privacyText.privacyLink}
             </a>
-            {" "}et notre{" "}
+            {" "}{t.loginModal.privacyText.beforeCookies}{" "}
             <a 
               href="/cookies" 
               className="text-[#FF4F81] hover:underline"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Politique relative aux cookies
+              {t.loginModal.privacyText.cookiesLink}
             </a>
           </p>
         </div>

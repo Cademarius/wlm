@@ -4,9 +4,12 @@ import dynamic from 'next/dynamic';
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { use } from "react";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { type Language } from '@/lib/i18n/setting';
 
 // Import dynamique des composants non-critiques
-const Footer = dynamic(() => import("../app/components/footer"), {
+const Footer = dynamic(() => import("../[lang]/components/footer"), {
   loading: () => <div className="h-16" />,
   ssr: false
 });
@@ -79,7 +82,10 @@ const illustrations: Illustration[] = [
   }
 ];
 
-export default function HomePage() {
+export default function HomePage({ params }: { params: Promise<{ lang: Language }> }) {
+  const resolvedParams = use(params);
+  const t = getTranslation(resolvedParams.lang);
+
   return (
     <div
       className="relative flex flex-col justify-between min-h-screen bg-cover bg-center"
@@ -88,12 +94,12 @@ export default function HomePage() {
         contain: "paint"
       }}
       role="main"
-      aria-label="Page d'accueil de WhoLikeMe"
+      aria-label={t.home.pageAriaLabel}
     >
       <header className="absolute top-10 left-1/2 transform -translate-x-1/2 w-[15vw] max-w-[211px] min-w-[120px] z-20">
         <Image
           src="/images/branding/wholikeme-desktop-logo.webp"
-          alt="Logo WhoLikeMe"
+          alt={t.home.logoAlt}
           width={211}
           height={100}
           priority
@@ -131,23 +137,23 @@ export default function HomePage() {
       {/* Contenu principal */}
       <main className="relative z-20 flex flex-col items-center justify-center text-center px-4 w-full max-w-[1040px] mx-auto space-y-6 flex-1">
         <h1 className="text-white font-bold font-poppins text-4xl sm:text-5xl md:text-6xl lg:text-[64px] leading-tight tracking-wide">
-          Qui t’a crushé en secret ?
+          {t.home.title}
         </h1>
         <p className="text-white font-medium font-poppins text-base sm:text-lg md:text-xl lg:text-2xl leading-snug tracking-wide max-w-[800px]">
-          Découvre qui a des sentiments pour toi ! Ajoute tes crushs et vois si c’est réciproque.
+          {t.home.description}
         </p>
-        <Link href="/addcrush" passHref>
+        <Link href={`/${resolvedParams.lang}/addcrush`} passHref>
           <button
             className="bg-[#FF4F81] hover:bg-[#e04370] transition-all text-white font-medium text-base sm:text-lg px-6 py-3 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-white cursor-pointer"
-            aria-label="Commencer à ajouter un crush"
+            aria-label={t.home.buttonAriaLabel}
           >
-            Commencer
+            {t.home.buttonText}
           </button>
         </Link>
       </main>
 
       {/* Pied de page */}
-      <Footer />
+    <Footer className="hidden md:block" lang={resolvedParams.lang} />
     </div>
   );
 }
