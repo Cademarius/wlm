@@ -14,6 +14,22 @@
     "buttonText": "Ajouter un crush",
     "buttonAriaLabel": "Ajouter un nouveau crush"
   },
+  "crushcard":{
+  "profile":"Avatar",
+  "accept":"Accepter",
+  "pending":"En attente"
+  },
+  "profile":{
+    "avatar":"Profile",
+    "friends":"Admirateurs",
+    "crushes":"Crushs",
+    "online":"Connecté",
+    "offline":"Deconnecté",
+    "noActivity":"Connections Récentes",
+    "recent":"Pas d'Activités Récentes",
+    "edit":"Modifier Profile"
+
+  },
   "matchcrush": {
     "illustrationAlt": "Illustration Match",
     "title": "Aucun admirateur pour le moment"
