@@ -87,13 +87,17 @@ const ProfilePage = ({ params }: { params: Promise<{ lang: Language }> }) => {
                     </span>
                   ))}
                 </div>
+                <div className="flex justify-center pt-3">
+  <div className="grid grid-cols-3 gap-2 sm:gap-3">
+    {/* ...stat items */}
+  </div>
+</div>
+
 
                 {/* Stats Section */}
                 <div className="grid grid-cols-3 gap-2 sm:gap-3 pt-3">
                   {[
-                    { label: t.profile?.friends || "Friends", value: user.friends, icon: "👥", color: "text-blue-300" },
-                    { label: t.profile?.crushes || "Crushes", value: user.crushes, icon: "💖", color: "text-pink-300" },
-                    { label: "Matches", value: user.matches, icon: "⚡", color: "text-purple-300" }
+                    { label: t.profile?.friends || "Admirator", value: user.friends, icon: "👥", color: "text-blue-300" },
                   ].map((stat, index) => (
                     <div
                       key={index}
@@ -111,24 +115,22 @@ const ProfilePage = ({ params }: { params: Promise<{ lang: Language }> }) => {
                     </div>
                   ))}
                 </div>
+                
               </div>
 
-              {/* Edit Button */}
-              <div className="w-full sm:w-auto flex justify-center sm:block">
-                <Link
-                  href={`/${resolvedParams.lang}/profile/edit`}
-                  className="group/edit relative px-4 py-2 bg-gradient-to-r from-[#23233D] to-[#2F2F4D] text-white rounded-xl font-semibold hover:from-[#2F2F4D] hover:to-[#3A3A5D] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center gap-2 text-sm"
-                >
-                  <span className="text-sm group-hover/edit:rotate-12 transition-transform duration-300">✏️</span>
-                  <span className="relative z-10">
-                    {t.profile?.edit || "Edit Profile"}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent rounded-xl opacity-0 group-hover/edit:opacity-100 transition-opacity duration-300"></div>
-                </Link>
-              </div>
             </div>
           </div>
 
+          {/* Action Button */}
+          <div className="w-full max-w-xs px-4">
+            <Link
+              href={`/${resolvedParams.lang}/discover`}
+              className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 px-4 rounded-xl font-bold text-center hover:from-pink-600 hover:to-rose-600 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform flex items-center justify-center gap-2 text-base"
+            >
+              <span className="text-lg">🔥</span>
+              Start Matching
+            </Link>
+          </div>
         </div>
       </main>
 
