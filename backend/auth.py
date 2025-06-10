@@ -62,7 +62,7 @@ async def exchange_code_for_token(code: str) -> Tuple[str, str]:
 async def get_instagram_user_profile(access_token: str) -> Dict[str, Any]:
     """Get user profile information from Instagram"""
     async with httpx.AsyncClient() as client:
-        graph_api_url = f"https://graph.instagram.com/me?fields=id,username&access_token={access_token}"
+        graph_api_url = f"https://graph.instagram.com/me?fields=id,username,name,profile_picture_url&access_token={access_token}"
         user_response = await client.get(graph_api_url)
         user_data = user_response.json()
         
@@ -93,6 +93,8 @@ async def handle_instagram_callback(code: str):
             new_user = {
                 "instagram_id": user_data["id"],
                 "username": user_data["username"],
+                "name": user_data.get("name"),
+                "profile_picture_url": user_data.get("profile_picture_url"),
                 "access_token": access_token
             }
             
@@ -102,13 +104,19 @@ async def handle_instagram_callback(code: str):
         else:
             # Update existing user's access token
             print(f"Mise à jour de l'utilisateur existant: {existing_user['id']}")
-            updated_user = database.update_user(user_data["id"], {"access_token": access_token})
+            updated_user = database.update_user(user_data["id"], {
+                "access_token": access_token,
+                "name": user_data.get("name"),
+                "profile_picture_url": user_data.get("profile_picture_url")
+            })
             print(f"Résultat de la mise à jour: {updated_user}")
         
         # Create session for frontend
         user_session = {
             "instagram_id": user_data["id"],
-            "username": user_data["username"]
+            "username": user_data["username"],
+            "name": user_data.get("name"),
+            "profile_picture_url": user_data.get("profile_picture_url")
         }
         
         # Au lieu de rediriger, retourner une page HTML avec un message de succès
@@ -148,7 +156,9 @@ async def handle_instagram_callback(code: str):
                 <h1>Authentification réussie!</h1>
                 <p>Vous êtes connecté avec Instagram.</p>
                 <div class="user-info">
+                    {f'<img src="{user_data.get("profile_picture_url")}" alt="Photo de profil" style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 15px; display: block;">' if user_data.get("profile_picture_url") else ''}
                     <p><strong>Nom d'utilisateur:</strong> {user_data.get('username')}</p>
+                    <p><strong>Nom:</strong> {user_data.get('name', 'N/A')}</p>
                     <p><strong>ID Instagram:</strong> {user_data.get('id')}</p>
                 </div>
                 <div class="countdown" id="countdown">Cette fenêtre se fermera dans <span id="timer">3</span>s</div>
