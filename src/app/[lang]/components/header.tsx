@@ -215,42 +215,18 @@ const Header = ({ lang }: HeaderProps) => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 top-[70px] z-40 pt-6 px-6 bg-[#1C1F3F]"
-          style={{
-            backgroundImage: "url('/images/ui/bg-pattern.webp')",
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            height: "calc(100vh - 70px)",
-            width: "100%"
-          }}
-        >
-          <nav className="flex flex-col gap-6">
-            {NAV_LINKS.map(({ id, label, href, icon: Icon }) => (
-              <Link 
-                key={id} 
-                href={href}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span
-                  className={`flex items-center gap-3 text-xl font-medium py-3 px-4 rounded-lg transition-all duration-200 ${
-                    pathname === href 
-                      ? "text-[#FF4F81] bg-[#FF4F81]/10 border border-[#FF4F81]/30" 
-                      : "text-white hover:text-[#FF4F81] hover:bg-white/5"
-                  }`}
-                >
-                  <Icon 
-                    size={24}
-                    variant={pathname === href ? "Bold" : "Linear"}
-                    color={pathname === href ? "#FF4F81" : "white"}
-                  />
-                  {label}
-                </span>
-              </Link>
-            ))}
-            
-            <div className="pt-4 mt-4 border-t border-white/20 flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors duration-200">
+          <div 
+            className="fixed inset-0 top-[70px] z-40 pt-6 px-6 bg-[#1C1F3F]"
+            style={{
+              backgroundImage: "url('/images/ui/bg-pattern.webp')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              height: "calc(100vh - 70px)",
+              width: "100%"
+            }}
+          >
+            <div className="pt-4 mt-4 flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/5 transition-colors duration-200">
               <button
                 className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FF4F81]/50 hover:border-[#FF4F81] transition-colors duration-200"
                 onClick={() => {
@@ -302,7 +278,6 @@ const Header = ({ lang }: HeaderProps) => {
                 </div>
               </div>
             </div>
-          </nav>
         </div>
       )}
     </header>
