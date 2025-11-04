@@ -10,13 +10,81 @@
   "addcrush": {
     "illustrationAlt": "Match Illustration",
     "title": "No crushes yet",
+    "titleWithContent": "My Crushes",
+    "titleNotAuthenticated": "My Crushes",
     "description": "Start by adding people you're interested in to discover your potential matches",
+    "descriptionNotAuthenticated": "Sign in to start adding crushes",
     "buttonText": "Add a crush",
-    "buttonAriaLabel": "Add a new crush"
+    "buttonAriaLabel": "Add a new crush",
+    "searchPlaceholder": "Search by name or email...",
+    "searching": "Searching...",
+    "noResults": "No users found",
+    "addButton": "Add",
+    "adding": "Adding...",
+    "status": {
+      "pending": "Pending",
+      "matched": "Match!"
+    },
+    "messages": {
+      "success": "Crush added successfully!",
+      "match": "🎉 It's a match! You've both added each other!",
+      "alreadyAdded": "You've already added this person",
+      "error": "Error adding crush"
+    }
   },
   "matchcrush": {
     "illustrationAlt": "Match Illustration",
-    "title": "No admirers yet"
+    "title": "No admirers yet",
+    "titleWithContent": "My Admirers",
+    "description": "No one has added you as a crush yet",
+    "descriptionNotAuthenticated": "Sign in to see your admirers",
+    "status": {
+      "matched": "Match!",
+      "admires": "Admires you"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllAsRead": "Mark all as read",
+    "markAsRead": "Mark as read",
+    "viewAll": "View all notifications",
+    "filters": {
+      "all": "All",
+      "unread": "Unread"
+    },
+    "empty": {
+      "title": "No notifications",
+      "description": "You'll receive notifications when someone adds you as a crush",
+      "unreadTitle": "No unread notifications",
+      "unreadDescription": "All your notifications have been read!"
+    },
+    "types": {
+      "newCrush": "New crush!",
+      "newMatch": "It's a match! 🎉"
+    },
+    "time": {
+      "now": "Just now",
+      "minutesAgo": "{{count}}min ago",
+      "hoursAgo": "{{count}}h ago",
+      "daysAgo": "{{count}}d ago"
+    },
+    "unreadCount": "{{count}} unread notification",
+    "unreadCountPlural": "{{count}} unread notifications",
+    "loading": "Loading notifications...",
+    "loginRequired": "Sign in to see your notifications"
+  },
+  "profile": {
+    "stats": {
+      "crushes": "My Crushes",
+      "matches": "My Matches",
+      "admirers": "My Admirers"
+    },
+    "actions": {
+      "editProfile": "Edit my profile",
+      "viewCrushes": "View my crushes",
+      "viewMatches": "View my matches",
+      "viewAdmirers": "View my admirers"
+    }
   },
   "feed": {
     "illustrationAlt": "Match Illustration",
@@ -48,12 +116,19 @@
     },
     "profile": {
       "userProfile": "User Profile",
-      "myProfile": "My Profile"
+      "myProfile": "My Profile",
+      "viewProfile": "View my profile"
     },
     "menu": {
       "open": "Open menu",
       "close": "Close menu"
-    }
+    },
+    "language": {
+      "label": "Language",
+      "french": "Français",
+      "english": "English"
+    },
+    "logout": "Sign Out"
   },
    "addModal": {
     "title": "Add a crush",
@@ -64,7 +139,7 @@
   },
   "loginModal": {
   "logoAlt": "WhoLikeMe Logo",
-  "instagramButton": "Sign in with Instagram",
+  "googleButton": "Sign in with Google",
   "privacyText": {
     "beforeTerms": "By signing in, you agree to our",
     "termsLink": "Terms of Service",
@@ -244,6 +319,57 @@
       "emailLabel": "Email",
       "email": "privacy@[yourdomain].com"
     }
+  }
+},
+"settings": {
+  "backButton": "Back",
+  "title": "Edit my profile",
+  "subtitle": "Customize your profile to introduce yourself",
+  "sections": {
+    "profilePhoto": {
+      "title": "Profile Photo",
+      "googlePhoto": "Google profile photo",
+      "changePhoto": "Change photo",
+      "newPhoto": "New photo (not saved)",
+      "customPhoto": "Custom photo",
+      "saveWarning": "Click \"Save\" to save the photo"
+    },
+    "personalInfo": {
+      "title": "Personal information",
+      "name": {
+        "label": "Name",
+        "placeholder": "Your name"
+      },
+      "age": {
+        "label": "Age",
+        "placeholder": "25"
+      },
+      "location": {
+        "label": "Location",
+        "placeholder": "Paris, France"
+      }
+    },
+    "about": {
+      "title": "About me",
+      "placeholder": "Tell us about yourself...",
+      "charactersCount": "characters"
+    },
+    "interests": {
+      "title": "Passions & Interests",
+      "placeholder": "Add an interest...",
+      "addButton": "Add",
+      "count": "interests"
+    }
+  },
+  "buttons": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "uploading": "Uploading photo..."
+  },
+  "messages": {
+    "success": "Profile updated successfully!",
+    "error": "Error saving profile"
   }
 }
 }

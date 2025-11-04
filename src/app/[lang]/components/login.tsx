@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
-import { AiOutlineInstagram } from "react-icons/ai";
+import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
 
@@ -37,10 +38,14 @@ const LoginModal: React.FC<LoginModalProps> = ({
     };
   }, [showLoginModal, handleCloseLoginModal]);
 
-  const handleInstagramLogin = () => {
-    // Remplacez par votre logique de connexion Instagram
-    console.log("Connexion Instagram");
-    // window.location.href = "votre_url_instagram_oauth";
+  const handleGoogleLogin = async () => {
+    try {
+      await signIn("google", {
+        callbackUrl: `/${params.lang}/feed`,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la connexion Google:", error);
+    }
   };
 
   if (!showLoginModal) return null;
@@ -67,13 +72,13 @@ const LoginModal: React.FC<LoginModalProps> = ({
           />
         </div>
 
-        {/* Bouton Instagram */}
+        {/* Bouton Google */}
         <button
-          onClick={handleInstagramLogin}
-          className="flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-500 text-white py-3 px-6 rounded-lg hover:from-purple-700 hover:to-pink-600 cursor-pointer w-full text-sm sm:text-base transition-all duration-200 transform hover:scale-105 active:scale-95 mb-8"
+          onClick={handleGoogleLogin}
+          className="flex items-center justify-center bg-white text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-50 cursor-pointer w-full text-sm sm:text-base transition-all duration-200 transform hover:scale-105 active:scale-95 mb-8 shadow-md border border-gray-300"
         >
-          <AiOutlineInstagram className="mr-3" size={24} />
-          <span>{t.loginModal.instagramButton}</span>
+          <FcGoogle className="mr-3" size={24} />
+          <span className="font-medium">{t.loginModal.googleButton}</span>
         </button>
 
         {/* Texte de confidentialité */}
@@ -82,7 +87,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             {t.loginModal.privacyText.beforeTerms}{" "}
             <a 
               href="/terms" 
-              className="text-[#FF4F81] hover:underline"
+              className="text-[#FF4F81] hover:underline cursor-pointer"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -91,7 +96,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             , {t.loginModal.privacyText.beforePrivacy}{" "}
             <a 
               href="/privacy" 
-              className="text-[#FF4F81] hover:underline"
+              className="text-[#FF4F81] hover:underline cursor-pointer"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -100,7 +105,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             {" "}{t.loginModal.privacyText.beforeCookies}{" "}
             <a 
               href="/cookies" 
-              className="text-[#FF4F81] hover:underline"
+              className="text-[#FF4F81] hover:underline cursor-pointer"
               target="_blank"
               rel="noopener noreferrer"
             >

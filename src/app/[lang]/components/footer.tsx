@@ -36,13 +36,13 @@ const Footer = ({ className = "", lang }: FooterProps) => {
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4 lg:gap-0">
         {/* Logo et copyright */}
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
-          <Link href={`/${lang}`} aria-label={t.footer.homeAriaLabel} className="group">
+          <Link href={`/${lang}`} aria-label={t.footer.homeAriaLabel} className="group cursor-pointer">
             <Image 
               src="/images/branding/wholikeme-desktop-logo.webp" 
               alt={t.footer.logoAlt}
               width={79} 
               height={24}
-              className="transform group-hover:scale-105 transition-all duration-200 ease-out"
+              className="transform group-hover:scale-105 transition-all duration-200 ease-out cursor-pointer"
               loading="lazy"
               quality={90}
             />
@@ -61,7 +61,7 @@ const Footer = ({ className = "", lang }: FooterProps) => {
             <div key={href} className="flex items-center">
               <Link
                 href={`/${lang}${href}`}
-                className="text-white/80 hover:text-[#FF4F81] text-xs sm:text-sm font-medium tracking-wide transition-all duration-200 ease-out hover:underline underline-offset-2 focus:outline-none focus:ring-2 focus:ring-[#FF4F81]/50 focus:ring-offset-2 focus:ring-offset-[#1C1F3F] rounded-sm px-2 py-1"
+                className="text-white/80 hover:text-[#FF4F81] text-xs sm:text-sm font-medium tracking-wide transition-all duration-200 ease-out hover:underline underline-offset-2 focus:outline-none focus:ring-2 focus:ring-[#FF4F81]/50 focus:ring-offset-2 focus:ring-offset-[#1C1F3F] rounded-sm px-2 py-1 cursor-pointer"
               >
                 {t.footer.links[labelKey]}
               </Link>

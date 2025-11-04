@@ -14,9 +14,13 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
 
   return (
     <div
-      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
+      className="w-full min-h-screen flex flex-col text-white bg-[#0F1128]"
       style={{
         backgroundImage: "url('/images/ui/bg-pattern.webp')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "fixed"
       }}
     >
       
@@ -43,8 +47,8 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
              </div>
       </main>
 
-      <Footer className="hidden md:block" lang={resolvedParams.lang} />
-      <MobileNavBar className="block md:hidden" activePage="feed" params={{ lang: resolvedParams.lang }} />
+      <Footer className="hidden xl:block" lang={resolvedParams.lang} />
+      <MobileNavBar className="block xl:hidden" activePage="feed" params={{ lang: resolvedParams.lang}} />
     </div>
   );
 };

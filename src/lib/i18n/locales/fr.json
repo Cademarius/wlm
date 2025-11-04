@@ -10,13 +10,81 @@
   "addcrush": {
     "illustrationAlt": "Illustration Match",
     "title": "Aucun crush pour le moment",
+    "titleWithContent": "Mes Crushes",
+    "titleNotAuthenticated": "Mes Crushes",
     "description": "Commencez par ajouter les personnes qui vous intéressent pour découvrir vos matchs potentiels",
+    "descriptionNotAuthenticated": "Connectez-vous pour commencer à ajouter des crushes",
     "buttonText": "Ajouter un crush",
-    "buttonAriaLabel": "Ajouter un nouveau crush"
+    "buttonAriaLabel": "Ajouter un nouveau crush",
+    "searchPlaceholder": "Rechercher par nom ou email...",
+    "searching": "Recherche en cours...",
+    "noResults": "Aucun utilisateur trouvé",
+    "addButton": "Ajouter",
+    "adding": "Ajout...",
+    "status": {
+      "pending": "En attente",
+      "matched": "Match !"
+    },
+    "messages": {
+      "success": "Crush ajouté avec succès !",
+      "match": "🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !",
+      "alreadyAdded": "Vous avez déjà ajouté cette personne",
+      "error": "Erreur lors de l'ajout du crush"
+    }
   },
   "matchcrush": {
     "illustrationAlt": "Illustration Match",
-    "title": "Aucun admirateur pour le moment"
+    "title": "Aucun admirateur pour le moment",
+    "titleWithContent": "Mes Admirateurs",
+    "description": "Personne ne vous a ajouté comme crush pour le moment",
+    "descriptionNotAuthenticated": "Connectez-vous pour voir vos admirateurs",
+    "status": {
+      "matched": "Match !",
+      "admires": "Vous admire"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllAsRead": "Tout marquer comme lu",
+    "markAsRead": "Marquer comme lu",
+    "viewAll": "Voir toutes les notifications",
+    "filters": {
+      "all": "Toutes",
+      "unread": "Non lues"
+    },
+    "empty": {
+      "title": "Aucune notification",
+      "description": "Vous recevrez des notifications quand quelqu'un vous ajoute comme crush",
+      "unreadTitle": "Aucune notification non lue",
+      "unreadDescription": "Toutes vos notifications ont été lues !"
+    },
+    "types": {
+      "newCrush": "Nouveau crush !",
+      "newMatch": "C'est un match ! 🎉"
+    },
+    "time": {
+      "now": "À l'instant",
+      "minutesAgo": "Il y a {{count}}min",
+      "hoursAgo": "Il y a {{count}}h",
+      "daysAgo": "Il y a {{count}}j"
+    },
+    "unreadCount": "{{count}} notification non lue",
+    "unreadCountPlural": "{{count}} notifications non lues",
+    "loading": "Chargement des notifications...",
+    "loginRequired": "Connectez-vous pour voir vos notifications"
+  },
+  "profile": {
+    "stats": {
+      "crushes": "Mes Crushes",
+      "matches": "Mes Matchs",
+      "admirers": "Mes Admirateurs"
+    },
+    "actions": {
+      "editProfile": "Modifier mon profil",
+      "viewCrushes": "Voir mes crushes",
+      "viewMatches": "Voir mes matchs",
+      "viewAdmirers": "Voir mes admirateurs"
+    }
   },
   "feed": {
     "illustrationAlt": "Illustration Match",
@@ -48,12 +116,19 @@
     },
     "profile": {
       "userProfile": "Profil utilisateur",
-      "myProfile": "Mon Profil"
+      "myProfile": "Mon Profil",
+      "viewProfile": "Voir mon profil"
     },
     "menu": {
       "open": "Ouvrir le menu",
       "close": "Fermer le menu"
-    }
+    },
+    "language": {
+      "label": "Langue",
+      "french": "Français",
+      "english": "English"
+    },
+    "logout": "Déconnexion"
   },
   "addModal": {
     "title": "Ajouter un crush",
@@ -64,7 +139,7 @@
   },
   "loginModal": {
   "logoAlt": "Logo WhoLikeMe",
-  "instagramButton": "Se connecter avec Instagram",
+  "googleButton": "Se connecter avec Google",
   "privacyText": {
     "beforeTerms": "En vous connectant, vous acceptez nos",
     "termsLink": "Conditions d'utilisation",
@@ -244,6 +319,57 @@
       "emailLabel": "Email",
       "email": "privacy@[votredomaine].com"
     }
+  }
+},
+"settings": {
+  "backButton": "Retour",
+  "title": "Modifier mon profil",
+  "subtitle": "Personnalisez votre profil pour vous faire connaître",
+  "sections": {
+    "profilePhoto": {
+      "title": "Photo de profil",
+      "googlePhoto": "Photo de profil Google",
+      "changePhoto": "Changer la photo",
+      "newPhoto": "Nouvelle photo (non enregistrée)",
+      "customPhoto": "Photo personnalisée",
+      "saveWarning": "Cliquez sur \"Enregistrer\" pour sauvegarder la photo"
+    },
+    "personalInfo": {
+      "title": "Informations personnelles",
+      "name": {
+        "label": "Nom",
+        "placeholder": "Votre nom"
+      },
+      "age": {
+        "label": "Âge",
+        "placeholder": "25"
+      },
+      "location": {
+        "label": "Localisation",
+        "placeholder": "Paris, France"
+      }
+    },
+    "about": {
+      "title": "À propos de moi",
+      "placeholder": "Parlez-nous de vous...",
+      "charactersCount": "caractères"
+    },
+    "interests": {
+      "title": "Passions & Intérêts",
+      "placeholder": "Ajouter un intérêt...",
+      "addButton": "Ajouter",
+      "count": "intérêts"
+    }
+  },
+  "buttons": {
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "uploading": "Upload de la photo..."
+  },
+  "messages": {
+    "success": "Profil mis à jour avec succès !",
+    "error": "Erreur lors de la sauvegarde"
   }
 }
 }

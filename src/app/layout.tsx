@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../../src/globals.css";
 import ServiceWorkerWrapper from "@/app/[lang]/components/ServiceWorkerWrapper";
+import SessionProvider from "@/app/[lang]/components/SessionProvider";
 import { languages, type Language } from '@/lib/i18n/setting';
 import { notFound } from 'next/navigation';
 
@@ -105,12 +106,14 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/images/icons/icon.png" />
       </head>
       <body className="min-h-screen bg-background antialiased">
-        <main className="relative flex min-h-screen flex-col">
-          {children}
-        </main>
-        <ServiceWorkerWrapper />
-        <Analytics />
-        <SpeedInsights />
+        <SessionProvider>
+          <main className="relative flex min-h-screen flex-col">
+            {children}
+          </main>
+          <ServiceWorkerWrapper />
+          <Analytics />
+          <SpeedInsights />
+        </SessionProvider>
       </body>
     </html>
   );
