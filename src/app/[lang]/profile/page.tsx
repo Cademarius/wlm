@@ -9,7 +9,6 @@ import { Edit2, Heart, Users, Settings, LogOut } from "lucide-react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
 import Header from "../components/header";
-import Footer from "../components/footer";
 import MobileNavBar from "../components/mobile-nav-bar";
 
 type ProfilePageProps = {
@@ -65,7 +64,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <div 
-      className="min-h-screen bg-[#0F1128] flex flex-col"
+      className="min-h-screen bg-[#1C1F3F] flex flex-col"
       style={{
         backgroundImage: "url('/images/ui/bg-pattern.webp')",
         backgroundSize: "cover",
@@ -173,7 +172,6 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         </div>
       </main>
       
-      <Footer className="hidden xl:block" lang={lang} />
       <MobileNavBar className="block xl:hidden" activePage="profile" params={{ lang }} />
     </div>
   );

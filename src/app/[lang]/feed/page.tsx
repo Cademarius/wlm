@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import Header from "../components/header";
-import Footer from "../components/footer";
 import MobileNavBar from "../components/mobile-nav-bar";
 import Image from 'next/image';
 import { getTranslation } from '@/lib/i18n/getTranslation';
@@ -14,7 +13,7 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
 
   return (
     <div
-      className="w-full min-h-screen flex flex-col text-white bg-[#0F1128]"
+      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
       style={{
         backgroundImage: "url('/images/ui/bg-pattern.webp')",
         backgroundSize: "cover",
@@ -47,7 +46,6 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
              </div>
       </main>
 
-      <Footer className="hidden xl:block" lang={resolvedParams.lang} />
       <MobileNavBar className="block xl:hidden" activePage="feed" params={{ lang: resolvedParams.lang}} />
     </div>
   );

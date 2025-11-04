@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { use } from "react";
 import Header from "../components/header";
-import Footer from "../components/footer";
 import MobileNavBar from "../components/mobile-nav-bar";
 import AddCrushModal from "../components/AddCrushModal";
 import WelcomeModal from "../components/welcome";
@@ -98,7 +97,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
 
   return (
     <div
-      className="w-full min-h-screen flex flex-col text-white bg-[#0F1128]"
+      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
       style={{
         backgroundImage: "url('/images/ui/bg-pattern.webp')",
         backgroundSize: "cover",
@@ -270,7 +269,6 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
         )}
       </main>
 
-      <Footer className="hidden xl:block" lang={resolvedParams.lang} />
       <MobileNavBar className="block xl:hidden" activePage="addcrush" params={{ lang: resolvedParams.lang }} />
       
       {/* Modal de recherche et ajout de crush */}

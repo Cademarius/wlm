@@ -1,8 +1,9 @@
 {
   "id": "/",
   "start_url": "/",
-  "theme_color": "#8936FF",
-  "background_color": "#2EC6FE",
+  "scope": "/",
+  "theme_color": "#FF4F81",
+  "background_color": "#1C1F3F",
   "icons": [
     {
       "purpose": "maskable",
@@ -23,25 +24,29 @@
       "type": "image/png"
     }
   ],
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "dir": "auto",
   "lang": "fr-FR",
   "name": "WhoLikeMe",
   "short_name": "WLM",
   "description": "WhoLikeMe est une application sociale pour découvrir si ton crush t'aime en retour. Ajoute ton crush en toute discrétion, s'il te crush aussi c'est un match. Sinon, vois ceux qui t'aiment en secret.",
+  "categories": ["social", "lifestyle"],
   "screenshots": [
     {
       "src": "/images/screenshots/a.webp",
       "sizes": "540x960",
       "type": "image/webp",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "Page principale de WhoLikeMe"
     },
     {
       "src": "/images/screenshots/b.webp",
       "sizes": "1200x800",
       "type": "image/webp",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "Interface desktop de WhoLikeMe"
     }
   ]
 }
