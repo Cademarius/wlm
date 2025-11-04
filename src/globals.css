@@ -204,7 +204,255 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Optimisation du rendu des images pour une meilleure netteté */
 img {
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Images de profil circulaires - amélioration spéciale */
+.rounded-full img,
+img.rounded-full {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0) scale(1.001);
+  will-change: transform;
+}
+
+/* Animation de fade-in pour le background */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Preload hint pour le background */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(1.02);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+/* Animation de slide down pour mobile menu et search */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation float pour illustrations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Animation shimmer pour skeleton loaders */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+}
+
+/* Animation de pulse améliorée pour skeleton */
+@keyframes pulse-enhanced {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-enhanced {
+  animation: pulse-enhanced 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Classe pour safe area insets */
+.safe-area-inset {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Touch manipulation pour meilleur feedback mobile */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Animation slide in up pour les cards */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Espacement pour navigation mobile */
+.mb-nav-mobile {
+  margin-bottom: 5rem; /* 80px */
+}
+
+@media (min-width: 1280px) {
+  .mb-nav-mobile {
+    margin-bottom: 0;
+  }
+}
+
+/* Animation slide in from right pour les toasts */
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Animation bounce slow pour les badges */
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s ease-in-out infinite;
+}
+
+/* Animation spin slow pour les icônes */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* Transitions globales pour navigation entre pages */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease-in, transform 0.2s ease-in;
+}
+
+/* Optimisation des transitions pour performance */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-enter-active,
+  .page-transition-exit-active {
+    transition: none;
+  }
+  
+  .animate-float,
+  .animate-bounce-slow,
+  .animate-spin-slow {
+    animation: none;
+  }
+}
+
+/* Modal animations */
+@keyframes modalBackdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContentSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-backdrop {
+  animation: modalBackdropFadeIn 0.2s ease-out;
+}
+
+.modal-content {
+  animation: modalContentSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-content {
+    animation: none;
+  }
 }

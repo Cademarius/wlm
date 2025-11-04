@@ -152,38 +152,40 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
       />
       
       <div
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-4"
+        className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50 p-4 modal-backdrop"
         onClick={handleClose}
       >
       <div
-        className="bg-[#1C1F3F] rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl"
+        className="bg-gradient-to-br from-[#1C1F3F]/95 to-[#252951]/95 backdrop-blur-xl rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col border border-white/10 modal-content"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-white/10">
-          <h2 className="text-white font-bold text-2xl flex items-center gap-2">
-            <Heart className="text-[#FF4F81]" size={28} />
+        <div className="flex items-center justify-between p-6 border-b border-white/10 bg-gradient-to-r from-[#FF4F81]/5 to-transparent">
+          <h2 className="text-white font-bold text-2xl flex items-center gap-3">
+            <div className="bg-[#FF4F81]/20 p-2 rounded-xl">
+              <Heart className="text-[#FF4F81]" size={24} />
+            </div>
             Ajouter un crush
           </h2>
           <button
             onClick={handleClose}
-            className="text-white/70 hover:text-white transition-colors cursor-pointer"
+            className="text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer rounded-full p-2"
             aria-label="Fermer"
           >
-            <X size={28} />
+            <X size={24} />
           </button>
         </div>
 
         {/* Search Bar */}
         <div className="p-6 border-b border-white/10">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/40" size={20} />
+          <div className="relative group">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/40 group-focus-within:text-[#FF4F81] transition-colors" size={20} />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Rechercher par nom ou email..."
-              className="w-full bg-white/10 border border-white/20 rounded-xl pl-12 pr-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] transition-colors"
+              className="w-full bg-white/5 border border-white/20 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] focus:bg-white/10 transition-all"
               autoFocus
             />
           </div>
@@ -221,7 +223,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               {searchResults.map((user) => (
                 <div
                   key={user.id}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl p-4 transition-all duration-200"
+                  className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF4F81]/30 rounded-xl p-4 transition-all duration-200"
                 >
                   <div className="flex items-center gap-4">
                     {/* Avatar */}
@@ -256,7 +258,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
                     <button
                       onClick={() => handleAddCrush(user.id)}
                       disabled={isAdding === user.id}
-                      className="bg-[#FF4F81] hover:bg-[#FF3D6D] text-white px-6 py-2 rounded-full font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 flex-shrink-0"
+                      className="bg-gradient-to-r from-[#FF4F81] to-[#FF3D6D] hover:from-[#FF3D6D] hover:to-[#FF2B59] text-white px-6 py-2.5 rounded-full font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 flex-shrink-0 hover:scale-105 active:scale-95"
                     >
                       {isAdding === user.id ? (
                         <>
@@ -282,13 +284,6 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               ))}
             </div>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="p-6 border-t border-white/10">
-          <p className="text-white/40 text-xs text-center">
-            💡 Astuce : Vous serez notifié si votre crush vous ajoute aussi !
-          </p>
         </div>
       </div>
     </div>

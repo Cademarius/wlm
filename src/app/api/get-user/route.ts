@@ -5,10 +5,11 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const email = searchParams.get('email');
+    const userId = searchParams.get('userId');
 
-    if (!email) {
+    if (!email && !userId) {
       return NextResponse.json(
-        { error: 'Email is required' },
+        { error: 'Email or userId is required' },
         { status: 400 }
       );
     }
@@ -20,12 +21,18 @@ export async function GET(request: Request) {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
 
-    // Récupérer l'utilisateur par email
-    const { data: user, error } = await supabase
+    // Récupérer l'utilisateur par email ou par userId
+    let query = supabase
       .from('users')
-      .select('id, email, name, age, image, bio, interests, location')
-      .eq('email', email)
-      .maybeSingle();
+      .select('id, email, name, age, image, bio, interests, location, created_at');
+    
+    if (userId) {
+      query = query.eq('id', userId);
+    } else if (email) {
+      query = query.eq('email', email);
+    }
+    
+    const { data: user, error } = await query.maybeSingle();
 
     if (error) {
       console.error('Error fetching user:', error);

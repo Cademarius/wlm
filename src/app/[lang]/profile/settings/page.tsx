@@ -40,10 +40,25 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
   const [newInterest, setNewInterest] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     params.then(p => setLang(p.lang));
   }, [params]);
+
+  // Fermer les suggestions quand on clique ailleurs
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.interests-input-container')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const t = getTranslation(lang);
 
@@ -82,13 +97,37 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const addInterest = () => {
-    if (newInterest.trim() && formData.interests.length < 10) {
+  const handleInterestInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewInterest(value);
+
+    if (value.trim().length > 0) {
+      // Obtenir les suggestions depuis les traductions
+      const availableInterests = t.settings.sections.interests.suggestions || [];
+      
+      // Filtrer les suggestions basées sur l'entrée
+      const filtered = availableInterests.filter((interest: string) => 
+        interest.toLowerCase().includes(value.toLowerCase()) &&
+        !formData.interests.includes(interest)
+      );
+      setFilteredSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setShowSuggestions(false);
+      setFilteredSuggestions([]);
+    }
+  };
+
+  const addInterest = (interest?: string) => {
+    const interestToAdd = interest || newInterest.trim();
+    if (interestToAdd && formData.interests.length < 10 && !formData.interests.includes(interestToAdd)) {
       setFormData(prev => ({
         ...prev,
-        interests: [...prev.interests, newInterest.trim()]
+        interests: [...prev.interests, interestToAdd]
       }));
       setNewInterest("");
+      setShowSuggestions(false);
+      setFilteredSuggestions([]);
     }
   };
 
@@ -237,8 +276,8 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
       >
         <Header lang={lang} />
       
-      <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12">
-        <div className="max-w-4xl mx-auto">
+      <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12 overflow-y-auto mb-20 xl:mb-0">
+        <div className="max-w-4xl mx-auto pb-6">
           {/* Back Button */}
           <button
             onClick={() => router.back()}
@@ -401,20 +440,44 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
               </h2>
               
               <div className="mb-4">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newInterest}
-                    onChange={(e) => setNewInterest(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addInterest())}
-                    className="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] transition-colors"
-                    placeholder={t.settings.sections.interests.placeholder}
-                    maxLength={30}
-                  />
+                <div className="flex gap-2 relative interests-input-container">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      value={newInterest}
+                      onChange={handleInterestInputChange}
+                      onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addInterest())}
+                      onFocus={() => {
+                        if (newInterest.trim().length > 0 && filteredSuggestions.length > 0) {
+                          setShowSuggestions(true);
+                        }
+                      }}
+                      className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] transition-colors"
+                      placeholder={t.settings.sections.interests.placeholder}
+                      maxLength={50}
+                    />
+                    
+                    {/* Dropdown des suggestions */}
+                    {showSuggestions && filteredSuggestions.length > 0 && (
+                      <div className="absolute z-50 w-full mt-2 bg-[#2A2E5A] border border-[#FF4F81]/30 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                        {filteredSuggestions.slice(0, 10).map((suggestion, index) => (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => addInterest(suggestion)}
+                            className="w-full text-left px-4 py-3 text-white hover:bg-[#FF4F81]/20 transition-colors border-b border-white/10 last:border-b-0 cursor-pointer"
+                          >
+                            {suggestion}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  
                   <button
                     type="button"
-                    onClick={addInterest}
-                    disabled={formData.interests.length >= 10}
+                    onClick={() => addInterest()}
+                    disabled={formData.interests.length >= 10 || !newInterest.trim()}
                     className="bg-[#FF4F81] hover:bg-[#FF3D6D] text-white px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
                     {t.settings.sections.interests.addButton}

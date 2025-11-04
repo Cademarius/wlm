@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { use } from "react";
-import Header from "../components/header";
 import MobileNavBar from "../components/mobile-nav-bar";
 import AddCrushModal from "../components/AddCrushModal";
 import WelcomeModal from "../components/welcome";
@@ -11,7 +10,12 @@ import LoginModal from "../components/login";
 import { useAuth } from "../components/AuthGuard";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
-import { Heart, Loader2 } from "lucide-react";
+import { Heart } from "lucide-react";
+import { CrushListSkeleton } from "../components/SkeletonLoader";
+import Header from "../components/header";
+import UserCard from "../components/UserCard";
+import PageTransition from "../components/PageTransition";
+import LoadingState from "../components/LoadingState";
 
 interface CrushUser {
   id: string;
@@ -39,6 +43,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [crushes, setCrushes] = useState<Crush[]>([]);
   const [isLoadingCrushes, setIsLoadingCrushes] = useState(false);
+  const [isContentReady, setIsContentReady] = useState(false);
 
   const handleOpenWelcomeModal = () => {
     setShowWelcomeModal(true);
@@ -95,6 +100,19 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated, user?.id]);
 
+  // Gérer l'affichage du contenu après le chargement
+  useEffect(() => {
+    if (!isAuthLoading && !isLoadingCrushes) {
+      // Petit délai pour éviter le flash de contenu
+      const timer = setTimeout(() => {
+        setIsContentReady(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setIsContentReady(false);
+    }
+  }, [isAuthLoading, isLoadingCrushes]);
+
   return (
     <div
       className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
@@ -109,163 +127,130 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
       
     <Header lang={resolvedParams.lang} />
       
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Afficher le loader pendant que l'authentification ou les données se chargent */}
-        {isAuthLoading || (isAuthenticated && isLoadingCrushes) ? (
-          <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="text-[#FF4F81] animate-spin mb-4" size={48} />
-            <p className="text-white/60">Chargement...</p>
-          </div>
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 mb-20 xl:mb-0 overflow-y-auto">
+        {/* Afficher le loader pendant que l'authentification se charge */}
+        {isAuthLoading ? (
+          <LoadingState message="Chargement..." />
+        ) : /* Si l'utilisateur est connecté et charge ses crushes */
+        isAuthenticated && isLoadingCrushes ? (
+          <PageTransition isLoading={isLoadingCrushes}>
+            <div className="space-y-8">
+              <div className="text-center space-y-4">
+                <div className="h-10 bg-gray-700/40 rounded-lg w-64 mx-auto animate-pulse" />
+                <div className="h-12 bg-[#FF4F81]/20 rounded-xl w-48 mx-auto animate-pulse" />
+              </div>
+              <CrushListSkeleton count={6} />
+            </div>
+          </PageTransition>
         ) : /* Si l'utilisateur n'est pas connecté OU n'a pas de crushes, afficher l'état initial */
         !isAuthenticated || crushes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center">
-            <div className="relative w-full aspect-[4/3] max-w-3xl mx-auto mb-12">
-              <Image
-                src="/images/ui/illustration.svg"
-                alt={t.addcrush.illustrationAlt}
-                fill
-                className="object-contain animate-float"
-                priority
-                sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 60vw"
-              />
-            </div>
-            
-            <div className="text-center max-w-2xl mx-auto">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
-                {!isAuthenticated ? t.addcrush.titleNotAuthenticated : t.addcrush.title}
-              </h2>
+          <PageTransition>
+            <div className="flex flex-col items-center justify-center" style={{ opacity: isContentReady ? 1 : 0, transition: 'opacity 0.3s ease-in' }}>
+              <div className="relative w-full aspect-[4/3] max-w-2xl mx-auto mb-12">
+                <Image
+                  src="/images/ui/illustration.svg"
+                  alt={t.addcrush.illustrationAlt}
+                  fill
+                  className="object-contain animate-float"
+                  priority
+                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 50vw"
+                />
+              </div>
               
-              <p className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8">
-                {!isAuthenticated 
-                  ? t.addcrush.descriptionNotAuthenticated
-                  : t.addcrush.description}
-              </p>
+              <div className="text-center max-w-2xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
+                  {!isAuthenticated ? t.addcrush.titleNotAuthenticated : t.addcrush.title}
+                </h2>
+                
+                <p className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8">
+                  {!isAuthenticated 
+                    ? t.addcrush.descriptionNotAuthenticated
+                    : t.addcrush.description}
+                </p>
 
-              <button
-                onClick={handleButtonClick}
-                className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
-                aria-label={t.addcrush.buttonAriaLabel}
-              >
-                <svg 
-                  className="w-6 h-6" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
+                  aria-label={t.addcrush.buttonAriaLabel}
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                {t.addcrush.buttonText}
-              </button>
+                  <svg 
+                    className="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  {t.addcrush.buttonText}
+                </button>
+              </div>
             </div>
-          </div>
+          </PageTransition>
         ) : (
           /* Afficher la liste des crushes uniquement si l'utilisateur est connecté ET a des crushes */
-          <div>
-            {/* Header Section */}
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
-                {t.addcrush.titleWithContent}
-              </h2>
-              
-              <button
-                onClick={handleButtonClick}
-                className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
-                aria-label={t.addcrush.buttonAriaLabel}
-              >
-                <svg 
-                  className="w-6 h-6" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
+          <PageTransition>
+            <div style={{ opacity: isContentReady ? 1 : 0, transition: 'opacity 0.3s ease-in' }}>
+              {/* Header Section */}
+              <div className="text-center mb-12">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Heart className="text-[#FF4F81]" size={36} />
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+                    {t.addcrush.titleWithContent}
+                  </h2>
+                </div>
+                <p className="text-white/60 text-base sm:text-lg mb-6">
+                  {crushes.length} {crushes.length > 1 ? 'crushes ajoutés' : 'crush ajouté'}
+                </p>
+                
+                <button
+                  onClick={handleButtonClick}
+                  className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
+                  aria-label={t.addcrush.buttonAriaLabel}
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                {t.addcrush.buttonText}
-              </button>
-            </div>
-
-            {/* Crushes List Section */}
-            <div className="mt-12">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-                  <Heart className="text-[#FF4F81]" size={28} />
-                  {t.addcrush.titleWithContent} ({crushes.length})
-                </h3>
+                  <svg 
+                    className="w-6 h-6" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth={2} 
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  {t.addcrush.buttonText}
+                </button>
               </div>
 
-              {isLoadingCrushes ? (
-                <div className="flex flex-col items-center justify-center py-12">
-                  <Loader2 className="text-[#FF4F81] animate-spin mb-4" size={48} />
-                  <p className="text-white/60">Chargement...</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {crushes.map((crush) => (
-                    <div
+              {/* Crushes List Section */}
+              <div className="mt-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {crushes.map((crush, index) => (
+                    <UserCard
                       key={crush.id}
-                      className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-6 border border-[#FF4F81]/20 hover:border-[#FF4F81]/50 transition-all duration-300"
-                    >
-                      {crush.user ? (
-                        <>
-                          <div className="flex items-center gap-4 mb-4">
-                            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#FF4F81]/50 flex-shrink-0">
-                              <Image
-                                src={crush.user.image || "/images/users/avatar.webp"}
-                                alt={crush.user.name || "User"}
-                                width={64}
-                                height={64}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-white font-semibold text-lg truncate">
-                                {crush.user.name}
-                              </h4>
-                              {(crush.user.age || crush.user.location) && (
-                                <p className="text-white/60 text-sm">
-                                  {crush.user.age && `${crush.user.age} ans`}
-                                  {crush.user.age && crush.user.location && " • "}
-                                  {crush.user.location}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <span
-                              className={`text-xs px-3 py-1 rounded-full ${
-                                crush.status === "matched"
-                                  ? "bg-green-500/20 text-green-400 border border-green-500/50"
-                                  : "bg-yellow-500/20 text-yellow-400 border border-yellow-500/50"
-                              }`}
-                            >
-                              {crush.status === "matched" ? `🎉 ${t.addcrush.status.matched}` : `⏳ ${t.addcrush.status.pending}`}
-                            </span>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-white/40 text-center py-4">
-                          Utilisateur non trouvé
-                        </div>
-                      )}
-                    </div>
+                      user={crush.user}
+                      status={crush.status}
+                      statusLabel={{
+                        matched: t.addcrush.status.matched,
+                        pending: t.addcrush.status.pending,
+                      }}
+                      type="crush"
+                      index={index}
+                    />
                   ))}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          </PageTransition>
         )}
       </main>
 

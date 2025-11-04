@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import Header from "../components/header";
+import HeaderComponent from "../components/header";
 import MobileNavBar from "../components/mobile-nav-bar";
 import { useAuth } from "../components/AuthGuard";
 import { getTranslation } from '@/lib/i18n/getTranslation';
@@ -164,9 +164,9 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
         backgroundAttachment: "fixed"
       }}
     >
-      <Header lang={resolvedParams.lang} />
+      <HeaderComponent lang={resolvedParams.lang} />
 
-      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-20 xl:mb-0 overflow-y-auto">
         {/* Afficher le loader pendant que l'authentification se charge */}
         {isAuthLoading ? (
           <div className="flex flex-col items-center justify-center py-12">

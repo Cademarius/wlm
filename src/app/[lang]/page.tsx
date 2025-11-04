@@ -81,14 +81,27 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
 
   return (
     <div
-      className="relative flex flex-col min-h-screen bg-cover bg-center"
-      style={{ 
-        backgroundImage: "url('/images/ui/background.webp')",
-        contain: "paint"
-      }}
+      className="relative flex flex-col min-h-screen"
       role="main"
       aria-label={t.home.pageAriaLabel}
     >
+      {/* Background optimisé avec Next.js Image - Lazy loading stratégique */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1a1d3f] via-[#2a2d5f] to-[#1a1d3f]">
+        <Image
+          src="/images/ui/background.webp"
+          alt="Background"
+          fill
+          priority
+          quality={75}
+          sizes="100vw"
+          className="object-cover opacity-0 animate-[fadeIn_0.6s_ease-in_0.1s_forwards]"
+          placeholder="blur"
+          blurDataURL="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA="
+        />
+        {/* Gradient overlay pour améliorer le contraste et la lisibilité */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none" />
+      </div>
+
       {/* Safe area pour PWA iOS/Android */}
       <div className="h-[env(safe-area-inset-top)]" />
       
