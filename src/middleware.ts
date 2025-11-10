@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { languages } from '@/lib/i18n/setting';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Ne pas rediriger les fichiers statiques
@@ -25,6 +25,9 @@ export function middleware(request: NextRequest) {
     const newUrl = new URL(`/${detectedLang}${pathname}`, request.url);
     return NextResponse.redirect(newUrl);
   }
+
+  // Plus de vérification de complétion de profil dans le middleware
+  // Le modal s'occupe de tout maintenant
 
   return NextResponse.next();
 }

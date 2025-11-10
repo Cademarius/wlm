@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
   interests TEXT[], -- Array de passions/intérêts
   location TEXT,
   google_id TEXT UNIQUE,
+  profile_completion_skips INTEGER DEFAULT 0, -- Nombre de fois que l'utilisateur a reporté la complétion
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );

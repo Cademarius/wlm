@@ -8,6 +8,8 @@ declare module "next-auth" {
       name?: string | null;
       email?: string | null;
       image?: string | null;
+      profileComplete?: boolean;
+      profileCompletionSkips?: number;
     };
   }
 
@@ -21,5 +23,7 @@ declare module "next-auth/jwt" {
     userId?: string;
     supabaseUserId?: string;
     accessToken?: string;
+    profileComplete?: boolean;
+    profileCompletionSkips?: number;
   }
 }

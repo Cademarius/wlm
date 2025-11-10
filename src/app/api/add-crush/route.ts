@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         user_id: crushUserId,
         type: "new_crush",
         title: "Nouveau crush !",
-        message: `${currentUser?.name || "Quelqu'un"} vous a ajouté comme crush 💕`,
+        message: `Un utilisateur crush sur vous 💕`,
         from_user_id: userId,
         is_read: false,
       });

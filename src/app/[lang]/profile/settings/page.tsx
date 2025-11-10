@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { use, useState, useEffect } from "react";
 import { useAuth } from "../../components/AuthGuard";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -18,10 +18,11 @@ type SettingsPageProps = {
 };
 
 export default function ProfileSettingsPage({ params }: SettingsPageProps) {
+  const resolvedParams = use(params);
+  const lang = resolvedParams.lang;
   const { user } = useAuth();
   const { update: updateSession } = useSession();
   const router = useRouter();
-  const [lang, setLang] = useState<Language>('fr');
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -42,10 +43,6 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
-
-  useEffect(() => {
-    params.then(p => setLang(p.lang));
-  }, [params]);
 
   // Fermer les suggestions quand on clique ailleurs
   useEffect(() => {

@@ -28,9 +28,9 @@ export async function POST(request: NextRequest) {
     // Validation de l'âge
     if (age !== null && age !== undefined) {
       const ageNum = parseInt(age);
-      if (isNaN(ageNum) || ageNum < 18 || ageNum > 100) {
+      if (isNaN(ageNum) || ageNum < 13 || ageNum > 100) {
         return NextResponse.json(
-          { error: "Age must be between 18 and 100" },
+          { error: "Age must be between 13 and 100" },
           { status: 400 }
         );
       }

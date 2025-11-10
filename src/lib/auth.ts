@@ -75,6 +75,23 @@ export const authConfig: NextAuthConfig = {
               if (data.user.image) {
                 session.user.image = data.user.image;
               }
+
+              // Vérifier la complétion du profil (champs obligatoires)
+              const isProfileComplete = !!(
+                data.user.age &&
+                data.user.location &&
+                data.user.bio &&
+                data.user.interests &&
+                Array.isArray(data.user.interests) &&
+                data.user.interests.length > 0
+              );
+              
+              session.user.profileComplete = isProfileComplete;
+              token.profileComplete = isProfileComplete;
+
+              // Récupérer le nombre de reports de complétion
+              session.user.profileCompletionSkips = data.user.profile_completion_skips || 0;
+              token.profileCompletionSkips = data.user.profile_completion_skips || 0;
             }
           }
         } catch (error) {
