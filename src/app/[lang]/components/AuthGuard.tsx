@@ -13,7 +13,36 @@ interface AuthGuardProps {
  * Utilisez ce composant pour wrapper les pages qui nécessitent une authentification
  */
 export default function AuthGuard({ children, onUnauthenticated }: AuthGuardProps) {
-  const { status } = useSession();
+  // Ping online toutes les 30s si connecté
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    const ping = async () => {
+      if (status === "authenticated" && session?.user?.id) {
+        console.log('[PING-ONLINE] frontend ping for userId:', session.user.id);
+        await fetch("/api/ping-online", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: session.user.id }),
+        });
+      }
+    };
+    if (status === "authenticated" && session?.user?.id) {
+      ping();
+      interval = setInterval(() => ping(), 30000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+      // Ping offline à l'unmount
+      if (status === "authenticated" && session?.user?.id) {
+        fetch("/api/set-online", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: session.user.id, is_online: false }),
+        });
+      }
+    };
+  }, [status, session]);
 
   useEffect(() => {
     if (status === "unauthenticated" && onUnauthenticated) {

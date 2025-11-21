@@ -1,8 +1,10 @@
 "use client";
 
+
 import Image from "next/image";
 import { Heart, MapPin, Calendar, Lock } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
+import { getTranslation } from '@/lib/i18n/getTranslation';
 
 interface UserCardProps {
   user: {
@@ -12,6 +14,8 @@ interface UserCardProps {
     image: string | null;
     age: number | null;
     location: string | null;
+    is_online?: boolean;
+    last_seen?: string | null;
   } | null;
   status: string;
   statusLabel: {
@@ -27,22 +31,34 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
   const router = useRouter();
   const params = useParams();
   const lang = params.lang as string;
+  const t = getTranslation(lang as 'fr' | 'en');
 
   if (!user) {
     return (
       <div className="bg-gradient-to-br from-[#2A2E5A]/60 to-[#1C1F3F]/60 rounded-2xl p-6 border border-white/10 backdrop-blur-sm">
         <div className="text-white/40 text-center py-8">
-          Utilisateur non trouvé
+          {t.userNotFound || 'Utilisateur non trouvé'}
         </div>
       </div>
     );
   }
+
 
   const isMatched = status === "matched";
   // Les admirateurs sont floutés tant qu'il n'y a pas de match
   const isBlurred = type === "admirer" && !isMatched;
   // La card n'est cliquable que si c'est un crush OU si c'est un admirer avec match
   const isClickable = type === "crush" || isMatched;
+
+  // Online logic: only show if is_online true AND last_seen < 2min
+  let isReallyOnline = false;
+  if (user.is_online && user.last_seen) {
+    const lastSeen = new Date(user.last_seen).getTime();
+    const now = Date.now();
+    if (now - lastSeen < 120000) {
+      isReallyOnline = true;
+    }
+  }
 
   const handleClick = () => {
     if (!isClickable) return; // Empêcher le clic si la card est bloquée
@@ -89,8 +105,8 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
                 </div>
               )}
             </div>
-            {/* Online indicator - masqué si blurred */}
-            {!isBlurred && (
+            {/* Online indicator - affiché seulement si l'utilisateur est vraiment en ligne et non blurred */}
+            {!isBlurred && isReallyOnline && (
               <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-br from-green-400 to-green-600 rounded-full border-2 border-[#1C1F3F] shadow-lg" />
             )}
           </div>
@@ -101,9 +117,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
             }`}>
               {isBlurred ? "••••••" : user.name}
             </h4>
-            <p className={`text-white/50 text-sm truncate mb-2 ${isBlurred ? "blur-sm" : ""}`}>
-              {isBlurred ? "••••••@••••.•••" : user.email}
-            </p>
+            {/* Email masqué sur les cards de crushs/admirers */}
           </div>
         </div>
 
@@ -112,7 +126,11 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           {user.age && (
             <div className={`flex items-center gap-2 text-white/70 ${isBlurred ? "blur-sm" : ""}`}>
               <Calendar size={16} className="text-[#FF4F81]/70 flex-shrink-0" />
-              <span className="text-sm">{isBlurred ? "•• ans" : `${user.age} ans`}</span>
+              <span className="text-sm">
+                {isBlurred
+                  ? (lang === 'fr' ? '•• ans' : '•• years')
+                  : t.addcrush.age.replace("{{count}}", String(user.age))}
+              </span>
             </div>
           )}
           {user.location && (
@@ -151,7 +169,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           {isClickable ? (
             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <span className="text-xs text-[#FF4F81] font-medium">
-                Voir plus →
+                {lang === 'fr' ? 'Voir plus →' : 'See more →'}
               </span>
             </div>
           ) : (

@@ -1,4 +1,5 @@
 {
+  "userNotFound": "Utilisateur non trouvé",
   "home": {
     "pageAriaLabel": "Page d'accueil de WhoLikeMe",
     "logoAlt": "Logo WhoLikeMe",
@@ -16,21 +17,29 @@
     "descriptionNotAuthenticated": "Connectez-vous pour commencer à ajouter des crushes",
     "buttonText": "Ajouter un crush",
     "buttonAriaLabel": "Ajouter un nouveau crush",
-    "searchPlaceholder": "Rechercher par nom ou email...",
     "searching": "Recherche en cours...",
-    "noResults": "Aucun utilisateur trouvé",
+  "noResults": "Aucun utilisateur trouvé",
+  "tryAnotherSearch": "Essayez une autre recherche",
+  "searchHelpTitle": "Recherchez un utilisateur par nom ou email",
+  "searchHelpSubtitle": "Commencez à taper pour voir les résultats",
+  "searchPlaceholder": "Rechercher par nom ou email...",
+  "modalTitle": "Ajouter un crush",
     "addButton": "Ajouter",
     "adding": "Ajout...",
     "status": {
       "pending": "En attente",
       "matched": "Match !"
     },
+    "age": "{{count}} ans",
     "messages": {
-      "success": "Crush ajouté avec succès !",
-      "match": "🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !",
-      "alreadyAdded": "Vous avez déjà ajouté cette personne",
-      "error": "Erreur lors de l'ajout du crush"
+  "success": "Crush ajouté avec succès !",
+  "match": "🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !",
+  "alreadyAdded": "Crush",
+  "error": "Erreur lors de l'ajout du crush"
     }
+  ,
+  "crushesAdded": "{{count}} crush ajouté",
+  "crushesAddedPlural": "{{count}} crushes ajoutés"
   },
   "matchcrush": {
     "illustrationAlt": "Illustration Match",
@@ -42,6 +51,9 @@
       "matched": "Match !",
       "admires": "Vous admire"
     }
+  ,
+  "admirers": "{{count}} personne vous admire",
+  "admirersPlural": "{{count}} personnes vous admirent"
   },
   "notifications": {
     "title": "Notifications",
@@ -347,6 +359,12 @@
       "location": {
         "label": "Localisation",
         "placeholder": "Paris, France"
+      },
+      "gender": {
+        "label": "Sexe",
+        "male": "Homme",
+        "female": "Femme",
+        "other": "Autre"
       }
     },
     "about": {
@@ -420,8 +438,9 @@
     "uploading": "Upload de la photo..."
   },
   "messages": {
-    "success": "Profil mis à jour avec succès !",
-    "error": "Erreur lors de la sauvegarde"
+  "success": "Profil mis à jour avec succès !",
+  "error": "Erreur lors de la sauvegarde",
+  "formIncomplete": "Merci de remplir tous les champs, de choisir un sexe et d'ajouter au moins 2 centres d'intérêt."
   }
 }
 }

@@ -15,7 +15,6 @@ import { CrushListSkeleton } from "../components/SkeletonLoader";
 import Header from "../components/header";
 import UserCard from "../components/UserCard";
 import PageTransition from "../components/PageTransition";
-import LoadingState from "../components/LoadingState";
 
 interface CrushUser {
   id: string;
@@ -129,10 +128,8 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
       
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 mb-20 xl:mb-0 overflow-y-auto">
         {/* Afficher le loader pendant que l'authentification se charge */}
-        {isAuthLoading ? (
-          <LoadingState message="Chargement..." />
-        ) : /* Si l'utilisateur est connecté et charge ses crushes */
-        isAuthenticated && isLoadingCrushes ? (
+  {isAuthLoading ? null : /* Si l'utilisateur est connecté et charge ses crushes */
+  isAuthenticated && isLoadingCrushes ? (
           <PageTransition isLoading={isLoadingCrushes}>
             <div className="space-y-8">
               <div className="text-center space-y-4">
@@ -205,7 +202,9 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                   </h2>
                 </div>
                 <p className="text-white/60 text-base sm:text-lg mb-6">
-                  {crushes.length} {crushes.length > 1 ? 'crushes ajoutés' : 'crush ajouté'}
+                  {crushes.length > 1
+                    ? t.addcrush.crushesAddedPlural.replace("{{count}}", String(crushes.length))
+                    : t.addcrush.crushesAdded.replace("{{count}}", String(crushes.length))}
                 </p>
                 
                 <button
@@ -263,6 +262,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
           handleClose={() => setShowAddCrushModal(false)}
           currentUserId={user.id}
           onCrushAdded={fetchCrushes}
+          existingCrushes={crushes.map(c => c.user).filter((u): u is CrushUser => !!u)}
         />
       )}
       

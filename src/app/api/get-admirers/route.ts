@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
       (admirers || []).map(async (admirer) => {
         const { data: user } = await supabase
           .from("users")
-          .select("id, name, email, image, age, location")
+          .select("id, name, email, image, age, location, is_online")
           .eq("id", admirer.user_id)
           .single();
 

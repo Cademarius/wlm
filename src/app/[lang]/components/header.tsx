@@ -242,7 +242,7 @@ const Header = ({ lang }: HeaderProps) => {
               {isSearching ? (
                 <div className="p-8 text-center">
                   <div className="inline-block w-8 h-8 border-4 border-[#FF4F81]/30 border-t-[#FF4F81] rounded-full animate-spin" />
-                  <p className="text-white/60 mt-4">Recherche en cours...</p>
+                  <p className="text-white/60 mt-4">{t.addcrush.searching}</p>
                 </div>
               ) : searchResults.length > 0 ? (
                 <div className="p-2">
@@ -268,7 +268,6 @@ const Header = ({ lang }: HeaderProps) => {
                         <h4 className="text-white font-semibold truncate group-hover:text-[#FF4F81] transition-colors">
                           {searchUser.name}
                         </h4>
-                        <p className="text-white/50 text-sm truncate">{searchUser.email}</p>
                         {searchUser.location && (
                           <p className="text-white/40 text-xs truncate mt-1">{searchUser.location}</p>
                         )}
@@ -282,8 +281,8 @@ const Header = ({ lang }: HeaderProps) => {
               ) : (
                 <div className="p-8 text-center">
                   <UsersIcon size={48} className="text-white/20 mx-auto mb-4" />
-                  <p className="text-white/60">Aucun utilisateur trouvé</p>
-                  <p className="text-white/40 text-sm mt-2">Essayez une autre recherche</p>
+                  <p className="text-white/60">{t.addcrush.noResults}</p>
+                  <p className="text-white/40 text-sm mt-2">{t.addcrush.tryAnotherSearch}</p>
                 </div>
               )}
             </div>
@@ -338,7 +337,7 @@ const Header = ({ lang }: HeaderProps) => {
                 {isSearching ? (
                   <div className="p-8 text-center">
                     <div className="inline-block w-8 h-8 border-4 border-[#FF4F81]/30 border-t-[#FF4F81] rounded-full animate-spin" />
-                    <p className="text-white/60 mt-4">Recherche en cours...</p>
+                    <p className="text-white/60 mt-4">{t.addcrush.searching}</p>
                   </div>
                 ) : searchResults.length > 0 ? (
                   <div className="p-2">
@@ -364,7 +363,6 @@ const Header = ({ lang }: HeaderProps) => {
                           <h4 className="text-white font-semibold truncate text-sm">
                             {searchUser.name}
                           </h4>
-                          <p className="text-white/50 text-xs truncate">{searchUser.email}</p>
                           {searchUser.location && (
                             <p className="text-white/40 text-xs truncate mt-0.5">{searchUser.location}</p>
                           )}
@@ -378,8 +376,8 @@ const Header = ({ lang }: HeaderProps) => {
                 ) : (
                   <div className="p-8 text-center">
                     <UsersIcon size={40} className="text-white/20 mx-auto mb-4" />
-                    <p className="text-white/60 text-sm">Aucun utilisateur trouvé</p>
-                    <p className="text-white/40 text-xs mt-2">Essayez une autre recherche</p>
+                    <p className="text-white/60 text-sm">{t.addcrush.noResults}</p>
+                    <p className="text-white/40 text-xs mt-2">{t.addcrush.tryAnotherSearch}</p>
                   </div>
                 )}
               </div>
@@ -494,6 +492,19 @@ const Header = ({ lang }: HeaderProps) => {
               <button
                 onClick={async () => {
                   setIsMobileMenuOpen(false);
+                  // Mettre à jour le statut en ligne à false avant de déconnecter
+                  try {
+                    const userId = session?.user?.id || user?.id;
+                    if (userId) {
+                      await fetch('/api/set-online', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, is_online: false }),
+                      });
+                    }
+                  } catch (err) {
+                    console.error('Erreur lors de la mise à jour du statut offline:', err);
+                  }
                   await signOut({ callbackUrl: `/${lang}` });
                 }}
                 className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-[#FF4F81]/20 hover:bg-[#FF4F81]/30 border border-[#FF4F81]/50 text-[#FF4F81] font-medium transition-all duration-300 shadow-lg active:scale-95 cursor-pointer"

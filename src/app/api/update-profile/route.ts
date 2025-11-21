@@ -16,7 +16,7 @@ const supabaseAdmin = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, name, age, bio, interests, location, image } = body;
+  const { email, name, age, bio, interests, location, image, gender } = body;
 
     if (!email) {
       return NextResponse.json(
@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
       bio: string | null;
       interests: string[] | null;
       location: string | null;
+      gender?: 'male' | 'female' | 'other' | null;
       updated_at: string;
       image?: string;
     } = {
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
       bio: bio || null,
       interests: interests || null,
       location: location || null,
+      gender: gender || null,
       updated_at: new Date().toISOString(),
     };
 

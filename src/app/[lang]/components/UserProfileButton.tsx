@@ -80,7 +80,22 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
             Mon profil
           </button>
           <button
-            onClick={() => signOut({ callbackUrl: "/" })}
+            onClick={async () => {
+              // Mettre à jour le statut en ligne à false avant de déconnecter
+              try {
+                const userId = user?.id;
+                if (userId) {
+                  await fetch('/api/set-online', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, is_online: false }),
+                  });
+                }
+              } catch (err) {
+                console.error('Erreur lors de la mise à jour du statut offline:', err);
+              }
+              await signOut({ callbackUrl: "/" });
+            }}
             className="w-full px-4 py-2 text-left text-white hover:bg-[#FF4F81]/20 transition-colors duration-200 cursor-pointer"
           >
             Se déconnecter

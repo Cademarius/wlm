@@ -13,10 +13,6 @@ export const authConfig: NextAuthConfig = {
     signIn: "/", // Page de connexion personnalisée
   },
   callbacks: {
-    authorized() {
-      // Vous pouvez ajouter ici la logique pour protéger certaines routes
-      return true;
-    },
     async signIn({ user, account }) {
       // Sauvegarder l'utilisateur dans Supabase via l'API
       if (account?.provider === "google" && user.email) {
@@ -44,6 +40,22 @@ export const authConfig: NextAuthConfig = {
         } catch (error) {
           console.error("Erreur lors de la sauvegarde de l'utilisateur:", error);
           // Continuer la connexion même si la sauvegarde échoue
+        }
+        // Mettre à jour le statut en ligne à true
+        try {
+          const getUserRes = await fetch(`${process.env.NEXTAUTH_URL}/api/get-user?email=${encodeURIComponent(user.email)}`);
+          if (getUserRes.ok) {
+            const userData = await getUserRes.json();
+            if (userData.user && userData.user.id) {
+              await fetch(`${process.env.NEXTAUTH_URL}/api/set-online`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: userData.user.id, is_online: true }),
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Erreur lors de la mise à jour du statut en ligne:', err);
         }
       }
       return true;

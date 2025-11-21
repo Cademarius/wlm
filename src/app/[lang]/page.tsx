@@ -3,9 +3,10 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { use } from "react";
+// import { use } from "react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
+import { use } from 'react';
 
 // Constants d'animation
 const ANIMATION_CONFIG = {
@@ -75,7 +76,7 @@ const illustrations: Illustration[] = [
   }
 ];
 
-export default function HomePage({ params }: { params: Promise<{ lang: Language }> }) {
+export default function Page({ params }: { params: Promise<{ lang: Language }> }) {
   const resolvedParams = use(params);
   const t = getTranslation(resolvedParams.lang);
 
@@ -86,7 +87,7 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
       aria-label={t.home.pageAriaLabel}
     >
       {/* Background optimisé avec Next.js Image - Lazy loading stratégique */}
-      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-[#1a1d3f] via-[#2a2d5f] to-[#1a1d3f]">
+  <div className="fixed inset-0 -z-10 bg-linear-to-br from-[#1a1d3f] via-[#2a2d5f] to-[#1a1d3f]">
         <Image
           src="/images/ui/background.webp"
           alt="Background"
@@ -99,14 +100,14 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
           blurDataURL="data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA="
         />
         {/* Gradient overlay pour améliorer le contraste et la lisibilité */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none" />
+  <div className="absolute inset-0 bg-linear-to-b from-black/20 via-transparent to-black/30 pointer-events-none" />
       </div>
 
       {/* Safe area pour PWA iOS/Android */}
       <div className="h-[env(safe-area-inset-top)]" />
       
       {/* Header - Logo optimisé pour mobile */}
-      <header className="flex-shrink-0 pt-6 pb-4 sm:pt-8 md:pt-10 px-4 flex justify-center z-20">
+  <header className="shrink-0 pt-6 pb-4 sm:pt-8 md:pt-10 px-4 flex justify-center z-20">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -149,8 +150,8 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
             >
               <div className={`relative ${
                 isTopIllustration 
-                  ? 'w-[18vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-[160px] min-w-[70px]'
-                  : 'w-[16vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-[180px] min-w-[80px]'
+                  ? 'w-[18vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-40 min-w-[70px]'
+                  : 'w-[16vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-[180px] min-w-20'
               } aspect-square opacity-70 sm:opacity-80 md:opacity-100`}>
                 <Image 
                   src={src} 
@@ -199,7 +200,7 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
           >
             <Link href={`/${resolvedParams.lang}/addcrush`} className="inline-block">
               <button
-                className="bg-[#FF4F81] hover:bg-[#e04370] active:bg-[#d03d64] transition-all duration-200 text-white font-semibold text-base sm:text-lg md:text-xl px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-white/30 cursor-pointer w-full sm:w-auto min-w-[200px] sm:min-w-[240px]"
+                className="bg-[#FF4F81] hover:bg-[#e04370] active:bg-[#d03d64] transition-all duration-200 text-white font-semibold text-base sm:text-lg md:text-xl px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-white/30 cursor-pointer w-full sm:w-auto min-w-[200px] sm:min-w-60"
                 aria-label={t.home.buttonAriaLabel}
               >
                 {t.home.buttonText}
@@ -221,7 +222,7 @@ export default function HomePage({ params }: { params: Promise<{ lang: Language 
       </main>
 
       {/* Safe area pour barre de navigation PWA */}
-      <div className="h-[env(safe-area-inset-bottom)] flex-shrink-0" />
+  <div className="h-[env(safe-area-inset-bottom)] shrink-0" />
     </div>
   );
 }

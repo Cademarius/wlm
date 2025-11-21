@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+// import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowLeft, Heart, Users, MapPin, Calendar, Mail } from "lucide-react";
+import { Heart, Users, MapPin, Calendar, User as UserIcon } from "lucide-react";
 import { type Language } from '@/lib/i18n/setting';
 import HeaderComponent from "../../components/header";
 import MobileNavBar from "../../components/mobile-nav-bar";
@@ -21,14 +22,16 @@ interface UserProfile {
   image: string | null;
   age: number | null;
   location: string | null;
+  gender?: string | null;
   bio: string | null;
   created_at: string;
 }
 
 export default function UserProfilePage({ params }: UserProfilePageProps) {
-  const router = useRouter();
+  // const router = useRouter();
   const { user: currentUser } = useAuth();
   const [lang, setLang] = React.useState<Language>('fr');
+  const t = React.useMemo(() => getTranslation(lang), [lang]);
   const [userId, setUserId] = React.useState<string>('');
   const [userProfile, setUserProfile] = React.useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -136,19 +139,10 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
         backgroundAttachment: "fixed"
       }}
     >
-      <HeaderComponent lang={lang} />
+  <HeaderComponent lang={lang} />
       
       <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12 mb-20 xl:mb-0 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
-          {/* Back Button */}
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-colors duration-200 group"
-          >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />
-            <span className="text-sm sm:text-base">Retour</span>
-          </button>
-
           {/* Profile Header */}
           {isLoading ? (
             <ProfileHeaderSkeleton />
@@ -188,7 +182,17 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                       {userProfile.age && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
                           <Calendar size={18} className="text-[#FF4F81]" />
-                          <span>{userProfile.age} ans</span>
+                          <span>{t.addcrush?.age ? t.addcrush.age.replace('{{count}}', userProfile.age.toString()) : `${userProfile.age} ans`}</span>
+                        </div>
+                      )}
+                      {userProfile.gender && (
+                        <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
+                          <UserIcon size={18} className="text-[#FF4F81]" />
+                          <span>
+                            {userProfile.gender === 'male' && (t.settings?.sections?.personalInfo?.gender?.male || 'Homme')}
+                            {userProfile.gender === 'female' && (t.settings?.sections?.personalInfo?.gender?.female || 'Femme')}
+                            {userProfile.gender === 'other' && (t.settings?.sections?.personalInfo?.gender?.other || 'Autre')}
+                          </span>
                         </div>
                       )}
                       {userProfile.location && (
@@ -197,10 +201,6 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                           <span>{userProfile.location}</span>
                         </div>
                       )}
-                      <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
-                        <Mail size={18} className="text-[#FF4F81]" />
-                        <span className="truncate max-w-[250px]">{userProfile.email}</span>
-                      </div>
                     </div>
 
                     {/* Stats Section */}
@@ -208,7 +208,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                       <div className="flex gap-6 justify-center md:justify-start">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-[#FF4F81]">{admirersCount}</div>
-                          <div className="text-xs text-white/60">Admirateurs</div>
+                          <div className="text-xs text-white/60">{t.profile?.stats?.admirers || 'Admirateurs'}</div>
                         </div>
                       </div>
                     </div>
@@ -222,28 +222,28 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                         className="bg-[#FF4F81] hover:bg-[#FF3D6D] text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 min-h-[44px]"
                       >
                         <Heart size={20} />
-                        <span className="font-medium">Ajouter un crush</span>
+                        <span className="font-medium">{t.addcrush?.buttonText || 'Ajouter un crush'}</span>
                       </button>
                     )}
                     
                     {isCrush && !isMatch && (
                       <div className="bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px]">
                         <Heart size={20} className="fill-yellow-400" />
-                        <span className="font-medium">Crush ajouté</span>
+                        <span className="font-medium">{t.addcrush?.messages?.alreadyAdded || 'Crush ajouté'}</span>
                       </div>
                     )}
                     
                     {isMatch && (
                       <div className="bg-green-500/20 border-2 border-green-500 text-green-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px]">
                         <Heart size={20} className="fill-green-400" />
-                        <span className="font-bold">Match</span>
+                        <span className="font-bold">{t.addcrush?.status?.matched || 'Match'}</span>
                       </div>
                     )}
                     
                     {isAdmirer && !isMatch && (
                       <div className="bg-blue-500/20 border border-blue-500/50 text-blue-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px] text-sm">
                         <Users size={18} />
-                        <span className="font-medium">Vous admire</span>
+                        <span className="font-medium">{t.matchcrush?.status?.admires || 'Vous admire'}</span>
                       </div>
                     )}
                   </div>
@@ -252,7 +252,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                 {/* Bio */}
                 {userProfile.bio && (
                   <div className="mt-6 pt-6 border-t border-white/10">
-                    <h3 className="text-white font-semibold mb-2">À propos</h3>
+                    <h3 className="text-white font-semibold mb-2">{t.settings?.sections?.about?.title || 'À propos'}</h3>
                     <p className="text-white/70 leading-relaxed">{userProfile.bio}</p>
                   </div>
                 )}
@@ -260,7 +260,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
             </div>
           ) : (
             <div className="bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-2xl p-8 text-center border border-[#FF4F81]/30">
-              <p className="text-white/70">Utilisateur non trouvé</p>
+              <p className="text-white/70">{t.userNotFound || t.addcrush?.noResults || 'Utilisateur non trouvé'}</p>
             </div>
           )}
         </div>

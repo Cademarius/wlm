@@ -1,14 +1,17 @@
 import ProfileCompletionModal from './components/ProfileCompletionModal';
 
-export default function LangLayout({
+export default async function LangLayout({
   children,
+  params
 }: {
   children: React.ReactNode;
+  params: Promise<{ lang: string }>;
 }) {
+  const resolvedParams = await params;
   return (
     <>
       {children}
-      <ProfileCompletionModal />
+      <ProfileCompletionModal lang={resolvedParams.lang} />
     </>
   );
 }

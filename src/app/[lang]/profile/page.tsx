@@ -22,7 +22,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
   const [lang, setLang] = React.useState<Language>('fr');
   const [crushesCount, setCrushesCount] = React.useState(0);
   const [admirersCount, setAdmirersCount] = React.useState(0);
-  const [matchesCount, setMatchesCount] = React.useState(0);
+  // const [matchesCount, setMatchesCount] = React.useState(0);
   const [isLoadingStats, setIsLoadingStats] = React.useState(true);
   const [isInitialLoad, setIsInitialLoad] = React.useState(true);
 
@@ -44,8 +44,8 @@ export default function ProfilePage({ params }: ProfilePageProps) {
         if (crushesResponse.ok) {
           setCrushesCount(crushesData.count || 0);
           // Compter les matches (status === "matched")
-          const matches = crushesData.crushes.filter((c: { status: string }) => c.status === "matched");
-          setMatchesCount(matches.length);
+          // const matches = crushesData.crushes.filter((c: { status: string }) => c.status === "matched");
+          // setMatchesCount(matches.length);
         }
 
         // Fetch admirers
@@ -98,7 +98,12 @@ export default function ProfilePage({ params }: ProfilePageProps) {
           <div className="relative flex flex-col md:flex-row items-center gap-4 sm:gap-6 group">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-[#FF4F81] transition-all duration-300 group-hover:border-[#FF3D6D] group-hover:scale-105 bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F]">
+              <button
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-[#FF4F81] transition-all duration-300 group-hover:border-[#FF3D6D] group-hover:scale-105 bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] p-0"
+                style={{ outline: 'none', border: 'none' }}
+                aria-label="Modifier la photo de profil"
+                onClick={() => router.push(`/${lang}/profile/settings`)}
+              >
                 <Image
                   src={user.image || "/images/users/avatar.webp"}
                   alt={user.name || "User"}
@@ -114,10 +119,11 @@ export default function ProfilePage({ params }: ProfilePageProps) {
                     transform: 'translateZ(0)',
                   }}
                 />
-              </div>
+              </button>
               <button 
                 className="absolute bottom-0 right-0 bg-[#FF4F81] p-2 rounded-full shadow-lg hover:bg-[#FF3D6D] active:scale-90 transition-all duration-200 cursor-pointer touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center hover:rotate-12"
                 aria-label="Edit profile picture"
+                onClick={() => router.push(`/${lang}/profile/settings`)}
               >
                 <Edit2 size={16} className="text-white sm:w-5 sm:h-5" />
               </button>
@@ -128,39 +134,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
               <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{user.name}</h1>
               <p className="text-sm sm:text-base text-white/70 mb-3 sm:mb-4 truncate px-2">{user.email}</p>
               
-              {/* Stats */}
-              <div className="flex justify-center md:justify-start gap-6 sm:gap-8 mt-4 sm:mt-5">
-                <div className="text-center group cursor-pointer" onClick={() => router.push(`/${lang}/addcrush`)}>
-                  <div className="text-2xl sm:text-3xl font-bold text-[#FF4F81] transition-all duration-300 group-hover:scale-110">
-                    {isLoadingStats ? (
-                      <div className="h-8 w-10 bg-[#FF4F81]/20 rounded animate-pulse mx-auto" />
-                    ) : (
-                      crushesCount
-                    )}
-                  </div>
-                  <div className="text-xs sm:text-sm text-white/60 mt-1 transition-colors group-hover:text-white/80">{t.profile.stats.crushes}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl font-bold text-[#FF4F81] transition-all duration-300">
-                    {isLoadingStats ? (
-                      <div className="h-8 w-10 bg-[#FF4F81]/20 rounded animate-pulse mx-auto" />
-                    ) : (
-                      matchesCount
-                    )}
-                  </div>
-                  <div className="text-xs sm:text-sm text-white/60 mt-1">{t.profile.stats.matches}</div>
-                </div>
-                <div className="text-center group cursor-pointer" onClick={() => router.push(`/${lang}/matchcrush`)}>
-                  <div className="text-2xl sm:text-3xl font-bold text-[#FF4F81] transition-all duration-300 group-hover:scale-110">
-                    {isLoadingStats ? (
-                      <div className="h-8 w-10 bg-[#FF4F81]/20 rounded animate-pulse mx-auto" />
-                    ) : (
-                      admirersCount
-                    )}
-                  </div>
-                  <div className="text-xs sm:text-sm text-white/60 mt-1 transition-colors group-hover:text-white/80">{t.profile.stats.admirers}</div>
-                </div>
-              </div>
+              {/* Stats supprimées pour éviter la répétition */}
             </div>
 
             {/* Action Buttons */}
@@ -177,7 +151,22 @@ export default function ProfilePage({ params }: ProfilePageProps) {
               
               {/* Logout Button - Only on XL screens */}
               <button 
-                onClick={() => signOut({ callbackUrl: `/${lang}` })}
+                onClick={async () => {
+                  // Mettre à jour le statut en ligne à false avant de déconnecter
+                  try {
+                    const userId = user?.id;
+                    if (userId) {
+                      await fetch('/api/set-online', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, is_online: false }),
+                      });
+                    }
+                  } catch (err) {
+                    console.error('Erreur lors de la mise à jour du statut offline:', err);
+                  }
+                  await signOut({ callbackUrl: `/${lang}` });
+                }}
                 className="hidden xl:flex bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-red-400 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 px-4 py-3 rounded-full items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 min-h-[44px]"
                 aria-label={t.header.logout}
               >

@@ -1,4 +1,5 @@
 {
+  "userNotFound": "User not found",
   "home": {
     "pageAriaLabel": "WhoLikeMe homepage",
     "logoAlt": "WhoLikeMe Logo",
@@ -16,21 +17,29 @@
     "descriptionNotAuthenticated": "Sign in to start adding crushes",
     "buttonText": "Add a crush",
     "buttonAriaLabel": "Add a new crush",
-    "searchPlaceholder": "Search by name or email...",
     "searching": "Searching...",
-    "noResults": "No users found",
+  "noResults": "No users found",
+  "tryAnotherSearch": "Try another search",
+  "searchHelpTitle": "Search for a user by name or email",
+  "searchHelpSubtitle": "Start typing to see results",
+  "searchPlaceholder": "Search by name or email...",
+  "modalTitle": "Add a crush",
     "addButton": "Add",
     "adding": "Adding...",
     "status": {
       "pending": "Pending",
       "matched": "Match!"
     },
+    "age": "{{count}} years old",
     "messages": {
-      "success": "Crush added successfully!",
-      "match": "🎉 It's a match! You've both added each other!",
-      "alreadyAdded": "You've already added this person",
-      "error": "Error adding crush"
+  "success": "Crush added successfully!",
+  "match": "🎉 It's a match! You've both added each other!",
+  "alreadyAdded": "Crush",
+  "error": "Error adding crush"
     }
+  ,
+  "crushesAdded": "{{count}} crush added",
+  "crushesAddedPlural": "{{count}} crushes added"
   },
   "matchcrush": {
     "illustrationAlt": "Match Illustration",
@@ -42,6 +51,9 @@
       "matched": "Match!",
       "admires": "Admires you"
     }
+  ,
+  "admirers": "{{count}} person admires you",
+  "admirersPlural": "{{count}} people admire you"
   },
   "notifications": {
     "title": "Notifications",
@@ -347,6 +359,12 @@
       "location": {
         "label": "Location",
         "placeholder": "Paris, France"
+      },
+      "gender": {
+        "label": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other"
       }
     },
     "about": {
@@ -420,8 +438,9 @@
     "uploading": "Uploading photo..."
   },
   "messages": {
-    "success": "Profile updated successfully!",
-    "error": "Error saving profile"
+  "success": "Profile updated successfully!",
+  "error": "Error saving profile",
+  "formIncomplete": "Please fill in all fields, select a gender, and add at least 2 interests."
   }
 }
 }

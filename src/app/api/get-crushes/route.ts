@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
       (crushes || []).map(async (crush) => {
         const { data: user } = await supabase
           .from("users")
-          .select("id, name, email, image, age, location")
+          .select("id, name, email, image, age, location, is_online, last_seen")
           .eq("email", crush.crush_name)
           .single();
 

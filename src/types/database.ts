@@ -8,9 +8,11 @@ export interface User {
   bio: string | null;
   interests: string[] | null;
   location: string | null;
+  gender?: 'male' | 'female' | 'other' | null;
   google_id: string | null;
   created_at: string;
   updated_at: string;
+  is_online?: boolean;
 }
 
 export interface Crush {

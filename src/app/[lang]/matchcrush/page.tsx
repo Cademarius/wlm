@@ -10,7 +10,6 @@ import { type Language } from '@/lib/i18n/setting';
 import { Heart } from "lucide-react";
 import UserCard from "../components/UserCard";
 import PageTransition from "../components/PageTransition";
-import LoadingState from "../components/LoadingState";
 import { CrushListSkeleton } from "../components/SkeletonLoader";
 
 interface AdmirerUser {
@@ -93,10 +92,8 @@ const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) =>
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 mb-20 xl:mb-0 overflow-y-auto">
         {/* Afficher le loader pendant que l'authentification se charge */}
-        {isAuthLoading ? (
-          <LoadingState message="Chargement..." />
-        ) : /* Si l'utilisateur est connecté et charge ses admirateurs */
-        isAuthenticated && isLoadingAdmirers ? (
+  {isAuthLoading ? null : /* Si l'utilisateur est connecté et charge ses admirateurs */
+  isAuthenticated && isLoadingAdmirers ? (
           <PageTransition isLoading={isLoadingAdmirers}>
             <div className="space-y-8">
               <div className="text-center space-y-4">
@@ -147,7 +144,9 @@ const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) =>
                   </h2>
                 </div>
                 <p className="text-white/60 text-base sm:text-lg">
-                  {admirers.length} {admirers.length > 1 ? 'personnes vous admirent' : 'personne vous admire'}
+                  {admirers.length > 1
+                    ? t.matchcrush.admirersPlural.replace("{{count}}", String(admirers.length))
+                    : t.matchcrush.admirers.replace("{{count}}", String(admirers.length))}
                 </p>
               </div>
 

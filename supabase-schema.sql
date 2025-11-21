@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
   location TEXT,
   google_id TEXT UNIQUE,
   profile_completion_skips INTEGER DEFAULT 0, -- Nombre de fois que l'utilisateur a reporté la complétion
+  is_online BOOLEAN DEFAULT false,
+  last_seen TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );

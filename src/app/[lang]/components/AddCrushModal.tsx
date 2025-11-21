@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Search, X, Heart, Loader2 } from "lucide-react";
 import Toast from "./Toast";
 import { useToast } from "@/hooks/useToast";
+import { useParams, useRouter } from "next/navigation";
+import { getTranslation } from '@/lib/i18n/getTranslation';
 
 interface User {
   id: string;
@@ -16,18 +18,30 @@ interface User {
   bio: string | null;
 }
 
+
+interface CrushUser {
+  id: string;
+  name: string;
+  email: string | null;
+  image: string | null;
+  age: number | null;
+  location: string | null;
+}
+
 interface AddCrushModalProps {
   showModal: boolean;
   handleClose: () => void;
   currentUserId: string;
   onCrushAdded?: () => void;
+  existingCrushes?: CrushUser[];
 }
 
 const AddCrushModal: React.FC<AddCrushModalProps> = ({ 
   showModal, 
   handleClose,
   currentUserId,
-  onCrushAdded
+  onCrushAdded,
+  existingCrushes = []
 }) => {
   const { toast, success, error: showError, hideToast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
@@ -47,7 +61,9 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        setSearchResults(data.users || []);
+        // Exclure les utilisateurs déjà crushés
+        const existingIds = new Set(existingCrushes.map(u => u.id));
+        setSearchResults((data.users || []).filter((u: User) => !existingIds.has(u.id)));
       } else {
         console.error("Error searching users:", data.error);
         setSearchResults([]);
@@ -139,6 +155,10 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
     }
   };
 
+  const params = useParams();
+  const lang = params.lang as string;
+  const t = getTranslation(lang as 'fr' | 'en');
+  const router = useRouter();
   if (!showModal) return null;
 
   return (
@@ -165,7 +185,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
             <div className="bg-[#FF4F81]/20 p-2 rounded-xl">
               <Heart className="text-[#FF4F81]" size={24} />
             </div>
-            Ajouter un crush
+            {t.addcrush.modalTitle}
           </h2>
           <button
             onClick={handleClose}
@@ -184,7 +204,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Rechercher par nom ou email..."
+              placeholder={t.addcrush.searchPlaceholder}
               className="w-full bg-white/5 border border-white/20 rounded-xl pl-12 pr-4 py-3.5 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] focus:bg-white/10 transition-all"
               autoFocus
             />
@@ -196,26 +216,26 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
           {isSearching ? (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="text-[#FF4F81] animate-spin mb-4" size={48} />
-              <p className="text-white/60">Recherche en cours...</p>
+              <p className="text-white/60">{t.addcrush.searching}</p>
             </div>
           ) : !hasSearched ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <Search className="text-white/20 mb-4" size={64} />
               <p className="text-white/60 text-lg">
-                Recherchez un utilisateur par nom ou email
+                {t.addcrush.searchHelpTitle}
               </p>
               <p className="text-white/40 text-sm mt-2">
-                Commencez à taper pour voir les résultats
+                {t.addcrush.searchHelpSubtitle}
               </p>
             </div>
           ) : searchResults.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="text-white/20 text-6xl mb-4">🔍</div>
               <p className="text-white/60 text-lg">
-                Aucun utilisateur trouvé
+                {t.addcrush.noResults}
               </p>
               <p className="text-white/40 text-sm mt-2">
-                Essayez une autre recherche
+                {t.addcrush.tryAnotherSearch}
               </p>
             </div>
           ) : (
@@ -223,7 +243,8 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               {searchResults.map((user) => (
                 <div
                   key={user.id}
-                  className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF4F81]/30 rounded-xl p-4 transition-all duration-200"
+                  className="bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#FF4F81]/30 rounded-xl p-4 transition-all duration-200 cursor-pointer"
+                  onClick={() => router.push(`/${lang}/user/${user.id}`)}
                 >
                   <div className="flex items-center gap-4">
                     {/* Avatar */}
@@ -242,12 +263,10 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
                       <h3 className="text-white font-semibold text-lg truncate">
                         {user.name}
                       </h3>
-                      <p className="text-white/60 text-sm truncate">
-                        {user.email}
-                      </p>
+                      {/* Email masqué lors de la recherche */}
                       {(user.age || user.location) && (
                         <p className="text-white/40 text-xs mt-1">
-                          {user.age && `${user.age} ans`}
+                          {user.age && t.addcrush.age.replace("{{count}}", String(user.age))}
                           {user.age && user.location && " • "}
                           {user.location}
                         </p>
@@ -256,7 +275,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
 
                     {/* Add Button */}
                     <button
-                      onClick={() => handleAddCrush(user.id)}
+                      onClick={e => { e.stopPropagation(); handleAddCrush(user.id); }}
                       disabled={isAdding === user.id}
                       className="bg-gradient-to-r from-[#FF4F81] to-[#FF3D6D] hover:from-[#FF3D6D] hover:to-[#FF2B59] text-white px-6 py-2.5 rounded-full font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center gap-2 flex-shrink-0 hover:scale-105 active:scale-95"
                     >
@@ -268,7 +287,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
                       ) : (
                         <>
                           <Heart size={16} />
-                          <span className="hidden sm:inline">Ajouter</span>
+                          <span className="hidden sm:inline">{t.addcrush.addButton}</span>
                         </>
                       )}
                     </button>

@@ -1,11 +1,11 @@
 "use client";
 
-import React, { use, useState, useEffect } from "react";
+import React, { use, useState, useEffect, useRef } from "react";
 import { useAuth } from "../../components/AuthGuard";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Camera, MapPin, Heart, Save, ArrowLeft } from "lucide-react";
+import { Camera, MapPin, Heart, Save } from "lucide-react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
 import Header from "../../components/header";
@@ -34,9 +34,13 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
     age: "",
     bio: "",
     location: "",
+    gender: "",
     interests: [] as string[],
     image: "",
   });
+  const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
+  const [showCitySuggestions, setShowCitySuggestions] = useState(false);
+  const cityInputRef = useRef<HTMLInputElement>(null);
 
   const [newInterest, setNewInterest] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -57,7 +61,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const t = getTranslation(lang);
+  const t = getTranslation(lang as Language);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -72,6 +76,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
               age: data.user.age?.toString() || "",
               bio: data.user.bio || "",
               location: data.user.location || "",
+              gender: data.user.gender && ["male","female","other"].includes(data.user.gender) ? data.user.gender : "other",
               interests: data.user.interests || [],
               image: data.user.image || "",
             });
@@ -89,9 +94,41 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
     return null;
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // Si on modifie la ville, lancer l'autocomplétion
+    if (name === "location") {
+      if (value.length >= 2) {
+        fetchCitySuggestions(value);
+      } else {
+        setCitySuggestions([]);
+        setShowCitySuggestions(false);
+      }
+    }
+  };
+
+  // Appel API GeoDB Cities pour suggestions
+  const fetchCitySuggestions = async (query: string) => {
+    try {
+      const res = await fetch(`https://wft-geo-db.p.rapidapi.com/v1/geo/cities?limit=5&namePrefix=${encodeURIComponent(query)}`, {
+        headers: {
+          'X-RapidAPI-Key': process.env.NEXT_PUBLIC_RAPIDAPI_KEY || '',
+          'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+        },
+      });
+      const data = await res.json();
+      if (data.data) {
+        setCitySuggestions(data.data.map((city: { city: string; country: string }) => `${city.city}, ${city.country}`));
+        setShowCitySuggestions(true);
+      } else {
+        setCitySuggestions([]);
+        setShowCitySuggestions(false);
+      }
+    } catch {
+      setCitySuggestions([]);
+      setShowCitySuggestions(false);
+    }
   };
 
   const handleInterestInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -209,6 +246,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
           bio: formData.bio,
           interests: formData.interests,
           location: formData.location,
+           gender: formData.gender,
           image: imageUrl, // Inclure l'image (nouvelle ou existante)
         }),
       });
@@ -222,12 +260,9 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
       // 3. Mettre à jour la session NextAuth
       await updateSession();
       
-      // 4. Rafraîchir les données côté serveur (force le re-fetch)
-      router.refresh();
-      
-      // 5. Reset du preview et du fichier sélectionné
-      setPreviewImage(null);
-      setSelectedFile(null);
+  // 4. Reset du preview et du fichier sélectionné
+  setPreviewImage(null);
+  setSelectedFile(null);
       
       // 6. Mettre à jour le formData localement
       setFormData(prev => ({ 
@@ -271,18 +306,10 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
           backgroundAttachment: "fixed"
         }}
       >
-        <Header lang={lang} />
+  <Header lang={lang as Language} />
       
       <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12 overflow-y-auto mb-20 xl:mb-0">
         <div className="max-w-4xl mx-auto pb-6">
-          {/* Back Button */}
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-white/70 hover:text-white transition-colors duration-200 mb-6 cursor-pointer"
-          >
-            <ArrowLeft size={20} />
-            <span>{t.settings.backButton}</span>
-          </button>
 
           {/* Header */}
           <div className="mb-8">
@@ -325,8 +352,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
                 <div className="flex-1">
                   <p className="text-white/80 text-sm mb-2">
                     {previewImage ? t.settings.sections.profilePhoto.newPhoto : 
-                     formData.image && formData.image !== user.image ? t.settings.sections.profilePhoto.customPhoto : 
-                     t.settings.sections.profilePhoto.googlePhoto}
+                     formData.image && formData.image !== user.image ? t.settings.sections.profilePhoto.customPhoto : ""}
                   </p>
                   <button
                     type="button"
@@ -358,6 +384,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
               <h2 className="text-xl font-bold text-white mb-4">{t.settings.sections.personalInfo.title}</h2>
               
               <div className="space-y-4">
+
                 {/* Nom */}
                 <div>
                   <label htmlFor="name" className="block text-white/80 text-sm font-medium mb-2">
@@ -392,8 +419,36 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
                   />
                 </div>
 
-                {/* Localisation */}
+                {/* Sexe (boutons stylés) */}
                 <div>
+                  <label htmlFor="gender" className="block text-white/80 text-sm font-medium mb-2">
+                    {t.settings.sections.personalInfo.gender.label}
+                  </label>
+                  <div className="flex gap-2">
+                    {[
+                      { value: "male", label: t.settings.sections.personalInfo.gender.male },
+                      { value: "female", label: t.settings.sections.personalInfo.gender.female },
+                      { value: "other", label: t.settings.sections.personalInfo.gender.other },
+                    ].map(option => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, gender: option.value }))}
+                        className={`px-6 py-3 rounded-lg font-medium border transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer
+                          ${formData.gender === option.value
+                            ? 'bg-[#FF4F81] text-white border-[#FF4F81] shadow-lg scale-105'
+                            : 'bg-white/10 text-white/70 border-white/20 hover:bg-[#FF4F81]/20 hover:text-white hover:border-[#FF4F81]'}
+                        `}
+                        aria-pressed={formData.gender === option.value}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Localisation avec autocomplétion */}
+                <div className="relative">
                   <label htmlFor="location" className="flex items-center gap-2 text-white/80 text-sm font-medium mb-2">
                     <MapPin size={16} />
                     {t.settings.sections.personalInfo.location.label}
@@ -402,11 +457,33 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
                     type="text"
                     id="location"
                     name="location"
+                    ref={cityInputRef}
+                    autoComplete="off"
                     value={formData.location}
                     onChange={handleInputChange}
+                    onFocus={() => formData.location.length >= 2 && citySuggestions.length > 0 && setShowCitySuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowCitySuggestions(false), 150)}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81] transition-colors"
                     placeholder={t.settings.sections.personalInfo.location.placeholder}
                   />
+                  {showCitySuggestions && citySuggestions.length > 0 && (
+                    <div className="absolute z-50 w-full mt-1 bg-[#2A2E5A] border border-[#FF4F81]/30 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                      {citySuggestions.map((city, idx) => (
+                        <button
+                          key={city + '-' + idx}
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, location: city }));
+                            setShowCitySuggestions(false);
+                            cityInputRef.current?.blur();
+                          }}
+                          className="w-full text-left px-4 py-3 text-white hover:bg-[#FF4F81]/20 transition-colors border-b border-white/10 last:border-b-0 cursor-pointer"
+                        >
+                          {city}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -543,7 +620,7 @@ export default function ProfileSettingsPage({ params }: SettingsPageProps) {
         </div>
       </main>
       
-      <MobileNavBar className="block xl:hidden" activePage="profile" params={{ lang }} />
+  <MobileNavBar className="block xl:hidden" activePage="profile" params={{ lang: lang as Language }} />
       </div>
     </>
   );
