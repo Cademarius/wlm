@@ -78,22 +78,19 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#1C1F3F" },
   ],
 };
-
-// Interface pour les props du layout avec support i18n
 interface RootLayoutProps {
   children: React.ReactNode;
-  params: Promise<{ lang: Language }>;
+  // Next's LayoutProps provide params as a Promise or it may be undefined.
+  params: Promise<{ lang: Language }> | undefined;
 }
 
 export default async function RootLayout({
   children,
   params
 }: RootLayoutProps) {
-  // Attendre la résolution des paramètres
-  const resolvedParams = await params;
+  // Resolve params (may be undefined in some contexts)
+  const resolvedParams = params ? (await params) : undefined;
   const lang = resolvedParams?.lang || 'fr'; // fallback vers 'fr' si pas de paramètre
-  
-  // Vérification que la langue est supportée
   if (resolvedParams?.lang && !languages.includes(resolvedParams.lang)) {
     notFound();
   }
