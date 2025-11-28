@@ -1,7 +1,80 @@
-
 "use client";
+// Utilitaire pour afficher les erreurs push traduites
+const getPushErrorMessage = (err: string | null, t: { notifications?: { push?: { errors?: Record<string, string> } } }) => {
+  if (!err) return null;
+  if (t.notifications?.push?.errors && t.notifications.push.errors[err]) return t.notifications.push.errors[err];
+  return err;
+};
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
+// Procédé identique à la page notifications
+async function activatePushNotifications() {
+  try {
+    if (!('serviceWorker' in navigator)) throw new Error('Service Worker non supporté');
+    // Enregistrement du Service Worker si non déjà fait
+    try {
+      await navigator.serviceWorker.register('/sw.js');
+    } catch {
+      throw new Error('Erreur enregistrement Service Worker');
+    }
+    // Attente que le SW soit prêt
+    let reg;
+    try {
+      reg = await navigator.serviceWorker.ready;
+    } catch {
+      throw new Error('Service Worker non prêt');
+    }
+    // Demande de permission
+    let permission;
+    try {
+      permission = await Notification.requestPermission();
+    } catch {
+      throw new Error('Erreur permission notification');
+    }
+    if (permission !== "granted") throw new Error("Permission refusée");
+    // Abonnement push
+    const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
+    const urlBase64ToUint8Array = (base64String: string) => {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+      const rawData = atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    };
+    let subscription;
+    try {
+      subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+    } catch {
+      throw new Error('Erreur abonnement push');
+    }
+    // Sérialisation et envoi à l’API
+    const subscriptionJson = JSON.parse(JSON.stringify(subscription));
+    const userId = window?.localStorage?.getItem('userId') || null;
+    if (!userId) throw new Error("Utilisateur non authentifié");
+    const res = await fetch('/api/save-push-subscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId, subscription: subscriptionJson }),
+    });
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {}
+    if (!res.ok) {
+      const apiError = typeof data === 'object' && 'error' in data ? (data as Record<string, unknown>).error as string : undefined;
+      throw new Error(apiError || "Erreur lors de l'enregistrement de l'abonnement");
+    }
+    return true;
+  } catch (e: unknown) {
+    throw new Error(e instanceof Error ? e.message : "Erreur d'abonnement push");
+  }
+}
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -12,6 +85,19 @@ type ProfileCompletionModalProps = {
 };
 
 export default function ProfileCompletionModal({ lang }: ProfileCompletionModalProps) {
+  const { data: session, status } = useSession();
+  // Stocke l'userId dans le localStorage dès que la session est authentifiée
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.id) {
+      localStorage.setItem('userId', session.user.id);
+    }
+  }, [status, session]);
+  // Stocke l'userId dans le localStorage dès que la session est authentifiée
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user?.id) {
+      localStorage.setItem('userId', session.user.id);
+    }
+  }, [status, session]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -25,7 +111,6 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
       }
     }
   };
-  const { data: session, status } = useSession();
   const t = useMemo(() => getTranslation(lang as 'fr' | 'en'), [lang]);
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState({
@@ -37,6 +122,8 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
     newInterest: "",
   });
   const [error, setError] = useState("");
+  const [wantsPush, setWantsPush] = useState(false);
+  const [pushError, setPushError] = useState<string | null>(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   // Langue dynamique via pathname (useMemo plus haut)
@@ -116,12 +203,21 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setPushError(null);
     if (!form.age || !form.location || !form.gender || !form.bio || form.interests.length < 2) {
       setError(
         t.settings?.messages?.formIncomplete
         || "Merci de remplir tous les champs, de choisir un sexe et d'ajouter au moins 2 centres d'intérêt."
       );
       return;
+    }
+    // Si l'utilisateur veut les notifications push, on active
+    if (wantsPush) {
+      const ok = await activatePushNotifications();
+      if (!ok) {
+        setPushError("Impossible d'activer les notifications push. Vérifiez les permissions ou réessayez plus tard.");
+        return;
+      }
     }
     // Appel API pour sauvegarder le profil (à adapter selon votre API)
     try {
@@ -165,8 +261,13 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
       className="fixed inset-0 flex items-center justify-center bg-black z-40 p-1 sm:p-4 overflow-y-auto"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.6)", minHeight: '100dvh' }}
     >
+      {pushError && (
+        <div className="text-red-500 text-sm mb-4 text-center">
+          {getPushErrorMessage(pushError, t)}
+        </div>
+      )}
       <form
-        className="bg-[#1C1F3F] w-full max-w-[98vw] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[600px] flex flex-col gap-6 rounded-[16px] p-2 sm:p-5 md:p-8 max-h-[92dvh] overflow-y-auto shadow-2xl"
+        className="bg-[#1C1F3F] w-full max-w-[98vw] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[600px] flex flex-col gap-6 rounded-2xl p-2 sm:p-5 md:p-8 max-h-[92dvh] overflow-y-auto shadow-2xl"
         style={{ maxHeight: '92dvh', minWidth: 0 }}
         onSubmit={handleSubmit}
         onClick={e => e.stopPropagation()}
@@ -212,9 +313,9 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
             </label>
             <div className="flex gap-2">
               {[
-                { value: "male", label: t.settings?.sections?.personalInfo?.gender?.male || "Homme" },
-                { value: "female", label: t.settings?.sections?.personalInfo?.gender?.female || "Femme" },
-                { value: "other", label: t.settings?.sections?.personalInfo?.gender?.other || "Autre" },
+                { value: "male", label: t.settings?.sections?.personalInfo?.gender?.male },
+                { value: "female", label: t.settings?.sections?.personalInfo?.gender?.female },
+                { value: "other", label: t.settings?.sections?.personalInfo?.gender?.other },
               ].map((option) => (
                   <button
                     key={option.value}
@@ -293,7 +394,12 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
                 name="newInterest"
                 value={form.newInterest}
                 onChange={handleInterestInputChange}
-                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddInterest())}
+                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddInterest();
+                  }
+                }}
                 onFocus={() => {
                   if (form.newInterest.trim().length > 0 && filteredSuggestions.length > 0) {
                     setShowSuggestions(true);
@@ -307,7 +413,7 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
               {/* Dropdown des suggestions */}
               {showSuggestions && filteredSuggestions.length > 0 && (
                 <div className="absolute z-50 w-full mt-2 bg-[#23244a] border border-white/10 rounded-lg shadow-xl max-h-60 overflow-y-auto">
-                  {filteredSuggestions.slice(0, 10).map((suggestion, index) => (
+                  {filteredSuggestions.slice(0, 10).map((suggestion: string, index: number) => (
                     <button
                       key={index}
                       type="button"
@@ -328,6 +434,7 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
                 {t.settings?.sections?.interests?.addButton || "Add"}
               </button>
             </div>
+            
             <div className="flex flex-wrap gap-2">
               {form.interests.map((interest: string, idx: number) => (
                 <span
@@ -349,10 +456,22 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
               {form.interests.length}/10 {t.settings?.sections?.interests?.count || "interests"}
             </p>
           </div>
+          {/* Checkbox notifications push - juste après le compteur d'intérêts */}
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="push-notif-checkbox"
+                checked={wantsPush}
+                onChange={e => setWantsPush(e.target.checked)}
+                className="w-5 h-5 accent-[#FF4F81]"
+              />
+              <label htmlFor="push-notif-checkbox" className="text-white/80 text-sm">
+                {t.settings?.sections?.pushOptin?.label}
+              </label>
+            </div>
+            {pushError && <p className="text-red-400 text-xs mt-1">{pushError}</p>}
         </div>
-
         {error && <p className="text-red-400 text-sm text-center">{error}</p>}
-
         {/* Bouton Valider */}
          <button
            type="submit"

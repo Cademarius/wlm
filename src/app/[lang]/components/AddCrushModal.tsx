@@ -129,11 +129,11 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
       const data = await response.json();
 
       if (response.ok) {
-        if (data.match) {
-          success("🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !");
-        } else {
-          success("✨ Crush ajouté avec succès ! Vous serez notifié s'il vous ajoute aussi.");
-        }
+          if (data.match) {
+            success(t.addcrush.messages.match);
+          } else {
+            success(t.addcrush.messages.success);
+          }
         // Retirer l'utilisateur des résultats
         setSearchResults(prev => prev.filter(user => user.id !== crushUserId));
         
@@ -145,11 +145,11 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
         // Déclencher le rafraîchissement des notifications
         window.dispatchEvent(new Event("refreshNotifications"));
       } else {
-        showError(data.error || "Erreur lors de l'ajout du crush");
+          showError(data.error || t.addcrush.messages.error);
       }
     } catch (error) {
       console.error("Error adding crush:", error);
-      showError("Erreur lors de l'ajout du crush");
+        showError(t.addcrush.messages.error);
     } finally {
       setIsAdding(null);
     }

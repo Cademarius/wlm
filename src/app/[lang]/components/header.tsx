@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { Edit2, Settings, Heart, Users } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { 
   Menu, 
@@ -21,6 +22,7 @@ import LoginModal from "./login";
 import { useAuth } from "./AuthGuard";
 import NotificationBell from "./NotificationBell";
 
+
 interface SearchUser {
   id: string;
   name: string;
@@ -35,6 +37,9 @@ type HeaderProps = {
 };
 
 const Header = ({ lang }: HeaderProps) => {
+  // Ajout des compteurs pour le profil mobile
+  const [crushesCount, setCrushesCount] = useState(0);
+  const [admirersCount, setAdmirersCount] = useState(0);
   const t = getTranslation(lang);
   const pathname = usePathname();
   const router = useRouter();
@@ -47,11 +52,29 @@ const Header = ({ lang }: HeaderProps) => {
   const [searchResults, setSearchResults] = useState<SearchUser[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const fetchStats = async () => {
+      try {
+        const crushesResponse = await fetch(`/api/get-crushes?userId=${user.id}`);
+        const crushesData = await crushesResponse.json();
+        if (crushesResponse.ok) setCrushesCount(crushesData.count || 0);
+        const admirersResponse = await fetch(`/api/get-admirers?userId=${user.id}`);
+        const admirersData = await admirersResponse.json();
+        if (admirersResponse.ok) setAdmirersCount(admirersData.count || 0);
+      } catch  {
+        // ignore
+      }
+    };
+    fetchStats();
+  }, [user?.id]);
   
   // Utiliser l'image de la session si disponible (plus récente)
   const userImage = session?.user?.image || user?.image;
   const userName = session?.user?.name || user?.name;
   
+
   const NAV_LINKS = [
     { id: "mon-fil", label: t.header.navigation.myFeed, href: `/${lang}/feed`, icon: Home },
     { id: "mes-crushs", label: t.header.navigation.myCrushes, href: `/${lang}/addcrush`, icon: HeartTick },
@@ -289,13 +312,20 @@ const Header = ({ lang }: HeaderProps) => {
           )}
         </div>
         
-        {/* Notifications */}
-        <div className="flex-shrink-0">
-          <NotificationBell />
-        </div>
+  {/* Notifications */}
+  <div className="shrink-0">
+    <Link
+      href={`/${lang}/notifications`}
+      className="relative p-2 rounded-full transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF4F81] group"
+      aria-label="Notifications"
+    >
+      <NotificationBell />
+    
+    </Link>
+  </div>
         
         {/* Avatar utilisateur avec photo Google - Cliquable pour ouvrir le profil */}
-        <div className="flex-shrink-0">
+  <div className="shrink-0">
           <UserProfileButton 
             onLoginClick={() => setShowLoginModal(true)}
             userImage={userImage}
@@ -309,7 +339,7 @@ const Header = ({ lang }: HeaderProps) => {
         {isSearchActive ? (
           <div className="absolute inset-0 top-0 left-0 right-0 bg-[#1C1F3F]/98 backdrop-blur-md z-50 animate-[slideDown_0.2s_ease-out] border-b border-[#FF4F81]/50">
             <div className="flex items-center h-14 sm:h-16 md:h-[72px] px-4">
-              <div className="flex items-center w-full bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full overflow-hidden border border-[#FF4F81]/40 shadow-lg">
+              <div className="flex items-center w-full bg-linear-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full overflow-hidden border border-[#FF4F81]/40 shadow-lg">
                 <input
                   type="text"
                   value={searchQuery}
@@ -350,7 +380,7 @@ const Header = ({ lang }: HeaderProps) => {
                           animation: `slideInUp 0.3s ease-out ${index * 0.05}s both`
                         }}
                       >
-                        <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#FF4F81]/50 flex-shrink-0">
+                        <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#FF4F81]/50 shrink-0">
                           <Image
                             src={searchUser.image || "/images/users/avatar.webp"}
                             alt={searchUser.name}
@@ -367,7 +397,7 @@ const Header = ({ lang }: HeaderProps) => {
                             <p className="text-white/40 text-xs truncate mt-0.5">{searchUser.location}</p>
                           )}
                         </div>
-                        <div className="text-[#FF4F81] flex-shrink-0">
+                        <div className="text-[#FF4F81] shrink-0">
                           →
                         </div>
                       </div>
@@ -394,8 +424,11 @@ const Header = ({ lang }: HeaderProps) => {
             </button>
             
             {/* Notifications */}
-            <div className="flex-shrink-0">
-              <NotificationBell />
+            <div className="shrink-0">
+              <Link href={`/${lang}/notifications`} className="relative p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer" aria-label="Notifications">
+  
+                <NotificationBell />
+              </Link>
             </div>
             
             <button
@@ -423,40 +456,70 @@ const Header = ({ lang }: HeaderProps) => {
               WebkitOverflowScrolling: "touch"
             }}
           >
-            {/* User Profile Section */}
+            {/* User Profile Section - contenu de /profile */}
             <div className="mb-8">
-              <button 
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  if (isAuthenticated) {
-                    router.push(`/${lang}/profile`);
-                  } else {
-                    setShowLoginModal(true);
-                  }
-                }}
-                className="w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] border border-[#FF4F81]/30 hover:border-[#FF4F81]/50 transition-all duration-300 shadow-lg cursor-pointer active:scale-95"
-              >
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#FF4F81] shadow-lg flex-shrink-0">
-                  <Image
-                    src={userImage || "/images/users/avatar.webp"}
-                    alt={userName || "User"}
-                    width={64}
-                    height={64}
-                    className="w-full h-full object-cover"
-                  />
+              <div className="flex flex-col items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] border border-[#FF4F81]/30 shadow-lg">
+                {/* Avatar */}
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-[#FF4F81]">
+                    <Image
+                      src={userImage || "/images/users/avatar.webp"}
+                      alt={userName || "User"}
+                      width={80}
+                      height={80}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <button 
+                    className="absolute bottom-0 right-0 bg-[#FF4F81] p-2 rounded-full shadow-lg hover:bg-[#FF3D6D] active:scale-90 transition-all duration-200 cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
+                    aria-label="Edit profile picture"
+                    onClick={() => router.push(`/${lang}/profile/settings`)}
+                  >
+                    <Edit2 size={14} className="text-white" />
+                  </button>
                 </div>
-                <div className="flex-1 min-w-0 text-left">
-                  <p className="text-white font-bold text-lg truncate">{userName || t.header.profile.myProfile}</p>
-                  <p className="text-white/60 text-sm truncate">{t.header.profile.viewProfile}</p>
+                {/* Infos utilisateur */}
+                <div className="text-center w-full">
+                  <h1 className="text-xl font-bold text-white mb-1">{userName}</h1>
+                  <p className="text-sm text-white/70 mb-2 truncate">{session?.user?.email || user?.email}</p>
                 </div>
-              </button>
+                {/* Actions */}
+                <div className="flex flex-col gap-2 w-full">
+                  <button 
+                    onClick={() => router.push(`/${lang}/profile/settings`)}
+                    className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                  >
+                    <Settings size={16} />
+                    <span className="text-sm font-medium">{t.settings.title}</span>
+                  </button>
+                </div>
+              </div>
+              {/* Stats - crushes & admirers */}
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                <div 
+                  className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
+                  onClick={() => router.push(`/${lang}/addcrush`)}
+                >
+                  <Heart className="text-[#FF4F81] mx-auto mb-1" size={18} />
+                  <div className="text-xs text-white/60">{t.profile.stats.crushes}</div>
+                  <div className="text-lg font-bold text-[#FF4F81]">{crushesCount}</div>
+                </div>
+                <div 
+                  className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
+                  onClick={() => router.push(`/${lang}/matchcrush`)}
+                >
+                  <Users className="text-[#FF4F81] mx-auto mb-1" size={18} />
+                  <div className="text-xs text-white/60">{t.profile.stats.admirers}</div>
+                  <div className="text-lg font-bold text-[#FF4F81]">{admirersCount}</div>
+                </div>
+              </div>
             </div>
 
             {/* Language Selector */}
             <div className="mb-6">
               <p className="text-white/60 text-sm font-medium mb-3 px-2">{t.header.language.label}</p>
               <div className="flex items-center justify-center">
-                <div className="flex items-center bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full p-1 border border-[#FF4F81]/30 shadow-lg w-full max-w-sm">
+                <div className="flex items-center bg-linear-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-full p-1 border border-[#FF4F81]/30 shadow-lg w-full max-w-sm">
                   <button
                     onClick={() => {
                       switchLanguage('fr');

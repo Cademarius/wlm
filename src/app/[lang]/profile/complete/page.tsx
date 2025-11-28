@@ -1,5 +1,8 @@
 'use client';
 
+import { useParams } from 'next/navigation';
+import { getTranslation } from '@/lib/i18n/getTranslation';
+
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -12,6 +15,9 @@ const popularInterests = [
 ];
 
 export default function CompleteProfilePage() {
+  const params = useParams();
+  const lang = typeof params?.lang === 'string' ? params.lang : 'fr';
+  const t = getTranslation(lang as 'fr' | 'en');
   const { data: session, status, update } = useSession();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,22 +63,22 @@ export default function CompleteProfilePage() {
 
     // Validation
     if (!formData.age || parseInt(formData.age) < 13 || parseInt(formData.age) > 100) {
-      setError('Veuillez entrer un âge valide (13-100 ans)');
+      setError(t.profile.errors.age);
       return;
     }
 
     if (!formData.location.trim()) {
-      setError('Veuillez entrer votre localisation');
+      setError(t.profile.errors.location);
       return;
     }
 
     if (!formData.bio.trim() || formData.bio.trim().length < 10) {
-      setError('Votre bio doit contenir au moins 10 caractères');
+      setError(t.profile.errors.bio);
       return;
     }
 
     if (formData.interests.length < 3) {
-      setError('Veuillez sélectionner au moins 3 centres d\'intérêt');
+      setError(t.profile.errors.interests);
       return;
     }
 
@@ -94,7 +100,7 @@ export default function CompleteProfilePage() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour du profil');
+        throw new Error(t.profile.errors.update);
       }
 
       // Mettre à jour la session
@@ -103,7 +109,7 @@ export default function CompleteProfilePage() {
       // Rediriger vers le feed
       router.push('/fr/feed');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+  setError(err instanceof Error ? err.message : t.profile.errors.unknown);
     } finally {
       setIsSubmitting(false);
     }

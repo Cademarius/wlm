@@ -16,12 +16,12 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServerSupabaseClient();
 
-    // Rechercher les utilisateurs par nom ou email (excluant l'utilisateur actuel)
+    // Rechercher les utilisateurs uniquement par nom (excluant l'utilisateur actuel)
     const { data: users, error } = await supabase
       .from("users")
       .select("id, name, email, image, age, location, bio")
       .neq("id", currentUserId)
-      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+      .ilike("name", `%${query}%`)
       .limit(20);
 
     if (error) {

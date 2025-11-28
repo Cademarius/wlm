@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { sendPushNotification } from '@/lib/sendPushNotification';
 
 export async function POST(request: NextRequest) {
   try {
@@ -71,7 +72,6 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (insertError) {
-      console.error("Error inserting crush:", insertError);
       return NextResponse.json(
         { error: "Erreur lors de l'ajout du crush" },
         { status: 500 }
@@ -85,10 +85,17 @@ export async function POST(request: NextRequest) {
         user_id: crushUserId,
         type: "new_crush",
         title: "Nouveau crush !",
+        title_en: "New crush!",
         message: `Un utilisateur crush sur vous 💕`,
+        message_en: `Someone has a crush on you 💕`,
         from_user_id: userId,
         is_read: false,
       });
+    // Envoi push pour la notification "new_crush"
+    await sendPushNotification(crushUserId, {
+      title: "Nouveau crush !",
+      body: `Un utilisateur crush sur vous 💕`
+    });
 
     // Vérifier si c'est un match (l'autre personne nous a déjà ajouté)
     const { data: reverseCrush } = await supabase
@@ -107,16 +114,14 @@ export async function POST(request: NextRequest) {
       // C'est un match ! Créer l'entrée dans la table matches
       const [user1, user2] = [userId, crushUserId].sort();
       
-      const { error: matchError } = await supabase
+      await supabase
         .from("matches")
         .insert({
           user1_id: user1,
           user2_id: user2,
         });
 
-      if (matchError && matchError.code !== "23505") { // 23505 = duplicate key (match déjà existant)
-        console.error("Error creating match:", matchError);
-      }
+  // 23505 = duplicate key (match déjà existant)
 
       // Mettre à jour le statut des deux crushs à "matched"
       await supabase
@@ -137,7 +142,9 @@ export async function POST(request: NextRequest) {
             user_id: userId,
             type: "new_match",
             title: "C'est un match ! 🎉",
+            title_en: "It's a match! 🎉",
             message: `Vous et ${crushUser.name} vous êtes mutuellement ajoutés !`,
+            message_en: `You and ${crushUser.name} have mutually added each other!`,
             from_user_id: crushUserId,
             is_read: false,
           },
@@ -145,11 +152,22 @@ export async function POST(request: NextRequest) {
             user_id: crushUserId,
             type: "new_match",
             title: "C'est un match ! 🎉",
+            title_en: "It's a match! 🎉",
             message: `Vous et ${currentUser?.name || "quelqu'un"} vous êtes mutuellement ajoutés !`,
+            message_en: `You and ${currentUser?.name || "someone"} have mutually added each other!`,
             from_user_id: userId,
             is_read: false,
           },
         ]);
+      // Envoi push pour les notifications de match
+      await sendPushNotification(userId, {
+        title: "C'est un match ! 🎉",
+        body: `Vous et ${crushUser.name} vous êtes mutuellement ajoutés !`
+      });
+      await sendPushNotification(crushUserId, {
+        title: "C'est un match ! 🎉",
+        body: `Vous et ${currentUser?.name || "quelqu'un"} vous êtes mutuellement ajoutés !`
+      });
 
       return NextResponse.json({
         success: true,
@@ -163,8 +181,7 @@ export async function POST(request: NextRequest) {
       match: false,
       message: "Crush ajouté avec succès !",
     });
-  } catch (error) {
-    console.error("Error in add-crush API:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

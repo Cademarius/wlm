@@ -84,6 +84,29 @@
     "unreadCountPlural": "{{count}} unread notifications",
     "loading": "Loading notifications...",
     "loginRequired": "Sign in to see your notifications"
+    ,
+    "push": {
+      "label": "Enable push notifications",
+      "enabled": "Notifications enabled",
+      "loading": "Enabling…",
+      "modal": {
+        "title": "Enable push notifications?",
+        "description": "Get an alert as soon as a new notification arrives. You can enable now or later.",
+        "enableNow": "Enable now",
+        "later": "Later"
+      },
+      "errors": {
+        "Service Worker non supporté": "Service Worker not supported by your browser.",
+        "Erreur enregistrement Service Worker": "Error registering Service Worker.",
+        "Service Worker non prêt": "Service Worker is not ready.",
+        "Erreur permission notification": "Error requesting notification permission.",
+        "Permission refusée": "Notification permission denied.",
+        "Erreur abonnement push": "Error during push subscription.",
+        "Utilisateur non authentifié": "User not authenticated.",
+        "Erreur lors de l'enregistrement de l'abonnement": "Error saving push subscription.",
+        "Erreur d'abonnement push": "Push subscription error."
+      }
+    }
   },
   "profile": {
     "stats": {
@@ -96,6 +119,15 @@
       "viewCrushes": "View my crushes",
       "viewMatches": "View my matches",
       "viewAdmirers": "View my admirers"
+    }
+    ,
+    "errors": {
+      "age": "Please enter a valid age (13-100 years)",
+      "location": "Please enter your location",
+      "bio": "Your bio must be at least 10 characters",
+      "interests": "Please select at least 3 interests",
+      "update": "Error while saving profile.",
+      "unknown": "An error occurred."
     }
   },
   "feed": {
@@ -367,6 +399,11 @@
         "other": "Other"
       }
     },
+      "pushOptin": {
+    "label": "Enable push notifications (recommended)",
+    "enabled": "Notifications enabled",
+    "loading": "Enabling…"
+      },
     "about": {
       "title": "About me",
       "placeholder": "Tell us about yourself...",

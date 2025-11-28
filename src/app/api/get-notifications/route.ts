@@ -5,6 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
+    const lang = searchParams.get("lang") || "fr";
 
     if (!userId) {
       return NextResponse.json(
@@ -30,13 +31,23 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Traduction des titres/messages si champs multilingues présents
+    let translatedNotifications = notifications || [];
+    if (translatedNotifications.length > 0 && translatedNotifications[0].title_en) {
+      translatedNotifications = translatedNotifications.map((n) => ({
+        ...n,
+        title: lang === "en" && n.title_en ? n.title_en : n.title,
+        message: lang === "en" && n.message_en ? n.message_en : n.message,
+      }));
+    }
+
     // Compter les notifications non lues
-    const unreadCount = notifications?.filter((n) => !n.is_read).length || 0;
+    const unreadCount = translatedNotifications.filter((n) => !n.is_read).length || 0;
 
     return NextResponse.json({
-      notifications: notifications || [],
+      notifications: translatedNotifications,
       unreadCount,
-      count: notifications?.length || 0,
+      count: translatedNotifications.length,
     });
   } catch (error) {
     console.error("Error in get-notifications API:", error);

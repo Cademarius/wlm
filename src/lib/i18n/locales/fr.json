@@ -84,6 +84,29 @@
     "unreadCountPlural": "{{count}} notifications non lues",
     "loading": "Chargement des notifications...",
     "loginRequired": "Connectez-vous pour voir vos notifications"
+    ,
+    "push": {
+      "label": "Activer les notifications push",
+      "enabled": "Notifications activées",
+      "loading": "Activation…",
+      "modal": {
+        "title": "Activer les notifications push ?",
+        "description": "Recevez une alerte dès qu'une nouvelle notification arrive. Vous pouvez activer maintenant ou plus tard.",
+        "enableNow": "Activer maintenant",
+        "later": "Plus tard"
+      },
+      "errors": {
+        "Service Worker non supporté": "Service Worker non supporté par votre navigateur.",
+        "Erreur enregistrement Service Worker": "Erreur lors de l'enregistrement du Service Worker.",
+        "Service Worker non prêt": "Le Service Worker n'est pas prêt.",
+        "Erreur permission notification": "Erreur lors de la demande de permission de notification.",
+        "Permission refusée": "Permission de notification refusée.",
+        "Erreur abonnement push": "Erreur lors de l'abonnement push.",
+        "Utilisateur non authentifié": "Utilisateur non authentifié.",
+        "Erreur lors de l'enregistrement de l'abonnement": "Erreur lors de l'enregistrement de l'abonnement push.",
+        "Erreur d'abonnement push": "Erreur d'abonnement push."
+      }
+    }
   },
   "profile": {
     "stats": {
@@ -96,6 +119,15 @@
       "viewCrushes": "Voir mes crushes",
       "viewMatches": "Voir mes matchs",
       "viewAdmirers": "Voir mes admirateurs"
+    }
+    ,
+    "errors": {
+      "age": "Veuillez entrer un âge valide (13-100 ans)",
+      "location": "Veuillez entrer votre localisation",
+      "bio": "Votre bio doit contenir au moins 10 caractères",
+      "interests": "Veuillez sélectionner au moins 3 centres d'intérêt",
+      "update": "Erreur lors de la sauvegarde du profil.",
+      "unknown": "Une erreur est survenue."
     }
   },
   "feed": {
@@ -367,6 +399,11 @@
         "other": "Autre"
       }
     },
+      "pushOptin": {
+    "label": "Activer les notifications push (recommandé)",
+    "enabled": "Notifications activées",
+    "loading": "Activation…"
+      },
     "about": {
       "title": "À propos de moi",
       "placeholder": "Parlez-nous de vous...",
