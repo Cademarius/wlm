@@ -37,7 +37,7 @@ self.addEventListener('push', event => {
   const title = data.title || 'Notification';
   const options = {
     body: data.body || '',
-    icon: '/icon512_rounded.png',
+    icon: '/favicon.png',
     badge: '/favicon.png',
     tag: 'notification',
     requireInteraction: false,

@@ -73,10 +73,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#1C1F3F" },
-  ],
+  themeColor: "#FF4F81", // Rose du site pour la barre d'état PWA
 };
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -100,8 +97,14 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#f3336d" />
-        <link rel="apple-touch-icon" href="/images/icons/icon.png" />
+        {/* Theme color pour tous les navigateurs et PWA */}
+        <meta name="theme-color" content="#FF4F81" />
+        <meta name="msapplication-TileColor" content="#FF4F81" />
+        <meta name="msapplication-navbutton-color" content="#FF4F81" />
+        {/* Apple iOS */}
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="apple-touch-icon" href="/icon512_rounded.png" />
       </head>
       <body className="min-h-screen bg-background antialiased">
         <SessionProvider>
