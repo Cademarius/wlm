@@ -473,7 +473,13 @@ const Header = ({ lang }: HeaderProps) => {
                   <button 
                     className="absolute bottom-0 right-0 bg-[#FF4F81] p-2 rounded-full shadow-lg hover:bg-[#FF3D6D] active:scale-90 transition-all duration-200 cursor-pointer min-w-[36px] min-h-[36px] flex items-center justify-center"
                     aria-label="Edit profile picture"
-                    onClick={() => router.push(`/${lang}/profile/settings`)}
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        setShowLoginModal(true);
+                      } else {
+                        router.push(`/${lang}/profile/settings`);
+                      }
+                    }}
                   >
                     <Edit2 size={14} className="text-white" />
                   </button>
@@ -484,35 +490,39 @@ const Header = ({ lang }: HeaderProps) => {
                   <p className="text-sm text-white/70 mb-2 truncate">{session?.user?.email || user?.email}</p>
                 </div>
                 {/* Actions */}
-                <div className="flex flex-col gap-2 w-full">
-                  <button 
-                    onClick={() => router.push(`/${lang}/profile/settings`)}
-                    className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
-                  >
-                    <Settings size={16} />
-                    <span className="text-sm font-medium">{t.settings.title}</span>
-                  </button>
-                </div>
+                {isAuthenticated && (
+                  <div className="flex flex-col gap-2 w-full">
+                    <button 
+                      onClick={() => router.push(`/${lang}/profile/settings`)}
+                      className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer"
+                    >
+                      <Settings size={16} />
+                      <span className="text-sm font-medium">{t.settings.title}</span>
+                    </button>
+                  </div>
+                )}
               </div>
               {/* Stats - crushes & admirers */}
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div 
-                  className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
-                  onClick={() => router.push(`/${lang}/addcrush`)}
-                >
-                  <Heart className="text-[#FF4F81] mx-auto mb-1" size={18} />
-                  <div className="text-xs text-white/60">{t.profile.stats.crushes}</div>
-                  <div className="text-lg font-bold text-[#FF4F81]">{crushesCount}</div>
+              {isAuthenticated && (
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  <div 
+                    className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
+                    onClick={() => router.push(`/${lang}/addcrush`)}
+                  >
+                    <Heart className="text-[#FF4F81] mx-auto mb-1" size={18} />
+                    <div className="text-xs text-white/60">{t.profile.stats.crushes}</div>
+                    <div className="text-lg font-bold text-[#FF4F81]">{crushesCount}</div>
+                  </div>
+                  <div 
+                    className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
+                    onClick={() => router.push(`/${lang}/matchcrush`)}
+                  >
+                    <Users className="text-[#FF4F81] mx-auto mb-1" size={18} />
+                    <div className="text-xs text-white/60">{t.profile.stats.admirers}</div>
+                    <div className="text-lg font-bold text-[#FF4F81]">{admirersCount}</div>
+                  </div>
                 </div>
-                <div 
-                  className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-3 border border-[#FF4F81]/20 text-center cursor-pointer"
-                  onClick={() => router.push(`/${lang}/matchcrush`)}
-                >
-                  <Users className="text-[#FF4F81] mx-auto mb-1" size={18} />
-                  <div className="text-xs text-white/60">{t.profile.stats.admirers}</div>
-                  <div className="text-lg font-bold text-[#FF4F81]">{admirersCount}</div>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Language Selector */}

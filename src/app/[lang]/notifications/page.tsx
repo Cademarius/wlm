@@ -187,16 +187,14 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
     setPushError(null);
     try {
       if (!('serviceWorker' in navigator)) {
-        console.error('Service Worker non supporté');
         setPushError('Service Worker non supporté');
         setPushLoading(false);
         return;
       }
       // Enregistrement du Service Worker si non déjà fait
-      let registration;
       try {
-        registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('Service Worker enregistré:', registration);
+        await navigator.serviceWorker.register('/sw.js');
+        console.log('Service Worker enregistré');
       } catch (err) {
         console.error('Erreur enregistrement Service Worker:', err);
         setPushError('Erreur enregistrement Service Worker');
@@ -207,7 +205,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
       let reg;
       try {
         reg = await navigator.serviceWorker.ready;
-        console.log('Service Worker prêt:', reg);
+        console.log('Service Worker prêt');
       } catch (err) {
         console.error('Erreur Service Worker ready:', err);
         setPushError('Service Worker non prêt');
@@ -217,9 +215,8 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
       // Demande de permission
       let permission;
       try {
-        console.log('Avant Notification.requestPermission');
         permission = await Notification.requestPermission();
-        console.log('Après Notification.requestPermission, valeur:', permission);
+        console.log('Permission notification:', permission);
       } catch (err) {
         console.error('Erreur permission notification:', err);
         setPushError('Erreur permission notification');
@@ -238,14 +235,14 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
           userVisibleOnly: true,
           applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
         });
-        console.log('Abonnement push généré:', subscription);
+        console.log('Abonnement push généré');
       } catch (err) {
         console.error('Erreur abonnement push:', err);
         setPushError('Erreur abonnement push');
         setPushLoading(false);
         return;
       }
-      // Sérialisation et envoi à l’API
+      // Sérialisation et envoi à l'API
       const subscriptionJson = JSON.parse(JSON.stringify(subscription));
       const userId = user?.id;
       if (!userId) {
@@ -253,7 +250,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
         setPushLoading(false);
         return;
       }
-      console.log('Envoi à l’API /api/save-push-subscription:', { userId, subscription: subscriptionJson });
+      console.log("Envoi a l'API /api/save-push-subscription");
       const res = await fetch('/api/save-push-subscription', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -268,70 +265,16 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
       }
       console.log('Données API:', data);
       if (!res.ok) {
-        setPushError('Erreur lors de l’enregistrement de l’abonnement');
-        setPushLoading(false);
-        return;
-      }
-      setPushEnabled(true);
-      setPushError(null);
-    } catch (e) {
-      console.error('Erreur globale subscribePush:', e);
-      setPushError('Erreur globale lors de l’activation push');
-    } finally {
-      setPushLoading(false);
-    }
-    setPushLoading(true);
-    setPushError(null);
-    try {
-      if (!('serviceWorker' in navigator)) {
-        setPushError("Service Worker non supporté");
-        setPushLoading(false);
-        return;
-      }
-      const reg = await navigator.serviceWorker.ready;
-      const permission = await Notification.requestPermission();
-      if (permission !== "granted") {
-        setPushError("Permission refusée");
-        setPushLoading(false);
-        return;
-      }
-      const subscription = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-      });
-      // Sérialise l'abonnement push
-      const subscriptionJson = JSON.parse(JSON.stringify(subscription));
-      console.log('Abonnement push généré:', subscriptionJson);
-      const userId = user?.id;
-      if (!userId) {
-        setPushError("Utilisateur non authentifié");
-        setPushLoading(false);
-        return;
-      }
-      console.log('Envoi à l’API /api/save-push-subscription:', { userId, subscription: subscriptionJson });
-      const res = await fetch('/api/save-push-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, subscription: subscriptionJson }),
-      });
-      console.log('Réponse API status:', res.status);
-      let data = {};
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.error('Erreur parsing JSON API:', err);
-      }
-      console.log('Données API:', data);
-      if (!res.ok) {
-  const apiError = typeof data === 'object' && 'error' in data ? (data as Record<string, unknown>).error as string : undefined;
-  console.error('Erreur API save-push-subscription:', apiError);
-  setPushError(apiError || "Erreur lors de l'enregistrement de l'abonnement");
+        const apiError = typeof data === 'object' && 'error' in data ? (data as Record<string, unknown>).error as string : undefined;
+        console.error('Erreur API save-push-subscription:', apiError);
+        setPushError(apiError || "Erreur lors de l'enregistrement de l'abonnement");
         setPushLoading(false);
         return;
       }
       setPushEnabled(true);
       setPushError(null);
     } catch (e: unknown) {
+      console.error('Erreur globale subscribePush:', e);
       setPushError((e instanceof Error ? e.message : "Erreur d'abonnement push"));
     } finally {
       setPushLoading(false);

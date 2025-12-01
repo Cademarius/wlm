@@ -130,9 +130,50 @@
       "unknown": "Une erreur est survenue."
     }
   },
+  "mobileNavBar": {
+    "feed": "Fil d'actualité",
+    "crush": "Mes Crushes",
+    "matches": "Matchs"
+  },
+  "welcomeModal": {
+    "welcomeLogoAlt": "Logo de bienvenue",
+    "step1": {
+      "title": "Vous êtes nouveau ?",
+      "textBefore": "Commencez par",
+      "addCrushText": "Ajouter un crush",
+      "textAfter": "en cliquant sur le bouton.",
+      "imageAlt": "Étape 1 - Ajouter un crush"
+    },
+    "step2": {
+      "title": "Ensuite ?",
+      "textIntro": "Vous verrez ensuite la liste de vos crushes avec un statut :",
+      "pendingStatus": "En attente",
+      "pendingText": " : si votre crush n'a pas encore répondu.",
+      "acceptedStatus": "Accepté",
+      "acceptedText": " : si votre crush accepte.",
+      "imageAlt": "Étape 2 - Liste des crushes avec statut"
+    },
+    "step3": {
+      "title": "Enfin ?",
+      "textBefore": "Sur la page",
+      "crushPageText": "Qui a un crush sur moi",
+      "textMiddle": ", vous verrez la liste de ceux qui ont un crush sur vous.",
+      "responseText": "Vous pouvez répondre avec :",
+      "yesText": "pour oui (matcher), et :",
+      "noText": "pour non.",
+      "imageAlt": "Étape 3 - Page qui a un crush sur moi avec réponses"
+    },
+    "navigation": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "start": "Commencer",
+      "totalSteps": "3"
+    }
+  },
   "feed": {
-    "illustrationAlt": "Illustration Match",
-    "title": "Bientôt disponible"
+    "illustrationAlt": "Illustration du fil d'actualité",
+    "title": "Bientôt disponible",
+    "description": "Utilisez la recherche en haut pour trouver des utilisateurs et découvrir qui vous admire"
   },
   "footer": {
     "ariaLabel": "Pied de page du site",
@@ -191,46 +232,6 @@
     "privacyLink": "Politique de confidentialité",
     "beforeCookies": "et notre",
     "cookiesLink": "Politique relative aux cookies"
-  }
-},
-"mobileNavBar": {
-  "feed": "Feed",
-  "crush": "Crush",
-  "matches": "Matchs"
-},
-"welcomeModal": {
-  "welcomeLogoAlt": "Logo de bienvenue",
-  "step1": {
-    "title": "Vous êtes nouveau ?",
-    "textBefore": "Commencez par",
-    "addCrushText": "Ajouter un crush",
-    "textAfter": "en cliquant sur le bouton.",
-    "imageAlt": "Étape 1 - Ajouter un crush"
-  },
-  "step2": {
-    "title": "Ensuite ?",
-    "textIntro": "Vous verrez ensuite la liste de vos crushs avec un status :",
-    "pendingStatus": "En attente",
-    "pendingText": " : si votre crush n'a pas encore répondu.",
-    "acceptedStatus": "Accepter",
-    "acceptedText": " : si votre crush accepte.",
-    "imageAlt": "Étape 2 - Liste des crushs avec status"
-  },
-  "step3": {
-    "title": "Enfin ?",
-    "textBefore": "Sur la page",
-    "crushPageText": "Qui ma crush",
-    "textMiddle": ", vous verrez la liste de ceux/celles qui crushs sur vous.",
-    "responseText": "Vous pouvez répondre avec :",
-    "yesText": "pour oui (matcher), et :",
-    "noText": "pour non.",
-    "imageAlt": "Étape 3 - Page qui ma crush avec réponses"
-  },
-  "navigation": {
-    "previous": "Précédent",
-    "next": "Suivant",
-    "start": "Commencer",
-    "totalSteps": "3"
   }
 },
 "legal": {

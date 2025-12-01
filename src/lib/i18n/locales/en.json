@@ -131,8 +131,9 @@
     }
   },
   "feed": {
-    "illustrationAlt": "Match Illustration",
-    "title": "Coming soon"
+    "illustrationAlt": "Feed Illustration",
+    "title": "Coming soon",
+    "description": "Use the search bar at the top to find users and discover who has a crush on you"
   },
   "footer": {
     "ariaLabel": "Site footer",

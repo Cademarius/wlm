@@ -45,7 +45,7 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
                 {t.feed.title}
               </h2>
               <p className="text-lg sm:text-xl text-white/70">
-                Utilisez la recherche en haut pour trouver des utilisateurs et découvrir qui vous admire
+                {t.feed.description}
               </p>
             </div>
           </div>

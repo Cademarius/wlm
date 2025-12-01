@@ -1,39 +1,59 @@
 "use client";
-// Utilitaire pour afficher les erreurs push traduites
-const getPushErrorMessage = (err: string | null, t: { notifications?: { push?: { errors?: Record<string, string> } } }) => {
-  if (!err) return null;
-  if (t.notifications?.push?.errors && t.notifications.push.errors[err]) return t.notifications.push.errors[err];
-  return err;
-};
 
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { getTranslation } from '@/lib/i18n/getTranslation';
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { FaUser, FaMapMarkerAlt, FaHeart, FaStar } from "react-icons/fa";
+
 // Procédé identique à la page notifications
-async function activatePushNotifications() {
+async function activatePushNotifications(userId: string) {
   try {
-    if (!('serviceWorker' in navigator)) throw new Error('Service Worker non supporté');
-    // Enregistrement du Service Worker si non déjà fait
-    try {
-      await navigator.serviceWorker.register('/sw.js');
-    } catch {
-      throw new Error('Erreur enregistrement Service Worker');
+    console.log('[Push] Starting activation for userId:', userId);
+    
+    // 1. Vérifier le support du Service Worker
+    if (!('serviceWorker' in navigator)) {
+      throw new Error('Service Worker non supporté sur ce navigateur');
     }
-    // Attente que le SW soit prêt
+    console.log('[Push] Service Worker supporté');
+    
+    // 2. Vérifier la clé VAPID
+    const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
+    if (!VAPID_PUBLIC_KEY) {
+      throw new Error('Clés VAPID non configurées');
+    }
+    console.log('[Push] VAPID key configured');
+    
+    // 3. Enregistrer le Service Worker
     let reg;
     try {
+      console.log('[Push] Registering Service Worker /sw.js...');
+      await navigator.serviceWorker.register('/sw.js');
+      console.log('[Push] Service Worker registered, waiting for ready state...');
+    } catch (err) {
+      console.error('[Push] Error registering Service Worker:', err);
+      throw new Error('Erreur enregistrement Service Worker');
+    }
+    
+    // 4. Attendre que le Service Worker soit prêt
+    try {
       reg = await navigator.serviceWorker.ready;
-    } catch {
+      console.log('[Push] Service Worker ready');
+    } catch (err) {
+      console.error('[Push] Error waiting for Service Worker ready:', err);
       throw new Error('Service Worker non prêt');
     }
-    // Demande de permission
-    let permission;
-    try {
-      permission = await Notification.requestPermission();
-    } catch {
-      throw new Error('Erreur permission notification');
+    
+    // 5. Demander la permission de notification
+    console.log('[Push] Requesting notification permission...');
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      throw new Error('Permission de notification refusée');
     }
-    if (permission !== "granted") throw new Error("Permission refusée");
-    // Abonnement push
-    const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || "";
+    console.log('[Push] Notification permission granted');
+    
+    // 6. S'abonner aux notifications push
+    console.log('[Push] Subscribing to push...');
     const urlBase64ToUint8Array = (base64String: string) => {
       const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
       const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
@@ -44,41 +64,54 @@ async function activatePushNotifications() {
       }
       return outputArray;
     };
+    
     let subscription;
     try {
       subscription = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
       });
-    } catch {
+      console.log('[Push] Push subscription created');
+    } catch (err) {
+      console.error('[Push] Error creating push subscription:', err);
       throw new Error('Erreur abonnement push');
     }
-    // Sérialisation et envoi à l’API
+    
+    // 7. Sauvegarder l'abonnement sur le serveur
+    console.log('[Push] Saving subscription to server...');
     const subscriptionJson = JSON.parse(JSON.stringify(subscription));
-    const userId = window?.localStorage?.getItem('userId') || null;
-    if (!userId) throw new Error("Utilisateur non authentifié");
+    console.log('[Push] Subscription payload:', subscriptionJson);
+    
     const res = await fetch('/api/save-push-subscription', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId, subscription: subscriptionJson }),
     });
+    
+    console.log('[Push] API response status:', res.status);
+    
     let data = {};
     try {
       data = await res.json();
-    } catch {}
-    if (!res.ok) {
-      const apiError = typeof data === 'object' && 'error' in data ? (data as Record<string, unknown>).error as string : undefined;
-      throw new Error(apiError || "Erreur lors de l'enregistrement de l'abonnement");
+      console.log('[Push] API response data:', data);
+    } catch (err) {
+      console.error('[Push] Error parsing API response:', err);
     }
+    
+    if (!res.ok) {
+      const errorMsg = (data as Record<string, unknown>).error || 'Erreur lors de la sauvegarde';
+      console.error('[Push] API error:', errorMsg);
+      throw new Error(String(errorMsg));
+    }
+    
+    console.log('[Push] Subscription saved successfully');
     return true;
   } catch (e: unknown) {
-    throw new Error(e instanceof Error ? e.message : "Erreur d'abonnement push");
+    const errorMsg = e instanceof Error ? e.message : 'Erreur inconnue';
+    console.error('[Push] Error:', errorMsg);
+    throw new Error(errorMsg);
   }
 }
-import { getTranslation } from '@/lib/i18n/getTranslation';
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { FaUser, FaMapMarkerAlt, FaHeart, FaStar } from "react-icons/fa";
 
 type ProfileCompletionModalProps = {
   lang: string;
@@ -86,18 +119,6 @@ type ProfileCompletionModalProps = {
 
 export default function ProfileCompletionModal({ lang }: ProfileCompletionModalProps) {
   const { data: session, status } = useSession();
-  // Stocke l'userId dans le localStorage dès que la session est authentifiée
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      localStorage.setItem('userId', session.user.id);
-    }
-  }, [status, session]);
-  // Stocke l'userId dans le localStorage dès que la session est authentifiée
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user?.id) {
-      localStorage.setItem('userId', session.user.id);
-    }
-  }, [status, session]);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -213,10 +234,20 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
     }
     // Si l'utilisateur veut les notifications push, on active
     if (wantsPush) {
-      const ok = await activatePushNotifications();
-      if (!ok) {
-        setPushError("Impossible d'activer les notifications push. Vérifiez les permissions ou réessayez plus tard.");
-        return;
+      try {
+        const userId = session?.user?.id;
+        if (!userId) {
+          setPushError("Utilisateur non authentifié");
+          // Ne pas bloquer la sauvegarde du profil si les notifications échouent
+        } else {
+          await activatePushNotifications(userId);
+        }
+      } catch (err) {
+        // Afficher l'erreur mais ne pas bloquer la sauvegarde du profil
+        const errorMsg = err instanceof Error ? err.message : "Impossible d'activer les notifications push. Vérifiez les permissions ou réessayez plus tard.";
+        console.error('[ProfileCompletionModal] Push notification error:', errorMsg);
+        setPushError(errorMsg);
+        // Continuer avec la sauvegarde du profil même si les notifications échouent
       }
     }
     // Appel API pour sauvegarder le profil (à adapter selon votre API)
@@ -261,11 +292,6 @@ export default function ProfileCompletionModal({ lang }: ProfileCompletionModalP
       className="fixed inset-0 flex items-center justify-center bg-black z-40 p-1 sm:p-4 overflow-y-auto"
       style={{ backgroundColor: "rgba(0, 0, 0, 0.6)", minHeight: '100dvh' }}
     >
-      {pushError && (
-        <div className="text-red-500 text-sm mb-4 text-center">
-          {getPushErrorMessage(pushError, t)}
-        </div>
-      )}
       <form
         className="bg-[#1C1F3F] w-full max-w-[98vw] sm:max-w-[420px] md:max-w-[520px] lg:max-w-[600px] flex flex-col gap-6 rounded-2xl p-2 sm:p-5 md:p-8 max-h-[92dvh] overflow-y-auto shadow-2xl"
         style={{ maxHeight: '92dvh', minWidth: 0 }}
