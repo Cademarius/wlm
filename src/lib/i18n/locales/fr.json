@@ -108,6 +108,9 @@
     "genderFemale": "Une fille",
     "genderOther": "Autre",
     "genderUnknown": "—",
+    "hintLabelGender": "Son genre",
+    "hintLabelInitial": "L'initiale de son prénom",
+    "hintLabelCity": "Sa ville",
     "unlockAria": "Débloquer {{hint}}",
     "reciprocalHint": "💡 Ajoute-le/la en secret : si c'est réciproque, tout se révèle gratuitement."
   },

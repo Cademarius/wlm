@@ -19,12 +19,6 @@ export const SLOTS_PACK = { amount: 500, slots: 5 };
 // Relance d'un secret (re-pousser une cible non inscrite à s'inscrire)
 export const BOOST_PRICE = 200;
 
-export const HINT_LABELS: Record<HintType, string> = {
-  gender: "Son genre",
-  initial: "L'initiale de son prénom",
-  city: "Sa ville",
-};
-
 /** Prix attendu pour un produit donné (sert à valider le paiement côté serveur). */
 export function expectedAmount(
   product: ProductKind,

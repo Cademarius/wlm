@@ -108,6 +108,9 @@
     "genderFemale": "A girl",
     "genderOther": "Other",
     "genderUnknown": "—",
+    "hintLabelGender": "Their gender",
+    "hintLabelInitial": "Their first initial",
+    "hintLabelCity": "Their city",
     "unlockAria": "Unlock {{hint}}",
     "reciprocalHint": "💡 Secretly add them: if it's mutual, everything is revealed for free."
   },

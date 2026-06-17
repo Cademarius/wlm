@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Lock, Venus, Type, MapPin, Loader2 } from "lucide-react";
 import { openKkiapay } from "@/lib/kkiapayClient";
-import { HINT_PRICES, HINT_LABELS, type HintType } from "@/lib/products";
+import { HINT_PRICES, type HintType } from "@/lib/products";
 import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 export interface AdmirerHints {
@@ -45,6 +45,13 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
     gender: t.admirerCard.hintFemale,
     initial: t.admirerCard.hintInitial,
     city: t.admirerCard.hintCity,
+  };
+
+  // Libellés des indices (traduits)
+  const hintLabel: Record<HintType, string> = {
+    gender: t.admirerCard.hintLabelGender,
+    initial: t.admirerCard.hintLabelInitial,
+    city: t.admirerCard.hintLabelCity,
   };
 
   const genderLabel = (g?: string | null): string => {
@@ -119,7 +126,7 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
               className="flex items-center justify-between gap-3 bg-white/5 rounded-xl px-3 py-2.5"
             >
               <span className="flex items-center gap-2 text-white/70 text-sm shrink-0">
-                {HINT_ICON[h]} {HINT_LABELS[h]}
+                {HINT_ICON[h]} {hintLabel[h]}
               </span>
 
               {unlocked ? (
@@ -129,7 +136,7 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
                   onClick={() => buyHint(h)}
                   disabled={buying !== null}
                   className="group flex items-center gap-2 disabled:opacity-60"
-                  aria-label={format(t.admirerCard.unlockAria, { hint: HINT_LABELS[h] })}
+                  aria-label={format(t.admirerCard.unlockAria, { hint: hintLabel[h] })}
                 >
                   {/* vraie-fausse valeur floutée pour donner envie */}
                   <span className="blur-[5px] select-none text-white/85 text-sm font-medium">
