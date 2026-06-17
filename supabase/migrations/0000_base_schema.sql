@@ -123,7 +123,8 @@ create index if not exists unlocked_hints_user_idx on public.unlocked_hints (use
 create table if not exists public.viral_invites (
   phone text primary key,
   invite_count integer not null default 0,
-  last_sent_at timestamptz
+  last_sent_at timestamptz,
+  last_channel text
 );
 
 -- ---------------------------------------------------------------------

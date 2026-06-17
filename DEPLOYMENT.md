@@ -48,7 +48,8 @@ WLM utilise **deux bases Supabase distinctes** et se déploie sur **Vercel**.
 | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | clé publique VAPID |
 | `VAPID_PRIVATE_KEY` | clé privée VAPID |
 | `ADMIN_PHONES` | numéros admin E.164, séparés par virgule |
-| `WHATSAPP_*` | quand la roadmap #7 sera branchée |
+| `WHATSAPP_TOKEN` / `WHATSAPP_PHONE_NUMBER_ID` / `WHATSAPP_INVITE_TEMPLATE` | invites virales WhatsApp (optionnel — voir §5) |
+| `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_SMS_FROM` | repli SMS des invites (optionnel — voir §5) |
 
 Après modification des variables → **redéployer** (les variables ne sont lues qu'au build/déploiement).
 
@@ -58,7 +59,19 @@ Après modification des variables → **redéployer** (les variables ne sont lue
 
 Les variables Supabase sont lues via `src/lib/env.ts` (validation *fail-fast*). Si une variable manque en prod, le build/déploiement échoue avec un message explicite (`[env] Variable d'environnement manquante : …`) plutôt qu'une erreur opaque. Le client service_role passe par `src/lib/supabase/service.ts` (`createServiceClient()`).
 
-## 5. Checklist mise en prod
+## 5. Invitations virales (WhatsApp + SMS)
+
+Quand quelqu'un ajoute un numéro **non inscrit**, WLM envoie une invite « quelqu'un t'aime en secret » (sans révéler qui). Deux canaux, avec repli automatique :
+
+1. **WhatsApp** (principal) — API Cloud de Meta. Écrire à un inconnu exige un **message template approuvé** par Meta :
+   - Créer une app WhatsApp Business, récupérer `WHATSAPP_TOKEN` + `WHATSAPP_PHONE_NUMBER_ID`.
+   - Soumettre un template (1 variable = l'URL de l'app), ex. nommé `secret_admirer_invite`, et le mettre dans `WHATSAPP_INVITE_TEMPLATE`.
+2. **SMS** (repli, si WhatsApp échoue/non configuré) — **Twilio** : `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, et un expéditeur (`TWILIO_SMS_FROM` ou `TWILIO_MESSAGING_SERVICE_SID`). Texte libre, pas de template. Remplaçable par Termii/Vonage en réécrivant `src/lib/sms.ts`.
+
+Sans aucune config → **mode stub** : l'invite est *loggée* (pas envoyée) et le cooldown anti-spam (7 j) est respecté. Le canal réellement utilisé est tracé dans `viral_invites.last_channel`.
+⚠️ Sur une base **existante**, exécuter `supabase/migrations/0005_invite_channel.sql` (la colonne est déjà dans `0000` pour les bases neuves).
+
+## 6. Checklist mise en prod
 
 - [ ] Projet Supabase prod créé + `0000_base_schema.sql` exécuté
 - [ ] Auth téléphone activée en prod (provider OTP configuré, pas de test numbers)
@@ -66,4 +79,5 @@ Les variables Supabase sont lues via `src/lib/env.ts` (validation *fail-fast*). 
 - [ ] KkiaPay en **live** (`SANDBOX=0`) avec clés de production
 - [ ] `NEXT_PUBLIC_APP_URL` = domaine de prod
 - [ ] `ADMIN_PHONES` renseigné
+- [ ] (optionnel) Invites virales : template WhatsApp approuvé et/ou Twilio SMS configuré (sinon mode stub)
 - [ ] Test de bout en bout sur le domaine de prod (connexion OTP → ajout secret → paiement réel)
