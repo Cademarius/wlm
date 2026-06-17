@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "./AuthGuard";
+import { defaultAvatar } from "@/lib/avatar";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 
@@ -52,12 +53,12 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
   return (
     <div className="relative group">
       <button
-        className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 hover:scale-110 cursor-pointer border-2 border-transparent hover:border-[#FF4F81] shadow-lg hover:shadow-[#FF4F81]/50"
+        className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 hover:scale-110 cursor-pointer border-2 border-transparent hover:border-[#FF5C8A] shadow-lg hover:shadow-[#FF5C8A]/50"
         onClick={handleClick}
         aria-label="Profil utilisateur"
       >
         <Image
-          src={displayImage || "/images/users/avatar.svg"}
+          src={displayImage || defaultAvatar(user?.profile?.gender)}
           alt={displayName || "Avatar utilisateur"}
           width={50}
           height={50}
@@ -67,14 +68,14 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
 
       {/* Menu déroulant uniquement sur mobile */}
       {isAuthenticated && (
-        <div className="lg:hidden absolute right-0 mt-2 w-48 bg-[#1C1F3F] rounded-lg shadow-xl border border-[#FF4F81]/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+        <div className="lg:hidden absolute right-0 mt-2 w-48 bg-[#1C1F3F] rounded-lg shadow-xl border border-[#FF5C8A]/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
           <div className="p-3 border-b border-white/10">
             <p className="text-white font-medium truncate">{displayName}</p>
             <p className="text-white/60 text-sm truncate">{user?.phone}</p>
           </div>
           <button
             onClick={() => router.push(`/${lang}/profile`)}
-            className="w-full px-4 py-2 text-left text-white hover:bg-[#FF4F81]/20 transition-colors duration-200 cursor-pointer"
+            className="w-full px-4 py-2 text-left text-white hover:bg-[#FF5C8A]/20 transition-colors duration-200 cursor-pointer"
           >
             Mon profil
           </button>
@@ -96,7 +97,7 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
               await signOut();
               router.push(`/${lang}`);
             }}
-            className="w-full px-4 py-2 text-left text-white hover:bg-[#FF4F81]/20 transition-colors duration-200 cursor-pointer"
+            className="w-full px-4 py-2 text-left text-white hover:bg-[#FF5C8A]/20 transition-colors duration-200 cursor-pointer"
           >
             Se déconnecter
           </button>

@@ -101,7 +101,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
             <div className="space-y-8">
               <div className="text-center space-y-4">
                 <div className="h-10 bg-gray-700/40 rounded-lg w-64 mx-auto animate-pulse" />
-                <div className="h-12 bg-[#FF4F81]/20 rounded-xl w-48 mx-auto animate-pulse" />
+                <div className="h-12 bg-[#FF5C8A]/20 rounded-xl w-48 mx-auto animate-pulse" />
               </div>
               <CrushListSkeleton count={6} />
             </div>
@@ -185,11 +185,11 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                       /* Secret vers une personne pas (encore) inscrite */
                       <div
                         key={crush.id}
-                        className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF4F81]/20 flex flex-col gap-3"
+                        className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF5C8A]/20 flex flex-col gap-3"
                         style={{ animation: `slideInUp 0.5s ease-out ${index * 0.1}s both` }}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 rounded-full bg-[#FF4F81]/15 flex items-center justify-center text-2xl">
+                          <div className="w-14 h-14 rounded-full bg-[#FF5C8A]/15 flex items-center justify-center text-2xl">
                             🤫
                           </div>
                           <div className="min-w-0">

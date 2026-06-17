@@ -105,7 +105,7 @@ export default function ProfileSetup() {
               onChange={(e) => setName(e.target.value)}
               maxLength={40}
               placeholder="Ton prénom"
-              className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF4F81]"
+              className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
             />
           </div>
 
@@ -119,7 +119,7 @@ export default function ProfileSetup() {
                   onClick={() => setGender(g.value)}
                   className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition ${
                     gender === g.value
-                      ? "bg-[#FF4F81] text-white"
+                      ? "bg-[#FF5C8A] text-white"
                       : "bg-white/10 text-white/70 hover:bg-white/20"
                   }`}
                 >
@@ -136,16 +136,16 @@ export default function ProfileSetup() {
               onChange={(e) => setLocation(e.target.value)}
               maxLength={60}
               placeholder="Ex : Cotonou"
-              className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF4F81]"
+              className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
             />
           </div>
 
-          {error && <p className="text-sm text-[#FF4F81]">{error}</p>}
+          {error && <p className="text-sm text-[#FF5C8A]">{error}</p>}
 
           <button
             onClick={save}
             disabled={saving}
-            className="rounded-lg bg-[#FF4F81] py-3 font-semibold transition hover:bg-[#e04370] disabled:opacity-50 active:scale-95"
+            className="rounded-lg bg-[#FF5C8A] py-3 font-semibold transition hover:bg-[#e04370] disabled:opacity-50 active:scale-95"
           >
             {saving ? "Enregistrement…" : "Enregistrer"}
           </button>

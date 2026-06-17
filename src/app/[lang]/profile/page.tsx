@@ -8,6 +8,7 @@ import { Camera, Save, ArrowLeft, LogOut } from "lucide-react";
 import { type Language } from "@/lib/i18n/setting";
 import Toast from "../components/Toast";
 import { useToast } from "@/hooks/useToast";
+import { defaultAvatar } from "@/lib/avatar";
 
 type ProfilePageProps = { params: Promise<{ lang: Language }> };
 
@@ -140,7 +141,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             <div className="wlm-card p-6 flex items-center gap-5">
               <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-[#FF5C8A] shrink-0">
                 <Image
-                  src={previewImage || form.image || user.image || "/images/users/avatar.svg"}
+                  src={previewImage || form.image || user.image || defaultAvatar(form.gender || user.profile?.gender)}
                   alt="Photo de profil"
                   width={96}
                   height={96}

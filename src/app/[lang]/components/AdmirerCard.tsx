@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, Heart, Venus, Type, MapPin, Loader2 } from "lucide-react";
+import { Lock, Venus, Type, MapPin, Loader2 } from "lucide-react";
 import { openKkiapay } from "@/lib/kkiapayClient";
 import { HINT_PRICES, HINT_LABELS, type HintType } from "@/lib/products";
 
@@ -25,9 +25,16 @@ interface AdmirerCardProps {
 }
 
 const HINT_ICON: Record<HintType, React.ReactNode> = {
-  gender: <Venus size={16} />,
-  initial: <Type size={16} />,
-  city: <MapPin size={16} />,
+  gender: <Venus size={15} />,
+  initial: <Type size={15} />,
+  city: <MapPin size={15} />,
+};
+
+// Placeholders flous (teaser) — la vraie valeur n'arrive qu'après paiement
+const HINT_PLACEHOLDER: Record<HintType, string> = {
+  gender: "Une femme",
+  initial: "M",
+  city: "Cotonou",
 };
 
 function genderLabel(g?: string | null): string {
@@ -47,6 +54,14 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
 
   const isUnlocked = (h: HintType) =>
     admirer.unlocked.includes(h) || admirer.hints[h] !== undefined;
+
+  const revealed = (h: HintType): string | null => {
+    if (!isUnlocked(h)) return null;
+    if (h === "gender") return genderLabel(admirer.hints.gender);
+    if (h === "initial") return admirer.hints.initial ?? "—";
+    if (h === "city") return admirer.hints.city ?? "—";
+    return null;
+  };
 
   const buyHint = async (hintType: HintType) => {
     setError(null);
@@ -76,52 +91,57 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
     }
   };
 
-  const revealed = (h: HintType): string | null => {
-    if (!isUnlocked(h)) return null;
-    if (h === "gender") return genderLabel(admirer.hints.gender);
-    if (h === "initial") return admirer.hints.initial ?? "—";
-    if (h === "city") return admirer.hints.city ?? "—";
-    return null;
-  };
-
   return (
-    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF4F81]/20 flex flex-col gap-4">
+    <div className="wlm-card p-6 flex flex-col gap-4">
       {/* Teaser flouté */}
       <div className="flex items-center gap-4">
-        <div className="relative w-16 h-16 rounded-2xl bg-[#FF4F81]/15 flex items-center justify-center">
-          <Lock className="text-white/70" size={22} />
+        <div className="relative w-16 h-16 rounded-2xl wlm-btn-gradient flex items-center justify-center shrink-0">
+          <Lock className="text-white" size={22} />
         </div>
         <div className="min-w-0">
-          <p className="text-white font-bold text-lg">Quelqu&apos;un t&apos;aime en secret</p>
-          <p className="text-white/50 text-sm">Découvre des indices 👇</p>
+          <p className="text-white font-bold text-lg leading-tight">
+            Quelqu&apos;un t&apos;aime en secret 💘
+          </p>
+          <p className="text-white/50 text-sm">Débloque des indices pour deviner qui</p>
         </div>
       </div>
 
-      {/* Indices */}
+      {/* Indices : valeur floutée (teaser) → se révèle au paiement */}
       <div className="flex flex-col gap-2">
         {(Object.keys(HINT_PRICES) as HintType[]).map((h) => {
           const value = revealed(h);
+          const unlocked = value !== null;
           return (
             <div
               key={h}
-              className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2"
+              className="flex items-center justify-between gap-3 bg-white/5 rounded-xl px-3 py-2.5"
             >
-              <span className="flex items-center gap-2 text-white/80 text-sm">
+              <span className="flex items-center gap-2 text-white/70 text-sm shrink-0">
                 {HINT_ICON[h]} {HINT_LABELS[h]}
               </span>
-              {value !== null ? (
-                <span className="text-[#FF4F81] font-semibold text-sm">{value}</span>
+
+              {unlocked ? (
+                <span className="text-[#FF5C8A] font-bold text-sm">{value}</span>
               ) : (
                 <button
                   onClick={() => buyHint(h)}
                   disabled={buying !== null}
-                  className="bg-[#FF4F81] hover:bg-[#e04370] text-white text-xs font-medium px-3 py-1.5 rounded-full transition disabled:opacity-50 flex items-center gap-1"
+                  className="group flex items-center gap-2 disabled:opacity-60"
+                  aria-label={`Débloquer ${HINT_LABELS[h]}`}
                 >
-                  {buying === h ? (
-                    <Loader2 className="animate-spin" size={12} />
-                  ) : (
-                    <>Voir · {HINT_PRICES[h]} FCFA</>
-                  )}
+                  {/* vraie-fausse valeur floutée pour donner envie */}
+                  <span className="blur-[5px] select-none text-white/85 text-sm font-medium">
+                    {HINT_PLACEHOLDER[h]}
+                  </span>
+                  <span className="flex items-center gap-1 text-[11px] font-semibold text-white wlm-btn-gradient px-2.5 py-1 rounded-full group-hover:brightness-110 transition">
+                    {buying === h ? (
+                      <Loader2 className="animate-spin" size={12} />
+                    ) : (
+                      <>
+                        <Lock size={11} /> {HINT_PRICES[h]} F
+                      </>
+                    )}
+                  </span>
                 </button>
               )}
             </div>
@@ -129,12 +149,11 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
         })}
       </div>
 
-      {error && <p className="text-[#FF4F81] text-xs">{error}</p>}
+      {error && <p className="text-[#FF5C8A] text-xs">{error}</p>}
 
-      <div className="flex items-center gap-2 pt-2 border-t border-white/10 text-white/40 text-xs">
-        <Heart size={12} className="text-[#FF4F81]" />
-        Ajoute-le/la en secret : si c&apos;est réciproque, tout se révèle 💘
-      </div>
+      <p className="text-white/40 text-xs pt-1 border-t border-white/10 leading-relaxed">
+        💡 Ajoute-le/la en secret : si c&apos;est réciproque, tout se révèle gratuitement.
+      </p>
     </div>
   );
 };

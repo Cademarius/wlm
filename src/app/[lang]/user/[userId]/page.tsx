@@ -135,15 +135,15 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
           {isLoading ? (
             <ProfileHeaderSkeleton />
           ) : userProfile ? (
-            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 border border-[#FF4F81]/30 relative overflow-hidden animate-[slideInUp_0.4s_ease-out]">
+            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 border border-[#FF5C8A]/30 relative overflow-hidden animate-[slideInUp_0.4s_ease-out]">
               {/* Effet de brillance */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4F81]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF5C8A]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
               
               <div className="relative">
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   {/* Avatar */}
                   <div className="relative">
-                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-[#FF4F81] bg-gradient-to-br from-white/[0.08] to-white/[0.03]">
+                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-[#FF5C8A] bg-gradient-to-br from-white/[0.08] to-white/[0.03]">
                       <Image
                         src={userProfile.image || "/images/users/avatar.svg"}
                         alt={userProfile.name || "User"}
@@ -169,13 +169,13 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                     <div className="space-y-2 mt-4">
                       {userProfile.age && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
-                          <Calendar size={18} className="text-[#FF4F81]" />
+                          <Calendar size={18} className="text-[#FF5C8A]" />
                           <span>{t.addcrush?.age ? t.addcrush.age.replace('{{count}}', userProfile.age.toString()) : `${userProfile.age} ans`}</span>
                         </div>
                       )}
                       {userProfile.gender && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
-                          <UserIcon size={18} className="text-[#FF4F81]" />
+                          <UserIcon size={18} className="text-[#FF5C8A]" />
                           <span>
                             {userProfile.gender === 'male' && (t.settings?.sections?.personalInfo?.gender?.male || 'Homme')}
                             {userProfile.gender === 'female' && (t.settings?.sections?.personalInfo?.gender?.female || 'Femme')}
@@ -185,7 +185,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                       )}
                       {userProfile.location && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
-                          <MapPin size={18} className="text-[#FF4F81]" />
+                          <MapPin size={18} className="text-[#FF5C8A]" />
                           <span>{userProfile.location}</span>
                         </div>
                       )}
@@ -195,7 +195,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                     <div className="mt-6 pt-4 border-t border-white/10">
                       <div className="flex gap-6 justify-center md:justify-start">
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-[#FF4F81]">{admirersCount}</div>
+                          <div className="text-2xl font-bold text-[#FF5C8A]">{admirersCount}</div>
                           <div className="text-xs text-white/60">{t.profile?.stats?.admirers || 'Admirateurs'}</div>
                         </div>
                       </div>
@@ -207,7 +207,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                     {!isCrush && !isMatch && (
                       <button
                         onClick={handleAddCrush}
-                        className="bg-[#FF4F81] hover:bg-[#FF3D6D] text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 min-h-[44px]"
+                        className="bg-[#FF5C8A] hover:bg-[#FF3D6D] text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 min-h-[44px]"
                       >
                         <Heart size={20} />
                         <span className="font-medium">{t.addcrush?.buttonText || 'Ajouter un crush'}</span>
@@ -247,7 +247,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
               </div>
             </div>
           ) : (
-            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl p-8 text-center border border-[#FF4F81]/30">
+            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl p-8 text-center border border-[#FF5C8A]/30">
               <p className="text-white/70">{t.userNotFound || t.addcrush?.noResults || 'Utilisateur non trouvé'}</p>
             </div>
           )}

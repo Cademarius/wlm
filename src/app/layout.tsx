@@ -111,9 +111,9 @@ export default async function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="manifest" href="/manifest.json" />
         {/* Theme color pour tous les navigateurs et PWA */}
-        <meta name="theme-color" content="#FF4F81" />
-        <meta name="msapplication-TileColor" content="#FF4F81" />
-        <meta name="msapplication-navbutton-color" content="#FF4F81" />
+        <meta name="theme-color" content="#FF5C8A" />
+        <meta name="msapplication-TileColor" content="#FF5C8A" />
+        <meta name="msapplication-navbutton-color" content="#FF5C8A" />
         {/* Apple iOS */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

@@ -134,7 +134,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             </button>
           </div>
 
-          {error && <p className="text-sm text-[#FF4F81] text-center">{error}</p>}
+          {error && <p className="text-sm text-[#FF5C8A] text-center">{error}</p>}
 
           <button
             type="submit"
@@ -164,7 +164,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             className="bg-white/10 rounded-lg px-3 py-3 text-center text-2xl tracking-[0.4em] outline-none"
           />
 
-          {error && <p className="text-sm text-[#FF4F81] text-center">{error}</p>}
+          {error && <p className="text-sm text-[#FF5C8A] text-center">{error}</p>}
 
           <button
             type="submit"

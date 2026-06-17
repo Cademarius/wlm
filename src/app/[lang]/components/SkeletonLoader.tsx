@@ -48,7 +48,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // Composant de Skeleton pour une carte de crush (UserCard)
 export const CrushCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF4F81]/20 overflow-hidden relative">
+    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF5C8A]/20 overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       
@@ -115,15 +115,15 @@ export const CrushListSkeleton: React.FC<CrushListSkeletonProps> = ({ count = 6 
 // Composant de Skeleton pour le header de profile
 export const ProfileHeaderSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-4 sm:mb-6 border border-[#FF4F81]/30 shadow-2xl overflow-hidden relative">
+    <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-4 sm:mb-6 border border-[#FF5C8A]/30 shadow-2xl overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       
       <div className="relative flex flex-col md:flex-row items-center gap-4 sm:gap-6">
         {/* Avatar skeleton */}
         <div className="relative group">
-          <Skeleton variant="circular" width={128} height={128} className="border-4 border-[#FF4F81]/40" />
-          <div className="absolute bottom-0 right-0 bg-[#FF4F81]/40 p-2 rounded-full w-10 h-10 animate-pulse" />
+          <Skeleton variant="circular" width={128} height={128} className="border-4 border-[#FF5C8A]/40" />
+          <div className="absolute bottom-0 right-0 bg-[#FF5C8A]/40 p-2 rounded-full w-10 h-10 animate-pulse" />
         </div>
         
         {/* User info skeleton */}
@@ -155,13 +155,13 @@ export const ProfileHeaderSkeleton: React.FC = () => {
 // Composant de Skeleton pour les sections de profile
 export const ProfileSectionSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF4F81]/20 overflow-hidden relative">
+    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF5C8A]/20 overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       
       <div className="relative">
         <div className="flex items-center gap-3 mb-3 sm:mb-4">
-          <Skeleton variant="circular" width={48} height={48} className="bg-[#FF4F81]/20" />
+          <Skeleton variant="circular" width={48} height={48} className="bg-[#FF5C8A]/20" />
           <Skeleton width="50%" height={24} className="rounded-lg" />
         </div>
         <Skeleton width="80%" height={16} className="mb-3 opacity-60 rounded" />

@@ -68,9 +68,9 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl overflow-hidden border border-[#FF4F81]/20 transition-all duration-500 transform ${
+      className={`group relative bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl overflow-hidden border border-[#FF5C8A]/20 transition-all duration-500 transform ${
         isClickable 
-          ? "hover:border-[#FF4F81]/60 hover:shadow-2xl hover:shadow-[#FF4F81]/30 hover:scale-[1.03] active:scale-[0.98] cursor-pointer" 
+          ? "hover:border-[#FF5C8A]/60 hover:shadow-2xl hover:shadow-[#FF5C8A]/30 hover:scale-[1.03] active:scale-[0.98] cursor-pointer" 
           : "cursor-not-allowed opacity-90"
       }`}
       style={{
@@ -78,16 +78,16 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
       }}
     >
       {/* Gradient overlay effect on hover */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-[#FF4F81]/0 via-[#FF4F81]/0 to-[#FF4F81]/0 transition-all duration-500 pointer-events-none ${
-        isClickable ? "group-hover:from-[#FF4F81]/5 group-hover:via-[#FF4F81]/10 group-hover:to-[#FF4F81]/5" : ""
+      <div className={`absolute inset-0 bg-gradient-to-br from-[#FF5C8A]/0 via-[#FF5C8A]/0 to-[#FF5C8A]/0 transition-all duration-500 pointer-events-none ${
+        isClickable ? "group-hover:from-[#FF5C8A]/5 group-hover:via-[#FF5C8A]/10 group-hover:to-[#FF5C8A]/5" : ""
       }`} />
       
       <div className="relative p-6">
         {/* Avatar and main info */}
         <div className="flex items-start gap-4 mb-4">
           <div className="relative flex-shrink-0">
-            <div className={`w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#FF4F81]/50 transition-all duration-300 shadow-lg ${
-              isClickable ? "group-hover:border-[#FF4F81] group-hover:shadow-[#FF4F81]/50" : ""
+            <div className={`w-20 h-20 rounded-2xl overflow-hidden border-2 border-[#FF5C8A]/50 transition-all duration-300 shadow-lg ${
+              isClickable ? "group-hover:border-[#FF5C8A] group-hover:shadow-[#FF5C8A]/50" : ""
             }`}>
               <Image
                 src={user.image || "/images/users/avatar.svg"}
@@ -113,7 +113,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           
           <div className="flex-1 min-w-0 pt-1">
             <h4 className={`text-white font-bold text-xl mb-1 truncate transition-colors duration-300 ${
-              isBlurred ? "blur-sm" : isClickable ? "group-hover:text-[#FF4F81]" : ""
+              isBlurred ? "blur-sm" : isClickable ? "group-hover:text-[#FF5C8A]" : ""
             }`}>
               {isBlurred ? "••••••" : user.name}
             </h4>
@@ -125,7 +125,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
         <div className="space-y-2 mb-4">
           {user.age && (
             <div className={`flex items-center gap-2 text-white/70 ${isBlurred ? "blur-sm" : ""}`}>
-              <Calendar size={16} className="text-[#FF4F81]/70 flex-shrink-0" />
+              <Calendar size={16} className="text-[#FF5C8A]/70 flex-shrink-0" />
               <span className="text-sm">
                 {isBlurred
                   ? (lang === 'fr' ? '•• ans' : '•• years')
@@ -135,7 +135,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           )}
           {user.location && (
             <div className={`flex items-center gap-2 text-white/70 ${isBlurred ? "blur-sm" : ""}`}>
-              <MapPin size={16} className="text-[#FF4F81]/70 flex-shrink-0" />
+              <MapPin size={16} className="text-[#FF5C8A]/70 flex-shrink-0" />
               <span className="text-sm truncate">{isBlurred ? "••••••, ••••••" : user.location}</span>
             </div>
           )}
@@ -168,7 +168,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           {/* Action hint */}
           {isClickable ? (
             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <span className="text-xs text-[#FF4F81] font-medium">
+              <span className="text-xs text-[#FF5C8A] font-medium">
                 {lang === 'fr' ? 'Voir plus →' : 'See more →'}
               </span>
             </div>
@@ -184,7 +184,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
       </div>
 
       {/* Bottom gradient decoration */}
-      <div className={`h-1 bg-gradient-to-r from-transparent via-[#FF4F81] to-transparent transition-opacity duration-500 ${
+      <div className={`h-1 bg-gradient-to-r from-transparent via-[#FF5C8A] to-transparent transition-opacity duration-500 ${
         isClickable ? "opacity-0 group-hover:opacity-100" : "opacity-0"
       }`} />
     </div>

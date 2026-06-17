@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerAuthUser, isAdminPhone } from '@/lib/supabase/serverAuth';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { createClient } from "@supabase/supabase-js";
 
 export async function GET(request: Request) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 
     let query = supabase
       .from('matches')

@@ -11,6 +11,7 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
   const { user } = useAuth();
   const [secrets, setSecrets] = useState(0);
   const [admirers, setAdmirers] = useState(0);
+  const [statsLoaded, setStatsLoaded] = useState(false);
 
   useEffect(() => {
     if (!user?.id) return;
@@ -24,6 +25,8 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
         setAdmirers(a.count || 0);
       } catch {
         // ignore
+      } finally {
+        setStatsLoaded(true);
       }
     })();
   }, [user?.id]);
@@ -74,7 +77,11 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
               </div>
               <span className="text-white/70 text-sm">Mes secrets</span>
             </div>
-            <div className="text-4xl font-bold wlm-gradient-text">{secrets}</div>
+            {statsLoaded ? (
+              <div className="text-4xl font-bold wlm-gradient-text">{secrets}</div>
+            ) : (
+              <div className="h-10 w-12 rounded-lg bg-white/10 animate-pulse" />
+            )}
           </Link>
           <Link href={`/${lang}/matchcrush`} className="wlm-card p-6 transition hover:scale-[1.02]">
             <div className="flex items-center gap-2 mb-3">
@@ -83,7 +90,11 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
               </div>
               <span className="text-white/70 text-sm">Mes admirateurs</span>
             </div>
-            <div className="text-4xl font-bold wlm-gradient-text">{admirers}</div>
+            {statsLoaded ? (
+              <div className="text-4xl font-bold wlm-gradient-text">{admirers}</div>
+            ) : (
+              <div className="h-10 w-12 rounded-lg bg-white/10 animate-pulse" />
+            )}
           </Link>
         </div>
 

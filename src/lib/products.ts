@@ -9,8 +9,8 @@ export type ProductKind = "hint" | "slots" | "boost";
 
 export const HINT_PRICES: Record<HintType, number> = {
   gender: 200,
-  initial: 300,
   city: 500,
+  initial: 1000,
 };
 
 // Pack de places supplémentaires pour aimer en secret

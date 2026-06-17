@@ -8,17 +8,17 @@ function PushPromptModal({ open, onEnable, onLater }: { open: boolean; onEnable:
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in">
-      <div className="bg-[#23255A]/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-[#FF4F81]/30 relative">
+      <div className="bg-[#23255A]/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center border border-[#FF5C8A]/30 relative">
         <div className="flex flex-col items-center mb-4">
-          <div className="w-16 h-16 rounded-full bg-[#FF4F81]/20 flex items-center justify-center mb-2 shadow-lg">
-            <Heart className="text-[#FF4F81]" size={36} />
+          <div className="w-16 h-16 rounded-full bg-[#FF5C8A]/20 flex items-center justify-center mb-2 shadow-lg">
+            <Heart className="text-[#FF5C8A]" size={36} />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{t.notifications.push.modal.title}</h2>
         </div>
         <p className="text-white/80 mb-6 text-base leading-relaxed">{t.notifications.push.modal.description}</p>
         <div className="flex flex-col gap-3 mt-2">
           <button
-            className="bg-[#FF4F81] hover:bg-[#e04370] text-white font-semibold px-6 py-3 rounded-xl flex items-center justify-center gap-2 text-lg shadow-md transition-all duration-150 cursor-pointer"
+            className="bg-[#FF5C8A] hover:bg-[#e04370] text-white font-semibold px-6 py-3 rounded-xl flex items-center justify-center gap-2 text-lg shadow-md transition-all duration-150 cursor-pointer"
             onClick={onEnable}
           >
             <ArrowRight className="text-white" size={20} />
@@ -28,7 +28,7 @@ function PushPromptModal({ open, onEnable, onLater }: { open: boolean; onEnable:
             className="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-xl flex items-center justify-center gap-2 text-lg shadow-md transition-all duration-150 cursor-pointer"
             onClick={onLater}
           >
-            <Clock className="text-[#FF4F81]" size={20} />
+            <Clock className="text-[#FF5C8A]" size={20} />
             {t.notifications.push.modal.later}
           </button>
         </div>
@@ -316,6 +316,8 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
           n.id === notificationId ? { ...n, is_read: true } : n
         )
       );
+      // Rafraîchir le badge du header
+      window.dispatchEvent(new Event("refreshNotifications"));
     } catch (error) {
       console.error("Error marking notification as read:", error);
     }
@@ -334,6 +336,8 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, is_read: true }))
       );
+      // Rafraîchir le badge du header
+      window.dispatchEvent(new Event("refreshNotifications"));
     } catch (error) {
       console.error("Error marking all notifications as read:", error);
     }
@@ -363,7 +367,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
       case "new_match":
         return <Sparkles className="text-green-400" size={24} />;
       case "new_crush":
-        return <Heart className="text-[#FF4F81]" size={24} />;
+        return <Heart className="text-[#FF5C8A]" size={24} />;
       default:
         return <Bell className="text-blue-400" size={24} />;
     }
@@ -385,7 +389,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
             onClick={subscribePush}
             disabled={pushEnabled || pushLoading}
             className={`px-4 py-2 rounded-lg transition-colors text-sm font-semibold min-w-11 min-h-11 flex items-center gap-2
-              ${pushEnabled ? "bg-green-600 text-white cursor-default" : "bg-[#FF4F81] hover:bg-[#e04370] text-white"}
+              ${pushEnabled ? "bg-green-600 text-white cursor-default" : "bg-[#FF5C8A] hover:bg-[#e04370] text-white"}
               ${pushLoading ? "opacity-60 cursor-wait" : ""}
             `}
             style={{ touchAction: 'manipulation' }}
@@ -412,7 +416,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
         {/* Afficher le loader pendant que l'authentification se charge */}
         {isAuthLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="text-[#FF4F81] animate-spin mb-4" size={48} />
+            <Loader2 className="text-[#FF5C8A] animate-spin mb-4" size={48} />
             <p className="text-white/60">Chargement...</p>
           </div>
         ) : !isAuthenticated ? (
@@ -459,7 +463,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-[#FF4F81] hover:bg-[#e04370] text-white rounded-lg transition-colors cursor-pointer text-sm sm:text-base min-w-11 min-h-11"
+                    className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-[#FF5C8A] hover:bg-[#e04370] text-white rounded-lg transition-colors cursor-pointer text-sm sm:text-base min-w-11 min-h-11"
                     style={{ touchAction: 'manipulation' }}
                   >
                     <CheckCheck size={18} />
@@ -474,7 +478,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                   onClick={() => setFilter("all")}
                   className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base min-w-11 min-h-11 ${
                     filter === "all"
-                      ? "bg-[#FF4F81] text-white"
+                      ? "bg-[#FF5C8A] text-white"
                       : "bg-white/10 text-white/70 hover:bg-white/20"
                   }`}
                   style={{ touchAction: 'manipulation' }}
@@ -485,7 +489,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                   onClick={() => setFilter("unread")}
                   className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors cursor-pointer text-sm sm:text-base min-w-11 min-h-11 ${
                     filter === "unread"
-                      ? "bg-[#FF4F81] text-white"
+                      ? "bg-[#FF5C8A] text-white"
                       : "bg-white/10 text-white/70 hover:bg-white/20"
                   }`}
                   style={{ touchAction: 'manipulation' }}
@@ -498,7 +502,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
             {/* Liste des notifications */}
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-12">
-                <Loader2 className="text-[#FF4F81] animate-spin mb-4" size={48} />
+                <Loader2 className="text-[#FF5C8A] animate-spin mb-4" size={48} />
                 <p className="text-white/60">{t.notifications.loading}</p>
               </div>
             ) : filteredNotifications.length === 0 ? (
@@ -528,7 +532,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                       onClick={() => !notification.is_read && markAsRead(notification.id)}
                       className={`bg-linear-to-br from-white/[0.08] to-white/[0.03] rounded-xl p-4 sm:p-6 border transition-all duration-300 cursor-pointer ${
                         !notification.is_read
-                          ? "border-[#FF4F81]/50 hover:border-[#FF4F81] shadow-lg shadow-[#FF4F81]/10"
+                          ? "border-[#FF5C8A]/50 hover:border-[#FF5C8A] shadow-lg shadow-[#FF5C8A]/10"
                           : "border-white/10 hover:border-white/20"
                       } min-h-16 sm:min-h-20 flex items-center`}
                       style={{ touchAction: 'manipulation' }}
@@ -540,7 +544,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                             className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center ${
                               notification.type === "new_match"
                                 ? "bg-green-500/20"
-                                : "bg-[#FF4F81]/20"
+                                : "bg-[#FF5C8A]/20"
                             }`}
                           >
                             {getNotificationIcon(notification.type)}
@@ -558,14 +562,14 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                               {notification.title}
                             </h3>
                             {!notification.is_read && (
-                              <div className="w-2 h-2 bg-[#FF4F81] rounded-full animate-pulse" />
+                              <div className="w-2 h-2 bg-[#FF5C8A] rounded-full animate-pulse" />
                             )}
                           </div>
 
                           {/* Avatar et nom de l'utilisateur si disponible */}
                           {fromUser && notification.type !== "new_crush" && (
                             <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-[#FF4F81]/30">
+                              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-[#FF5C8A]/30">
                                 <Image
                                   src={fromUser.image || "/images/users/avatar.svg"}
                                   alt={fromUser.name}
@@ -598,7 +602,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                                   e.stopPropagation();
                                   markAsRead(notification.id);
                                 }}
-                                className="flex items-center gap-1 text-[#FF4F81] hover:text-[#e04370] text-xs sm:text-sm cursor-pointer min-w-9 min-h-9"
+                                className="flex items-center gap-1 text-[#FF5C8A] hover:text-[#e04370] text-xs sm:text-sm cursor-pointer min-w-9 min-h-9"
                                 style={{ touchAction: 'manipulation' }}
                               >
                                 <Check size={16} />

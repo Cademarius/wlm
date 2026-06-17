@@ -154,8 +154,8 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-white/10">
             <h2 className="text-white font-bold text-xl flex items-center gap-3">
-              <div className="bg-[#FF4F81]/20 p-2 rounded-xl">
-                <Heart className="text-[#FF4F81]" size={22} />
+              <div className="bg-[#FF5C8A]/20 p-2 rounded-xl">
+                <Heart className="text-[#FF5C8A]" size={22} />
               </div>
               Ajoute quelqu&apos;un que tu aimes en secret
             </h2>
@@ -202,14 +202,14 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
                 onChange={(e) => setLabel(e.target.value)}
                 maxLength={40}
                 placeholder="Ex: la fille du cours de maths"
-                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF4F81]"
+                className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF5C8A]"
               />
             </div>
 
             <button
               type="submit"
               disabled={isAdding}
-              className="bg-gradient-to-r from-[#FF4F81] to-[#FF3D6D] hover:from-[#FF3D6D] hover:to-[#FF2B59] text-white py-3.5 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 active:scale-95"
+              className="bg-gradient-to-r from-[#FF5C8A] to-[#FF3D6D] hover:from-[#FF3D6D] hover:to-[#FF2B59] text-white py-3.5 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 active:scale-95"
             >
               {isAdding ? (
                 <>
@@ -227,7 +227,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
                 type="button"
                 onClick={buySlots}
                 disabled={buyingSlots}
-                className="border border-[#FF4F81]/50 text-[#FF4F81] hover:bg-[#FF4F81]/10 py-3 rounded-xl font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
+                className="border border-[#FF5C8A]/50 text-[#FF5C8A] hover:bg-[#FF5C8A]/10 py-3 rounded-xl font-semibold transition disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {buyingSlots ? (
                   <>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import { sendPushNotification } from "@/lib/sendPushNotification";
 import { sendSecretAdmirerInvite } from "@/lib/sendSecretAdmirerInvite";
 
@@ -26,7 +26,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
+    );
 
     // Résoudre le numéro cible : soit fourni directement, soit via l'id d'un inscrit
     let phone = crushPhone?.trim();
@@ -47,6 +51,10 @@ export async function POST(request: NextRequest) {
     if (!phone) {
       return NextResponse.json({ error: "Numéro cible manquant" }, { status: 400 });
     }
+
+    // Normalisation : chiffres uniquement (Supabase stocke le téléphone sans "+")
+    // → garantit que crush_phone matche users.phone (sinon aucun match ne se déclenche).
+    phone = phone.replace(/\D/g, "");
 
     // Utilisateur courant (son numéro + son quota)
     const { data: currentUser, error: currentErr } = await supabase
