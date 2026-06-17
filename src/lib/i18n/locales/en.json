@@ -1,78 +1,204 @@
 {
   "userNotFound": "User not found",
-  "home": {
-    "pageAriaLabel": "WhoLikeMe homepage",
-    "logoAlt": "WhoLikeMe Logo",
-    "title": "Who has a secret crush on you?",
-    "description": "Find out who has feelings for you! Add your crushes and see if it's mutual.",
-    "buttonText": "Get Started",
-    "buttonAriaLabel": "Start adding a crush"
+  "common": {
+    "close": "Close",
+    "save": "Save",
+    "saving": "Saving…",
+    "later": "Later",
+    "back": "Back",
+    "loading": "Loading…",
+    "errorGeneric": "Something went wrong.",
+    "loginRequired": "Log in to continue.",
+    "notFound": "User not found"
   },
-  "addcrush": {
-    "illustrationAlt": "Match Illustration",
-    "title": "No crushes yet",
-    "titleWithContent": "My Crushes",
-    "titleNotAuthenticated": "My Crushes",
-    "description": "Start by adding people you're interested in to discover your potential matches",
-    "descriptionNotAuthenticated": "Sign in to start adding crushes",
-    "buttonText": "Add a crush",
-    "buttonAriaLabel": "Add a new crush",
-    "searching": "Searching...",
-  "noResults": "No users found",
-  "tryAnotherSearch": "Try another search",
-  "searchHelpTitle": "Search for a user by name or email",
-  "searchHelpSubtitle": "Start typing to see results",
-  "searchPlaceholder": "Search by name or email...",
-  "modalTitle": "Add a crush",
-    "addButton": "Add",
-    "adding": "Adding...",
-    "status": {
-      "pending": "Pending",
-      "matched": "Match!"
-    },
-    "age": "{{count}} years old",
-    "messages": {
-  "success": "Crush added successfully!",
-  "match": "🎉 It's a match! You've both added each other!",
-  "alreadyAdded": "Crush",
-  "error": "Error adding crush"
-    }
-  ,
-  "crushesAdded": "{{count}} crush added",
-  "crushesAddedPlural": "{{count}} crushes added"
+  "nav": {
+    "home": "Home",
+    "secrets": "Secrets",
+    "admirers": "Admirers",
+    "profile": "My profile"
   },
-  "matchcrush": {
-    "illustrationAlt": "Match Illustration",
-    "title": "No admirers yet",
-    "titleWithContent": "My Admirers",
-    "description": "No one has added you as a crush yet",
-    "descriptionNotAuthenticated": "Sign in to see your admirers",
+  "language": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
+  },
+  "landing": {
+    "ariaLabel": "WLM home page",
+    "title": "Who",
+    "titleHighlight": "secretly loves you",
+    "description": "Secretly add the people you love. If it's mutual, it's revealed 💘 Otherwise, it stays your secret.",
+    "badgeSecret": "🔒 100% secret",
+    "badgePhone": "📱 By number",
+    "badgeReciprocal": "💘 Mutual",
+    "cta": "Get started",
+    "ctaAria": "Start loving in secret"
+  },
+  "feed": {
+    "greeting": "Hi {{name}} 👋",
+    "greetingFallback": "Welcome 👋",
+    "subtitle": "Find out who secretly loves you.",
+    "actionTitle": "Who secretly loves you?",
+    "actionDesc": "Secretly add the people you love. If it's mutual, it's revealed 💘",
+    "actionBtn": "Add in secret",
+    "statSecrets": "My secrets",
+    "statAdmirers": "My admirers",
+    "howTitle": "How it works",
+    "step1Title": "Add a number",
+    "step1Desc": "The person you secretly love — even if they're not signed up.",
+    "step2Title": "It's 100% secret",
+    "step2Desc": "They'll never know it's you.",
+    "step3Title": "If it's mutual…",
+    "step3Desc": "You're both notified 💘"
+  },
+  "secrets": {
+    "emptyTitle": "No secrets yet",
+    "emptyTitleGuest": "Find out who secretly loves you",
+    "emptyDesc": "Add someone you secretly love. They'll never know… unless it's mutual 💘",
+    "emptyDescGuest": "Log in to secretly add the people you love.",
+    "addBtn": "Add in secret",
+    "sectionTitle": "My secrets",
+    "count": "{{count}} person you secretly love",
+    "countPlural": "{{count}} people you secretly love",
+    "pending": "Pending — not signed up yet",
     "status": {
-      "matched": "Match!",
-      "admires": "Admires you"
+      "matched": "Mutual 💘",
+      "pending": "Pending"
     }
-  ,
-  "admirers": "{{count}} person admires you",
-  "admirersPlural": "{{count}} people admire you"
+  },
+  "admirers": {
+    "emptyTitle": "No one yet",
+    "emptyTitleGuest": "Find out who secretly loves you",
+    "emptyDesc": "When someone secretly adds you, they'll appear here (blurred). Unlock hints to learn more 👀",
+    "emptyDescGuest": "Log in to see who secretly loves you.",
+    "sectionTitle": "👀 My admirers",
+    "count": "{{count}} person secretly loves you",
+    "countPlural": "{{count}} people secretly love you",
+    "status": {
+      "matched": "Mutual 💘",
+      "admires": "Secretly loves you"
+    }
+  },
+  "addModal": {
+    "title": "Add someone you secretly love",
+    "desc": "Enter their phone number. It's 100% secret: they'll never know it's you, unless they secretly love you too 💘",
+    "phoneLabel": "Their number",
+    "phonePlaceholder": "The person's number",
+    "nicknameLabel": "A nickname to keep track",
+    "nicknameHint": "(optional, private)",
+    "nicknamePlaceholder": "e.g. the girl from math class",
+    "add": "Add in secret",
+    "adding": "Adding…",
+    "matchToast": "💘 It's mutual!",
+    "addedToast": "Added in secret 🤫",
+    "limitError": "You've reached your limit. Unlock more slots to keep loving in secret.",
+    "errorGeneric": "Something went wrong.",
+    "invalidPhone": "Enter a valid phone number.",
+    "duplicateError": "You've already added this number.",
+    "paying": "Payment…",
+    "unlockSlots": "Unlock +{{slots}} slots · {{amount}} FCFA",
+    "close": "Close"
+  },
+  "admirerCard": {
+    "teaserTitle": "Someone secretly loves you 💘",
+    "teaserSubtitle": "Unlock hints to guess who",
+    "hintFemale": "A woman",
+    "hintInitial": "M",
+    "hintCity": "Cotonou",
+    "genderMale": "A guy",
+    "genderFemale": "A girl",
+    "genderOther": "Other",
+    "genderUnknown": "—",
+    "unlockAria": "Unlock {{hint}}",
+    "reciprocalHint": "💡 Secretly add them: if it's mutual, everything is revealed for free."
+  },
+  "userCard": {
+    "age": "{{count}} yrs",
+    "agePlaceholder": "•• yrs",
+    "locationPlaceholder": "••••••, ••••••",
+    "seeMore": "See more →",
+    "locked": "Locked"
+  },
+  "auth": {
+    "title": "Find out who secretly loves you",
+    "desc": "Enter your number to receive a login code.",
+    "phonePlaceholder": "Your phone number",
+    "whatsapp": "WhatsApp",
+    "sms": "SMS",
+    "sending": "Sending…",
+    "getCode": "Get my code",
+    "codeTitle": "Enter your code",
+    "codeDescWhatsapp": "Sent on WhatsApp to {{phone}}",
+    "codeDescSms": "Sent by SMS to {{phone}}",
+    "verifying": "Verifying…",
+    "login": "Log in",
+    "changeNumber": "← Change number",
+    "resend": "Resend code",
+    "close": "Close",
+    "invalidPhone": "Enter a valid phone number.",
+    "sendError": "Couldn't send the code. Try again.",
+    "enterCode": "Enter the code you received.",
+    "verifyError": "Wrong or expired code. Try again.",
+    "resendError": "Failed to resend the code."
+  },
+  "profile": {
+    "back": "Back",
+    "title": "My profile",
+    "firstName": "First name",
+    "firstNamePlaceholder": "Your first name",
+    "gender": "Gender",
+    "genderFemale": "Woman",
+    "genderMale": "Man",
+    "genderOther": "Other",
+    "city": "City",
+    "cityPlaceholder": "e.g. Cotonou",
+    "changePhoto": "Change photo",
+    "saveHint": "Click Save to confirm",
+    "incompleteError": "Please enter your first name, gender and city.",
+    "fileTypeError": "JPEG, PNG or WebP images only",
+    "fileSizeError": "Image too large (max 5 MB)",
+    "uploading": "Uploading…",
+    "saving": "Saving…",
+    "save": "Save",
+    "logout": "Log out"
+  },
+  "profileSetup": {
+    "title": "Complete your profile in 10 seconds",
+    "desc": "Just 3 details — to reveal your identity on a match 💘 and unlock hints.",
+    "firstName": "First name",
+    "firstNamePlaceholder": "Your first name",
+    "gender": "Gender",
+    "genderFemale": "Woman",
+    "genderMale": "Man",
+    "genderOther": "Other",
+    "city": "City",
+    "cityPlaceholder": "e.g. Cotonou",
+    "incompleteError": "Please enter your first name, gender and city.",
+    "saveError": "Something went wrong. Try again.",
+    "saving": "Saving…",
+    "save": "Save",
+    "later": "Later"
+  },
+  "publicProfile": {
+    "about": "About",
+    "notFound": "User not found"
   },
   "notifications": {
     "title": "Notifications",
     "markAllAsRead": "Mark all as read",
     "markAsRead": "Mark as read",
-    "viewAll": "View all notifications",
     "filters": {
       "all": "All",
       "unread": "Unread"
     },
     "empty": {
       "title": "No notifications",
-      "description": "You'll receive notifications when someone adds you as a crush",
+      "description": "You'll be notified as soon as someone secretly adds you.",
       "unreadTitle": "No unread notifications",
       "unreadDescription": "All your notifications have been read!"
     },
     "types": {
-      "newCrush": "New crush!",
-      "newMatch": "It's a match! 🎉"
+      "newSecret": "Someone secretly loves you 💘",
+      "newMatch": "It's mutual! 🎉"
     },
     "time": {
       "now": "Just now",
@@ -82,9 +208,8 @@
     },
     "unreadCount": "{{count}} unread notification",
     "unreadCountPlural": "{{count}} unread notifications",
-    "loading": "Loading notifications...",
-    "loginRequired": "Sign in to see your notifications"
-    ,
+    "loading": "Loading notifications…",
+    "loginRequired": "Log in to see your notifications",
     "push": {
       "label": "Enable push notifications",
       "enabled": "Notifications enabled",
@@ -97,388 +222,35 @@
       },
       "errors": {
         "Service Worker non supporté": "Service Worker not supported by your browser.",
-        "Erreur enregistrement Service Worker": "Error registering Service Worker.",
-        "Service Worker non prêt": "Service Worker is not ready.",
+        "Erreur enregistrement Service Worker": "Error registering the Service Worker.",
+        "Service Worker non prêt": "The Service Worker isn't ready.",
         "Erreur permission notification": "Error requesting notification permission.",
         "Permission refusée": "Notification permission denied.",
-        "Erreur abonnement push": "Error during push subscription.",
+        "Erreur abonnement push": "Error subscribing to push.",
         "Utilisateur non authentifié": "User not authenticated.",
-        "Erreur lors de l'enregistrement de l'abonnement": "Error saving push subscription.",
+        "Erreur lors de l'enregistrement de l'abonnement": "Error saving the push subscription.",
         "Erreur d'abonnement push": "Push subscription error."
       }
     }
   },
-  "profile": {
-    "stats": {
-      "crushes": "My Crushes",
-      "matches": "My Matches",
-      "admirers": "My Admirers"
-    },
-    "actions": {
-      "editProfile": "Edit my profile",
-      "viewCrushes": "View my crushes",
-      "viewMatches": "View my matches",
-      "viewAdmirers": "View my admirers"
-    }
-    ,
-    "errors": {
-      "age": "Please enter a valid age (13-100 years)",
-      "location": "Please enter your location",
-      "bio": "Your bio must be at least 10 characters",
-      "interests": "Please select at least 3 interests",
-      "update": "Error while saving profile.",
-      "unknown": "An error occurred."
-    }
+  "install": {
+    "title": "Install WLM on your screen",
+    "desc": "Quick access, full screen, like a real app.",
+    "close": "Close",
+    "install": "Install the app",
+    "later": "Later",
+    "iosStep1": "Tap",
+    "iosShare": "Share",
+    "iosStep2": "Choose",
+    "iosOption": "\"Add to Home Screen\""
   },
-  "feed": {
-    "illustrationAlt": "Feed Illustration",
-    "title": "Coming soon",
-    "description": "Use the search bar at the top to find users and discover who has a crush on you"
+  "profileButton": {
+    "userProfile": "User profile",
+    "myProfile": "My profile",
+    "logout": "Log out",
+    "avatarAlt": "User avatar"
   },
-  "footer": {
-    "ariaLabel": "Site footer",
-    "logoAlt": "WhoLikeMe Logo",
-    "homeAriaLabel": "Back to home",
-    "navAriaLabel": "Footer navigation",
-    "links": {
-      "legalNotice": "Legal Notice",
-      "privacy": "Privacy"
-    }
-  },
-   "header": {
-    "navigation": {
-      "myFeed": "My Feed",
-      "myCrushes": "My Crushes",
-      "myAdmirers": "My Admirers"
-    },
-    "search": {
-      "placeholder": "Search...",
-      "label": "Search",
-      "close": "Close search"
-    },
-    "notifications": {
-      "label": "Notifications"
-    },
-    "profile": {
-      "userProfile": "User Profile",
-      "myProfile": "My Profile",
-      "viewProfile": "View my profile"
-    },
-    "menu": {
-      "open": "Open menu",
-      "close": "Close menu"
-    },
-    "language": {
-      "label": "Language",
-      "french": "Français",
-      "english": "English"
-    },
-    "logout": "Sign Out"
-  },
-   "addModal": {
-    "title": "Add a crush",
-    "placeholder": "John Doe",
-    "buttonText": "Add a crush",
-    "loading": "Adding...",
-    "privacyNote": "Your information remains private until a match is confirmed"
-  },
-  "loginModal": {
-  "logoAlt": "WhoLikeMe Logo",
-  "googleButton": "Sign in with Google",
-  "privacyText": {
-    "beforeTerms": "By signing in, you agree to our",
-    "termsLink": "Terms of Service",
-    "beforePrivacy": "our",
-    "privacyLink": "Privacy Policy",
-    "beforeCookies": "and our",
-    "cookiesLink": "Cookie Policy"
+  "notificationBell": {
+    "label": "Notifications"
   }
-},
-"mobileNavBar": {
-  "feed": "Feed",
-  "crush": "Crush",
-  "matches": "Matches"
-},
-"welcomeModal": {
-  "welcomeLogoAlt": "Welcome logo",
-  "step1": {
-    "title": "Are you new?",
-    "textBefore": "Start by",
-    "addCrushText": "Adding a crush",
-    "textAfter": "by clicking the button.",
-    "imageAlt": "Step 1 - Add a crush"
-  },
-  "step2": {
-    "title": "Then what?",
-    "textIntro": "You will then see the list of your crushes with a status:",
-    "pendingStatus": "Pending",
-    "pendingText": ": if your crush hasn't responded yet.",
-    "acceptedStatus": "Accepted",
-    "acceptedText": ": if your crush accepts.",
-    "imageAlt": "Step 2 - Crushes list with status"
-  },
-  "step3": {
-    "title": "Finally?",
-    "textBefore": "On the",
-    "crushPageText": "Who has a crush on me",
-    "textMiddle": " page, you will see the list of those who have a crush on you.",
-    "responseText": "You can respond with:",
-    "yesText": "for yes (match), and:",
-    "noText": "for no.",
-    "imageAlt": "Step 3 - Who has a crush on me page with responses"
-  },
-  "navigation": {
-    "previous": "Previous",
-    "next": "Next",
-    "start": "Get Started",
-    "totalSteps": "3"
-  }
-}, 
-"legal": {
-  "iconAlt": "Legal Icon",
-  "title": "Legal Notice",
-  "subtitle": "Legal and regulatory information",
-  "sections": {
-    "publisher": {
-      "title": "Site Publisher",
-      "fields": {
-        "company": "Company Name",
-        "legalForm": "Legal Form",
-        "address": "Address",
-        "phone": "Phone",
-        "email": "Email",
-        "siret": "SIRET",
-        "vat": "VAT Number"
-      },
-      "values": {
-        "company": "[Your company name]",
-        "legalForm": "[Legal form]",
-        "address": "[Complete address]",
-        "phone": "[Phone number]",
-        "email": "[Email address]",
-        "siret": "[SIRET number]",
-        "vat": "[VAT number]"
-      }
-    },
-    "director": {
-      "title": "Publication Director",
-      "fields": {
-        "name": "Name",
-        "email": "Email"
-      },
-      "values": {
-        "name": "[Director's name]",
-        "email": "[Director's email]"
-      }
-    },
-    "hosting": {
-      "title": "Hosting",
-      "fields": {
-        "host": "Host",
-        "address": "Address",
-        "phone": "Phone"
-      },
-      "values": {
-        "host": "[Host name]",
-        "address": "[Host address]",
-        "phone": "[Host phone]"
-      }
-    },
-    "intellectualProperty": {
-      "title": "Intellectual Property",
-      "paragraph1": "This entire site is subject to French and international legislation on copyright and intellectual property. All reproduction rights are reserved, including for downloadable documents and iconographic and photographic representations.",
-      "paragraph2": "The reproduction of all or part of this site on any electronic medium is strictly prohibited without express authorization from the publication director."
-    },
-    "responsibility": {
-      "title": "Responsibility",
-      "paragraph1": "The information contained on this site is as accurate as possible and the site is periodically updated, but may nevertheless contain inaccuracies, omissions or gaps.",
-      "paragraph2": "If you notice a gap, error or what appears to be a malfunction, please report it by email describing the problem as precisely as possible."
-    }
-  }
-},
-"privacy": {
-  "iconAlt": "Privacy Icon",
-  "title": "Privacy Policy",
-  "subtitle": "Protection and management of your personal data",
-  "sections": {
-    "dataCollection": {
-      "title": "1. Data Collection",
-      "intro": "We collect personal data that you provide to us directly when:",
-      "items": [
-        "Registering on our platform",
-        "Adding crush profiles",
-        "Using our matching services",
-        "Interacting with other users"
-      ]
-    },
-    "dataUsage": {
-      "title": "2. Data Usage",
-      "intro": "Your personal data is used to:",
-      "items": [
-        "Provide and improve our matching services",
-        "Personalize your user experience",
-        "Send you important notifications",
-        "Ensure platform security",
-        "Comply with our legal obligations"
-      ]
-    },
-    "dataSharing": {
-      "title": "3. Data Sharing",
-      "intro": "We do not sell, rent, or share your personal data with third parties, except in the following cases:",
-      "items": [
-        "With your explicit consent",
-        "To comply with a legal obligation",
-        "With our service providers (under strict contract)",
-        "Right to object to processing"
-      ]
-    },
-    "dataSecurity": {
-      "title": "4. Data Security",
-      "intro": "We implement appropriate technical and organizational measures to protect your data:",
-      "items": [
-        "Encryption of sensitive data",
-        "Restricted access to personal data",
-        "Continuous monitoring of our systems",
-        "Regular training of our teams"
-      ]
-    },
-    "userRights": {
-      "title": "5. Your Rights",
-      "intro": "In accordance with GDPR, you have the following rights:",
-      "items": [
-        "Right of access to your personal data",
-        "Right to rectification of inaccurate data",
-        "Right to erasure of your data",
-        "Right to data portability",
-        "Right to object to processing",
-        "Right to withdraw your consent"
-      ]
-    },
-    "dataRetention": {
-      "title": "6. Data Retention",
-      "content": "We retain your personal data only for the duration necessary for the purposes for which it was collected, or in accordance with legal obligations."
-    },
-    "contact": {
-      "title": "7. Contact",
-      "intro": "For any questions regarding this privacy policy or to exercise your rights, contact us at:",
-      "emailLabel": "Email",
-      "email": "privacy@[yourdomain].com"
-    }
-  }
-},
-"settings": {
-  "backButton": "Back",
-  "title": "Edit my profile",
-  "subtitle": "Customize your profile to introduce yourself",
-  "sections": {
-    "profilePhoto": {
-      "title": "Profile Photo",
-      "googlePhoto": "Google profile photo",
-      "changePhoto": "Change photo",
-      "newPhoto": "New photo (not saved)",
-      "customPhoto": "Custom photo",
-      "saveWarning": "Click \"Save\" to save the photo"
-    },
-    "personalInfo": {
-      "title": "Personal information",
-      "name": {
-        "label": "Name",
-        "placeholder": "Your name"
-      },
-      "age": {
-        "label": "Age",
-        "placeholder": "25"
-      },
-      "location": {
-        "label": "Location",
-        "placeholder": "Paris, France"
-      },
-      "gender": {
-        "label": "Gender",
-        "male": "Male",
-        "female": "Female",
-        "other": "Other"
-      }
-    },
-      "pushOptin": {
-    "label": "Enable push notifications (recommended)",
-    "enabled": "Notifications enabled",
-    "loading": "Enabling…"
-      },
-    "about": {
-      "title": "About me",
-      "placeholder": "Tell us about yourself...",
-      "charactersCount": "characters"
-    },
-    "interests": {
-      "title": "Passions & Interests",
-      "placeholder": "Add an interest...",
-      "addButton": "Add",
-      "count": "interests",
-      "suggestions": [
-        "Drawing & Painting",
-        "Photography",
-        "Music (listening or composition)",
-        "Movies & TV Shows",
-        "Fashion & Style",
-        "Design & Architecture",
-        "Writing & Poetry",
-        "Dance",
-        "Theater & Comedy",
-        "Video Games & Esports",
-        "Fitness & Bodybuilding",
-        "Yoga & Meditation",
-        "Running",
-        "Football",
-        "Basketball",
-        "Swimming",
-        "Hiking & Nature",
-        "Martial Arts (MMA, boxing, etc.)",
-        "Cycling",
-        "Rock Climbing",
-        "Road trips",
-        "Camping & Outdoor",
-        "Cultural Discovery",
-        "Sea & Diving",
-        "Gastronomic Travel",
-        "Safari & Wildlife",
-        "Urban Exploration",
-        "Travel Photography",
-        "Backpacking",
-        "Vanlife",
-        "Reading & Books",
-        "Science & Technology",
-        "Personal Development",
-        "Foreign Languages",
-        "History & Philosophy",
-        "Chess & Strategy Games",
-        "Astronomy",
-        "Innovation & Startups",
-        "Programming & AI",
-        "Economics & Finance",
-        "Cooking & Gastronomy",
-        "Animals & Animal Protection",
-        "Environment & Ecology",
-        "Volunteering & Humanitarian Work",
-        "Spirituality & Religion",
-        "Gardening & Nature",
-        "Minimalist Lifestyle",
-        "Cars & Motorcycles",
-        "Collecting & Vintage Items",
-        "Nightlife & Going Out"
-      ]
-    }
-  },
-  "buttons": {
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving...",
-    "uploading": "Uploading photo..."
-  },
-  "messages": {
-  "success": "Profile updated successfully!",
-  "error": "Error saving profile",
-  "formIncomplete": "Please fill in all fields, select a gender, and add at least 2 interests."
-  }
-}
 }

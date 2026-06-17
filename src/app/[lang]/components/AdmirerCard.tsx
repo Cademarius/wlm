@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Lock, Venus, Type, MapPin, Loader2 } from "lucide-react";
 import { openKkiapay } from "@/lib/kkiapayClient";
 import { HINT_PRICES, HINT_LABELS, type HintType } from "@/lib/products";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 export interface AdmirerHints {
   gender?: string | null;
@@ -30,27 +31,28 @@ const HINT_ICON: Record<HintType, React.ReactNode> = {
   city: <MapPin size={15} />,
 };
 
-// Placeholders flous (teaser) — la vraie valeur n'arrive qu'après paiement
-const HINT_PLACEHOLDER: Record<HintType, string> = {
-  gender: "Une femme",
-  initial: "M",
-  city: "Cotonou",
-};
-
-function genderLabel(g?: string | null): string {
-  if (g === "male") return "Un garçon";
-  if (g === "female") return "Une fille";
-  if (g === "other") return "Autre";
-  return "—";
-}
-
 const AdmirerCard: React.FC<AdmirerCardProps> = ({
   admirer,
   currentUserId,
   onChanged,
 }) => {
+  const { t, format } = useTranslation();
   const [buying, setBuying] = useState<HintType | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Placeholders flous (teaser) — la vraie valeur n'arrive qu'après paiement
+  const HINT_PLACEHOLDER: Record<HintType, string> = {
+    gender: t.admirerCard.hintFemale,
+    initial: t.admirerCard.hintInitial,
+    city: t.admirerCard.hintCity,
+  };
+
+  const genderLabel = (g?: string | null): string => {
+    if (g === "male") return t.admirerCard.genderMale;
+    if (g === "female") return t.admirerCard.genderFemale;
+    if (g === "other") return t.admirerCard.genderOther;
+    return t.admirerCard.genderUnknown;
+  };
 
   const isUnlocked = (h: HintType) =>
     admirer.unlocked.includes(h) || admirer.hints[h] !== undefined;
@@ -100,9 +102,9 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
         </div>
         <div className="min-w-0">
           <p className="text-white font-bold text-lg leading-tight">
-            Quelqu&apos;un t&apos;aime en secret 💘
+            {t.admirerCard.teaserTitle}
           </p>
-          <p className="text-white/50 text-sm">Débloque des indices pour deviner qui</p>
+          <p className="text-white/50 text-sm">{t.admirerCard.teaserSubtitle}</p>
         </div>
       </div>
 
@@ -127,7 +129,7 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
                   onClick={() => buyHint(h)}
                   disabled={buying !== null}
                   className="group flex items-center gap-2 disabled:opacity-60"
-                  aria-label={`Débloquer ${HINT_LABELS[h]}`}
+                  aria-label={format(t.admirerCard.unlockAria, { hint: HINT_LABELS[h] })}
                 >
                   {/* vraie-fausse valeur floutée pour donner envie */}
                   <span className="blur-[5px] select-none text-white/85 text-sm font-medium">
@@ -152,7 +154,7 @@ const AdmirerCard: React.FC<AdmirerCardProps> = ({
       {error && <p className="text-[#FF5C8A] text-xs">{error}</p>}
 
       <p className="text-white/40 text-xs pt-1 border-t border-white/10 leading-relaxed">
-        💡 Ajoute-le/la en secret : si c&apos;est réciproque, tout se révèle gratuitement.
+        {t.admirerCard.reciprocalHint}
       </p>
     </div>
   );

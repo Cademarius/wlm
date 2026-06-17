@@ -1,78 +1,204 @@
 {
-  "userNotFound": "Utilisateur non trouvé",
-  "home": {
-    "pageAriaLabel": "Page d'accueil de WhoLikeMe",
-    "logoAlt": "Logo WhoLikeMe",
-    "title": "Qui t'a crushé en secret ?",
-    "description": "Découvre qui a des sentiments pour toi ! Ajoute tes crushs et vois si c'est réciproque.",
-    "buttonText": "Commencer",
-    "buttonAriaLabel": "Commencer à ajouter un crush"
+  "userNotFound": "Utilisateur introuvable",
+  "common": {
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "later": "Plus tard",
+    "back": "Retour",
+    "loading": "Chargement…",
+    "errorGeneric": "Une erreur est survenue.",
+    "loginRequired": "Connecte-toi pour continuer.",
+    "notFound": "Utilisateur introuvable"
   },
-  "addcrush": {
-    "illustrationAlt": "Illustration Match",
-    "title": "Aucun crush pour le moment",
-    "titleWithContent": "Mes Crushes",
-    "titleNotAuthenticated": "Mes Crushes",
-    "description": "Commencez par ajouter les personnes qui vous intéressent pour découvrir vos matchs potentiels",
-    "descriptionNotAuthenticated": "Connectez-vous pour commencer à ajouter des crushes",
-    "buttonText": "Ajouter un crush",
-    "buttonAriaLabel": "Ajouter un nouveau crush",
-    "searching": "Recherche en cours...",
-  "noResults": "Aucun utilisateur trouvé",
-  "tryAnotherSearch": "Essayez une autre recherche",
-  "searchHelpTitle": "Recherchez un utilisateur par nom ou email",
-  "searchHelpSubtitle": "Commencez à taper pour voir les résultats",
-  "searchPlaceholder": "Rechercher par nom ou email...",
-  "modalTitle": "Ajouter un crush",
-    "addButton": "Ajouter",
-    "adding": "Ajout...",
+  "nav": {
+    "home": "Accueil",
+    "secrets": "Secrets",
+    "admirers": "Admirateurs",
+    "profile": "Mon profil"
+  },
+  "language": {
+    "label": "Langue",
+    "fr": "Français",
+    "en": "English"
+  },
+  "landing": {
+    "ariaLabel": "Page d'accueil de WLM",
+    "title": "Qui",
+    "titleHighlight": "t'aime en secret",
+    "description": "Ajoute en secret les personnes que tu aimes. Si c'est réciproque, c'est révélé 💘 Sinon, ça reste ton secret.",
+    "badgeSecret": "🔒 100% secret",
+    "badgePhone": "📱 Par numéro",
+    "badgeReciprocal": "💘 Réciproque",
+    "cta": "Commencer",
+    "ctaAria": "Commencer à aimer en secret"
+  },
+  "feed": {
+    "greeting": "Salut {{name}} 👋",
+    "greetingFallback": "Bienvenue 👋",
+    "subtitle": "Découvre qui t'aime en secret.",
+    "actionTitle": "Qui t'aime en secret ?",
+    "actionDesc": "Ajoute en secret les personnes que tu aimes. Si c'est réciproque, c'est révélé 💘",
+    "actionBtn": "Ajouter en secret",
+    "statSecrets": "Mes secrets",
+    "statAdmirers": "Mes admirateurs",
+    "howTitle": "Comment ça marche",
+    "step1Title": "Ajoute un numéro",
+    "step1Desc": "La personne que tu aimes en secret — même si elle n'est pas inscrite.",
+    "step2Title": "C'est 100% secret",
+    "step2Desc": "Elle ne saura jamais que c'est toi.",
+    "step3Title": "Si c'est réciproque…",
+    "step3Desc": "Vous êtes prévenus tous les deux 💘"
+  },
+  "secrets": {
+    "emptyTitle": "Aucun secret pour l'instant",
+    "emptyTitleGuest": "Découvre qui t'aime en secret",
+    "emptyDesc": "Ajoute quelqu'un que tu aimes en secret. Il ne le saura jamais… sauf si c'est réciproque 💘",
+    "emptyDescGuest": "Connecte-toi pour ajouter en secret les personnes que tu aimes.",
+    "addBtn": "Ajouter en secret",
+    "sectionTitle": "Mes secrets",
+    "count": "{{count}} personne que tu aimes en secret",
+    "countPlural": "{{count}} personnes que tu aimes en secret",
+    "pending": "En attente — pas encore inscrit(e)",
     "status": {
-      "pending": "En attente",
-      "matched": "Match !"
-    },
+      "matched": "Réciproque 💘",
+      "pending": "En attente"
+    }
+  },
+  "admirers": {
+    "emptyTitle": "Personne pour l'instant",
+    "emptyTitleGuest": "Découvre qui t'aime en secret",
+    "emptyDesc": "Quand quelqu'un t'ajoutera en secret, il apparaîtra ici (flouté). Débloque des indices pour en savoir plus 👀",
+    "emptyDescGuest": "Connecte-toi pour voir qui t'aime en secret.",
+    "sectionTitle": "👀 Mes admirateurs",
+    "count": "{{count}} personne t'aime en secret",
+    "countPlural": "{{count}} personnes t'aiment en secret",
+    "status": {
+      "matched": "Réciproque 💘",
+      "admires": "T'aime en secret"
+    }
+  },
+  "addModal": {
+    "title": "Ajoute quelqu'un que tu aimes en secret",
+    "desc": "Entre son numéro de téléphone. C'est 100% secret : il ne saura jamais que c'est toi, sauf si lui aussi t'aime en secret 💘",
+    "phoneLabel": "Son numéro",
+    "phonePlaceholder": "Numéro de la personne",
+    "nicknameLabel": "Un surnom pour t'y retrouver",
+    "nicknameHint": "(optionnel, privé)",
+    "nicknamePlaceholder": "Ex : la fille du cours de maths",
+    "add": "Ajouter en secret",
+    "adding": "Ajout…",
+    "matchToast": "💘 C'est réciproque !",
+    "addedToast": "Ajouté en secret 🤫",
+    "limitError": "Tu as atteint ta limite. Débloque plus de places pour aimer en secret.",
+    "errorGeneric": "Une erreur est survenue.",
+    "invalidPhone": "Entre un numéro de téléphone valide.",
+    "duplicateError": "Tu as déjà ajouté ce numéro.",
+    "paying": "Paiement…",
+    "unlockSlots": "Débloquer +{{slots}} places · {{amount}} FCFA",
+    "close": "Fermer"
+  },
+  "admirerCard": {
+    "teaserTitle": "Quelqu'un t'aime en secret 💘",
+    "teaserSubtitle": "Débloque des indices pour deviner qui",
+    "hintFemale": "Une femme",
+    "hintInitial": "M",
+    "hintCity": "Cotonou",
+    "genderMale": "Un garçon",
+    "genderFemale": "Une fille",
+    "genderOther": "Autre",
+    "genderUnknown": "—",
+    "unlockAria": "Débloquer {{hint}}",
+    "reciprocalHint": "💡 Ajoute-le/la en secret : si c'est réciproque, tout se révèle gratuitement."
+  },
+  "userCard": {
     "age": "{{count}} ans",
-    "messages": {
-  "success": "Crush ajouté avec succès !",
-  "match": "🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !",
-  "alreadyAdded": "Crush",
-  "error": "Erreur lors de l'ajout du crush"
-    }
-  ,
-  "crushesAdded": "{{count}} crush ajouté",
-  "crushesAddedPlural": "{{count}} crushes ajoutés"
+    "agePlaceholder": "•• ans",
+    "locationPlaceholder": "••••••, ••••••",
+    "seeMore": "Voir plus →",
+    "locked": "Verrouillé"
   },
-  "matchcrush": {
-    "illustrationAlt": "Illustration Match",
-    "title": "Aucun admirateur pour le moment",
-    "titleWithContent": "Mes Admirateurs",
-    "description": "Personne ne vous a ajouté comme crush pour le moment",
-    "descriptionNotAuthenticated": "Connectez-vous pour voir vos admirateurs",
-    "status": {
-      "matched": "Match !",
-      "admires": "Vous admire"
-    }
-  ,
-  "admirers": "{{count}} personne vous admire",
-  "admirersPlural": "{{count}} personnes vous admirent"
+  "auth": {
+    "title": "Découvre qui t'aime en secret",
+    "desc": "Entre ton numéro pour recevoir un code de connexion.",
+    "phonePlaceholder": "Ton numéro de téléphone",
+    "whatsapp": "WhatsApp",
+    "sms": "SMS",
+    "sending": "Envoi…",
+    "getCode": "Recevoir mon code",
+    "codeTitle": "Entre ton code",
+    "codeDescWhatsapp": "Envoyé sur WhatsApp au {{phone}}",
+    "codeDescSms": "Envoyé par SMS au {{phone}}",
+    "verifying": "Vérification…",
+    "login": "Se connecter",
+    "changeNumber": "← Changer de numéro",
+    "resend": "Renvoyer le code",
+    "close": "Fermer",
+    "invalidPhone": "Entre un numéro de téléphone valide.",
+    "sendError": "Impossible d'envoyer le code. Réessaie.",
+    "enterCode": "Entre le code reçu.",
+    "verifyError": "Code incorrect ou expiré. Réessaie.",
+    "resendError": "Échec du renvoi du code."
+  },
+  "profile": {
+    "back": "Retour",
+    "title": "Mon profil",
+    "firstName": "Prénom",
+    "firstNamePlaceholder": "Ton prénom",
+    "gender": "Genre",
+    "genderFemale": "Femme",
+    "genderMale": "Homme",
+    "genderOther": "Autre",
+    "city": "Ville",
+    "cityPlaceholder": "Ex : Cotonou",
+    "changePhoto": "Changer la photo",
+    "saveHint": "Clique sur Enregistrer pour valider",
+    "incompleteError": "Renseigne ton prénom, ton genre et ta ville.",
+    "fileTypeError": "Image JPEG, PNG ou WebP uniquement",
+    "fileSizeError": "Image trop lourde (max 5 Mo)",
+    "uploading": "Téléversement…",
+    "saving": "Enregistrement…",
+    "save": "Enregistrer",
+    "logout": "Se déconnecter"
+  },
+  "profileSetup": {
+    "title": "Complète ton profil en 10 secondes",
+    "desc": "Juste 3 infos — pour révéler ton identité en cas de match 💘 et activer les indices.",
+    "firstName": "Prénom",
+    "firstNamePlaceholder": "Ton prénom",
+    "gender": "Genre",
+    "genderFemale": "Femme",
+    "genderMale": "Homme",
+    "genderOther": "Autre",
+    "city": "Ville",
+    "cityPlaceholder": "Ex : Cotonou",
+    "incompleteError": "Renseigne ton prénom, ton genre et ta ville.",
+    "saveError": "Une erreur est survenue. Réessaie.",
+    "saving": "Enregistrement…",
+    "save": "Enregistrer",
+    "later": "Plus tard"
+  },
+  "publicProfile": {
+    "about": "À propos",
+    "notFound": "Utilisateur introuvable"
   },
   "notifications": {
     "title": "Notifications",
     "markAllAsRead": "Tout marquer comme lu",
     "markAsRead": "Marquer comme lu",
-    "viewAll": "Voir toutes les notifications",
     "filters": {
       "all": "Toutes",
       "unread": "Non lues"
     },
     "empty": {
       "title": "Aucune notification",
-      "description": "Vous recevrez des notifications quand quelqu'un vous ajoute comme crush",
+      "description": "Tu seras prévenu(e) dès que quelqu'un t'ajoute en secret.",
       "unreadTitle": "Aucune notification non lue",
-      "unreadDescription": "Toutes vos notifications ont été lues !"
+      "unreadDescription": "Toutes tes notifications ont été lues !"
     },
     "types": {
-      "newCrush": "Nouveau crush !",
-      "newMatch": "C'est un match ! 🎉"
+      "newSecret": "Quelqu'un t'aime en secret 💘",
+      "newMatch": "C'est réciproque ! 🎉"
     },
     "time": {
       "now": "À l'instant",
@@ -82,21 +208,20 @@
     },
     "unreadCount": "{{count}} notification non lue",
     "unreadCountPlural": "{{count}} notifications non lues",
-    "loading": "Chargement des notifications...",
-    "loginRequired": "Connectez-vous pour voir vos notifications"
-    ,
+    "loading": "Chargement des notifications…",
+    "loginRequired": "Connecte-toi pour voir tes notifications",
     "push": {
       "label": "Activer les notifications push",
       "enabled": "Notifications activées",
       "loading": "Activation…",
       "modal": {
         "title": "Activer les notifications push ?",
-        "description": "Recevez une alerte dès qu'une nouvelle notification arrive. Vous pouvez activer maintenant ou plus tard.",
+        "description": "Reçois une alerte dès qu'une nouvelle notification arrive. Tu peux activer maintenant ou plus tard.",
         "enableNow": "Activer maintenant",
         "later": "Plus tard"
       },
       "errors": {
-        "Service Worker non supporté": "Service Worker non supporté par votre navigateur.",
+        "Service Worker non supporté": "Service Worker non supporté par ton navigateur.",
         "Erreur enregistrement Service Worker": "Erreur lors de l'enregistrement du Service Worker.",
         "Service Worker non prêt": "Le Service Worker n'est pas prêt.",
         "Erreur permission notification": "Erreur lors de la demande de permission de notification.",
@@ -108,377 +233,24 @@
       }
     }
   },
-  "profile": {
-    "stats": {
-      "crushes": "Mes Crushes",
-      "matches": "Mes Matchs",
-      "admirers": "Mes Admirateurs"
-    },
-    "actions": {
-      "editProfile": "Modifier mon profil",
-      "viewCrushes": "Voir mes crushes",
-      "viewMatches": "Voir mes matchs",
-      "viewAdmirers": "Voir mes admirateurs"
-    }
-    ,
-    "errors": {
-      "age": "Veuillez entrer un âge valide (13-100 ans)",
-      "location": "Veuillez entrer votre localisation",
-      "bio": "Votre bio doit contenir au moins 10 caractères",
-      "interests": "Veuillez sélectionner au moins 3 centres d'intérêt",
-      "update": "Erreur lors de la sauvegarde du profil.",
-      "unknown": "Une erreur est survenue."
-    }
+  "install": {
+    "title": "Installe WLM sur ton écran",
+    "desc": "Accès rapide, plein écran, comme une vraie app.",
+    "close": "Fermer",
+    "install": "Installer l'app",
+    "later": "Plus tard",
+    "iosStep1": "Appuie sur",
+    "iosShare": "Partager",
+    "iosStep2": "Choisis",
+    "iosOption": "« Sur l'écran d'accueil »"
   },
-  "mobileNavBar": {
-    "feed": "Fil d'actualité",
-    "crush": "Mes Crushes",
-    "matches": "Matchs"
+  "profileButton": {
+    "userProfile": "Profil utilisateur",
+    "myProfile": "Mon profil",
+    "logout": "Se déconnecter",
+    "avatarAlt": "Avatar utilisateur"
   },
-  "welcomeModal": {
-    "welcomeLogoAlt": "Logo de bienvenue",
-    "step1": {
-      "title": "Vous êtes nouveau ?",
-      "textBefore": "Commencez par",
-      "addCrushText": "Ajouter un crush",
-      "textAfter": "en cliquant sur le bouton.",
-      "imageAlt": "Étape 1 - Ajouter un crush"
-    },
-    "step2": {
-      "title": "Ensuite ?",
-      "textIntro": "Vous verrez ensuite la liste de vos crushes avec un statut :",
-      "pendingStatus": "En attente",
-      "pendingText": " : si votre crush n'a pas encore répondu.",
-      "acceptedStatus": "Accepté",
-      "acceptedText": " : si votre crush accepte.",
-      "imageAlt": "Étape 2 - Liste des crushes avec statut"
-    },
-    "step3": {
-      "title": "Enfin ?",
-      "textBefore": "Sur la page",
-      "crushPageText": "Qui a un crush sur moi",
-      "textMiddle": ", vous verrez la liste de ceux qui ont un crush sur vous.",
-      "responseText": "Vous pouvez répondre avec :",
-      "yesText": "pour oui (matcher), et :",
-      "noText": "pour non.",
-      "imageAlt": "Étape 3 - Page qui a un crush sur moi avec réponses"
-    },
-    "navigation": {
-      "previous": "Précédent",
-      "next": "Suivant",
-      "start": "Commencer",
-      "totalSteps": "3"
-    }
-  },
-  "feed": {
-    "illustrationAlt": "Illustration du fil d'actualité",
-    "title": "Bientôt disponible",
-    "description": "Utilisez la recherche en haut pour trouver des utilisateurs et découvrir qui vous admire"
-  },
-  "footer": {
-    "ariaLabel": "Pied de page du site",
-    "logoAlt": "Logo WhoLikeMe",
-    "homeAriaLabel": "Retour à l'accueil",
-    "navAriaLabel": "Navigation du pied de page",
-    "links": {
-      "legalNotice": "Mentions légales",
-      "privacy": "Confidentialité"
-    }
-  },
-  "header": {
-    "navigation": {
-      "myFeed": "Mon fil",
-      "myCrushes": "Mes Crushs",
-      "myAdmirers": "Mes admirateurs"
-    },
-    "search": {
-      "placeholder": "Rechercher...",
-      "label": "Rechercher",
-      "close": "Fermer la recherche"
-    },
-    "notifications": {
-      "label": "Notifications"
-    },
-    "profile": {
-      "userProfile": "Profil utilisateur",
-      "myProfile": "Mon Profil",
-      "viewProfile": "Voir mon profil"
-    },
-    "menu": {
-      "open": "Ouvrir le menu",
-      "close": "Fermer le menu"
-    },
-    "language": {
-      "label": "Langue",
-      "french": "Français",
-      "english": "English"
-    },
-    "logout": "Déconnexion"
-  },
-  "addModal": {
-    "title": "Ajouter un crush",
-    "placeholder": "John Doe",
-    "buttonText": "Ajouter un crush",
-    "loading": "Ajout en cours...",
-    "privacyNote": "Vos informations restent privées jusqu'à ce qu'un match soit confirmé"
-  },
-  "loginModal": {
-  "logoAlt": "Logo WhoLikeMe",
-  "googleButton": "Se connecter avec Google",
-  "privacyText": {
-    "beforeTerms": "En vous connectant, vous acceptez nos",
-    "termsLink": "Conditions d'utilisation",
-    "beforePrivacy": "notre",
-    "privacyLink": "Politique de confidentialité",
-    "beforeCookies": "et notre",
-    "cookiesLink": "Politique relative aux cookies"
+  "notificationBell": {
+    "label": "Notifications"
   }
-},
-"legal": {
-  "iconAlt": "Icône légale",
-  "title": "Mentions Légales",
-  "subtitle": "Informations légales et réglementaires",
-  "sections": {
-    "publisher": {
-      "title": "Éditeur du site",
-      "fields": {
-        "company": "Nom de l'entreprise",
-        "legalForm": "Forme juridique",
-        "address": "Adresse",
-        "phone": "Téléphone",
-        "email": "Email",
-        "siret": "SIRET",
-        "vat": "TVA Intracommunautaire"
-      },
-      "values": {
-        "company": "[Nom de votre entreprise]",
-        "legalForm": "[Forme juridique]",
-        "address": "[Adresse complète]",
-        "phone": "[Numéro de téléphone]",
-        "email": "[Adresse email]",
-        "siret": "[Numéro SIRET]",
-        "vat": "[Numéro TVA]"
-      }
-    },
-    "director": {
-      "title": "Directeur de la publication",
-      "fields": {
-        "name": "Nom",
-        "email": "Email"
-      },
-      "values": {
-        "name": "[Nom du directeur]",
-        "email": "[Email du directeur]"
-      }
-    },
-    "hosting": {
-      "title": "Hébergement",
-      "fields": {
-        "host": "Hébergeur",
-        "address": "Adresse",
-        "phone": "Téléphone"
-      },
-      "values": {
-        "host": "[Nom de l'hébergeur]",
-        "address": "[Adresse de l'hébergeur]",
-        "phone": "[Téléphone de l'hébergeur]"
-      }
-    },
-    "intellectualProperty": {
-      "title": "Propriété intellectuelle",
-      "paragraph1": "L'ensemble de ce site relève de la législation française et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.",
-      "paragraph2": "La reproduction de tout ou partie de ce site sur un support électronique quelconque est formellement interdite sauf autorisation expresse du directeur de la publication."
-    },
-    "responsibility": {
-      "title": "Responsabilité",
-      "paragraph1": "Les informations contenues sur ce site sont aussi précises que possible et le site est périodiquement remis à jour, mais peut toutefois contenir des inexactitudes, des omissions ou des lacunes.",
-      "paragraph2": "Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email en décrivant le problème de la manière la plus précise possible."
-    }
-  }
-}, 
-"privacy": {
-  "iconAlt": "Icône de confidentialité",
-  "title": "Politique de Confidentialité",
-  "subtitle": "Protection et gestion de vos données personnelles",
-  "sections": {
-    "dataCollection": {
-      "title": "1. Collecte des données",
-      "intro": "Nous collectons les données personnelles que vous nous fournissez directement lors de :",
-      "items": [
-        "Votre inscription sur notre plateforme",
-        "L'ajout de profils de crush",
-        "L'utilisation de nos services de matching",
-        "Vos interactions avec d'autres utilisateurs"
-      ]
-    },
-    "dataUsage": {
-      "title": "2. Utilisation des données",
-      "intro": "Vos données personnelles sont utilisées pour :",
-      "items": [
-        "Fournir et améliorer nos services de matching",
-        "Personnaliser votre expérience utilisateur",
-        "Vous envoyer des notifications importantes",
-        "Assurer la sécurité de la plateforme",
-        "Respecter nos obligations légales"
-      ]
-    },
-    "dataSharing": {
-      "title": "3. Partage des données",
-      "intro": "Nous ne vendons, ne louons, ni ne partageons vos données personnelles avec des tiers, sauf dans les cas suivants :",
-      "items": [
-        "Avec votre consentement explicite",
-        "Pour respecter une obligation légale",
-        "Avec nos prestataires de services (sous contrat strict)",
-        "Droit d'opposition au traitement"
-      ]
-    },
-    "dataSecurity": {
-      "title": "4. Sécurité des données",
-      "intro": "Nous mettons en place des mesures techniques et organisationnelles appropriées pour protéger vos données :",
-      "items": [
-        "Chiffrement des données sensibles",
-        "Accès restreint aux données personnelles",
-        "Surveillance continue de nos systèmes",
-        "Formation régulière de nos équipes"
-      ]
-    },
-    "userRights": {
-      "title": "5. Vos droits",
-      "intro": "Conformément au RGPD, vous disposez des droits suivants :",
-      "items": [
-        "Droit d'accès à vos données personnelles",
-        "Droit de rectification des données inexactes",
-        "Droit à l'effacement de vos données",
-        "Droit à la portabilité de vos données",
-        "Droit d'opposition au traitement",
-        "Droit de retirer votre consentement"
-      ]
-    },
-    "dataRetention": {
-      "title": "6. Conservation des données",
-      "content": "Nous conservons vos données personnelles uniquement pendant la durée nécessaire aux finalités pour lesquelles elles ont été collectées, ou conformément aux obligations légales."
-    },
-    "contact": {
-      "title": "7. Contact",
-      "intro": "Pour toute question concernant cette politique de confidentialité ou pour exercer vos droits, contactez-nous à :",
-      "emailLabel": "Email",
-      "email": "privacy@[votredomaine].com"
-    }
-  }
-},
-"settings": {
-  "backButton": "Retour",
-  "title": "Modifier mon profil",
-  "subtitle": "Personnalisez votre profil pour vous faire connaître",
-  "sections": {
-    "profilePhoto": {
-      "title": "Photo de profil",
-      "googlePhoto": "Photo de profil Google",
-      "changePhoto": "Changer la photo",
-      "newPhoto": "Nouvelle photo (non enregistrée)",
-      "customPhoto": "Photo personnalisée",
-      "saveWarning": "Cliquez sur \"Enregistrer\" pour sauvegarder la photo"
-    },
-    "personalInfo": {
-      "title": "Informations personnelles",
-      "name": {
-        "label": "Nom",
-        "placeholder": "Votre nom"
-      },
-      "age": {
-        "label": "Âge",
-        "placeholder": "25"
-      },
-      "location": {
-        "label": "Localisation",
-        "placeholder": "Paris, France"
-      },
-      "gender": {
-        "label": "Sexe",
-        "male": "Homme",
-        "female": "Femme",
-        "other": "Autre"
-      }
-    },
-      "pushOptin": {
-    "label": "Activer les notifications push (recommandé)",
-    "enabled": "Notifications activées",
-    "loading": "Activation…"
-      },
-    "about": {
-      "title": "À propos de moi",
-      "placeholder": "Parlez-nous de vous...",
-      "charactersCount": "caractères"
-    },
-    "interests": {
-      "title": "Passions & Intérêts",
-      "placeholder": "Ajouter un intérêt...",
-      "addButton": "Ajouter",
-      "count": "intérêts",
-      "suggestions": [
-        "Dessin & Peinture",
-        "Photographie",
-        "Musique (écoute ou composition)",
-        "Cinéma & Séries",
-        "Mode & Stylisme",
-        "Design & Architecture",
-        "Écriture & Poésie",
-        "Danse",
-        "Théâtre & Comédie",
-        "Jeux vidéo & Esport",
-        "Fitness & Musculation",
-        "Yoga & Méditation",
-        "Course à pied",
-        "Football",
-        "Basketball",
-        "Natation",
-        "Randonnée & Nature",
-        "Arts martiaux (MMA, boxe, etc.)",
-        "Cyclisme",
-        "Escalade",
-        "Road trip",
-        "Camping & Outdoor",
-        "Découverte de cultures",
-        "Mer & Plongée",
-        "Voyage gastronomique",
-        "Safari & Nature sauvage",
-        "Exploration urbaine",
-        "Photographie de voyage",
-        "Backpacking",
-        "Vanlife",
-        "Lecture & Livres",
-        "Science & Technologie",
-        "Développement personnel",
-        "Langues étrangères",
-        "Histoire & Philosophie",
-        "Échecs & Jeux de stratégie",
-        "Astronomie",
-        "Innovation & Startups",
-        "Programmation & IA",
-        "Économie & Finance",
-        "Cuisine & Gastronomie",
-        "Animaux & Protection animale",
-        "Environnement & Écologie",
-        "Bénévolat & Humanitaire",
-        "Spiritualité & Religion",
-        "Jardinage & Nature",
-        "Mode de vie minimaliste",
-        "Automobile & Motos",
-        "Collection & objets vintage",
-        "Vie nocturne & Sorties"
-      ]
-    }
-  },
-  "buttons": {
-    "cancel": "Annuler",
-    "save": "Enregistrer",
-    "saving": "Enregistrement...",
-    "uploading": "Upload de la photo..."
-  },
-  "messages": {
-  "success": "Profil mis à jour avec succès !",
-  "error": "Erreur lors de la sauvegarde",
-  "formIncomplete": "Merci de remplir tous les champs, de choisir un sexe et d'ajouter au moins 2 centres d'intérêt."
-  }
-}
 }

@@ -6,8 +6,7 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import Toast from "./Toast";
 import { useToast } from "@/hooks/useToast";
-import { useParams } from "next/navigation";
-import { getTranslation } from "@/lib/i18n/getTranslation";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 import { openKkiapay } from "@/lib/kkiapayClient";
 import { SLOTS_PACK } from "@/lib/products";
 
@@ -27,9 +26,7 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
   existingPhones = [],
 }) => {
   const { toast, success, error: showError, hideToast } = useToast();
-  const params = useParams();
-  const lang = (params.lang as string) || "fr";
-  const t = getTranslation(lang as "fr" | "en");
+  const { t, format } = useTranslation();
 
   const [phone, setPhone] = useState<string | undefined>();
   const [label, setLabel] = useState("");
@@ -60,11 +57,11 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone || !isValidPhoneNumber(phone)) {
-      showError("Entre un numéro de téléphone valide.");
+      showError(t.addModal.invalidPhone);
       return;
     }
     if (existingPhones.includes(phone)) {
-      showError("Tu as déjà ajouté ce numéro.");
+      showError(t.addModal.duplicateError);
       return;
     }
 
@@ -83,24 +80,22 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
 
       if (response.ok) {
         if (data.match) {
-          success("💘 C'est réciproque !");
+          success(t.addModal.matchToast);
         } else {
-          success("Ajouté en secret 🤫");
+          success(t.addModal.addedToast);
         }
         onCrushAdded?.();
         window.dispatchEvent(new Event("refreshNotifications"));
         resetAndClose();
       } else if (response.status === 402) {
         setLimitReached(true);
-        showError(
-          "Tu as atteint ta limite. Débloque plus de places pour aimer en secret."
-        );
+        showError(t.addModal.limitError);
       } else {
-        showError(data.error || "Une erreur est survenue.");
+        showError(data.error || t.addModal.errorGeneric);
       }
     } catch (err) {
       console.error("Error adding crush:", err);
-      showError("Une erreur est survenue.");
+      showError(t.addModal.errorGeneric);
     } finally {
       setIsAdding(false);
     }
@@ -157,12 +152,12 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               <div className="bg-[#FF5C8A]/20 p-2 rounded-xl">
                 <Heart className="text-[#FF5C8A]" size={22} />
               </div>
-              Ajoute quelqu&apos;un que tu aimes en secret
+              {t.addModal.title}
             </h2>
             <button
               onClick={resetAndClose}
               className="text-white/70 hover:text-white hover:bg-white/10 transition-all cursor-pointer rounded-full p-2"
-              aria-label="Fermer"
+              aria-label={t.addModal.close}
             >
               <X size={22} />
             </button>
@@ -171,20 +166,18 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
           {/* Form */}
           <form onSubmit={handleAdd} className="p-6 flex flex-col gap-5">
             <p className="text-white/60 text-sm">
-              Entre son numéro de téléphone. C&apos;est <strong>100% secret</strong> :
-              il ne saura jamais que c&apos;est toi, sauf si lui aussi t&apos;aime en
-              secret 💘
+              {t.addModal.desc}
             </p>
 
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2">
-                Son numéro
+                {t.addModal.phoneLabel}
               </label>
               <div className="wlm-phone-input bg-white/10 rounded-lg px-3 py-3">
                 <PhoneInput
                   international
                   defaultCountry="BJ"
-                  placeholder="Numéro de la personne"
+                  placeholder={t.addModal.phonePlaceholder}
                   value={phone}
                   onChange={setPhone}
                 />
@@ -193,15 +186,15 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
 
             <div>
               <label className="block text-white/80 text-sm font-medium mb-2">
-                Un surnom pour t&apos;y retrouver{" "}
-                <span className="text-white/40">(optionnel, privé)</span>
+                {t.addModal.nicknameLabel}{" "}
+                <span className="text-white/40">{t.addModal.nicknameHint}</span>
               </label>
               <input
                 type="text"
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
                 maxLength={40}
-                placeholder="Ex: la fille du cours de maths"
+                placeholder={t.addModal.nicknamePlaceholder}
                 className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/40 focus:outline-none focus:border-[#FF5C8A]"
               />
             </div>
@@ -213,11 +206,11 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
             >
               {isAdding ? (
                 <>
-                  <Loader2 className="animate-spin" size={18} /> Ajout…
+                  <Loader2 className="animate-spin" size={18} /> {t.addModal.adding}
                 </>
               ) : (
                 <>
-                  <Heart size={18} /> {t.addcrush.addButton}
+                  <Heart size={18} /> {t.addModal.add}
                 </>
               )}
             </button>
@@ -231,11 +224,14 @@ const AddCrushModal: React.FC<AddCrushModalProps> = ({
               >
                 {buyingSlots ? (
                   <>
-                    <Loader2 className="animate-spin" size={18} /> Paiement…
+                    <Loader2 className="animate-spin" size={18} /> {t.addModal.paying}
                   </>
                 ) : (
                   <>
-                    Débloquer +{SLOTS_PACK.slots} places · {SLOTS_PACK.amount} FCFA
+                    {format(t.addModal.unlockSlots, {
+                      slots: SLOTS_PACK.slots,
+                      amount: SLOTS_PACK.amount,
+                    })}
                   </>
                 )}
               </button>

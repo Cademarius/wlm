@@ -5,8 +5,10 @@ import { createClient } from '@/lib/supabase/client';
 import { Bell } from "lucide-react";
 import { useAuth } from "./AuthGuard";
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 export default function NotificationBell() {
+  const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -74,7 +76,7 @@ export default function NotificationBell() {
     <button
       onClick={handleClick}
       className="relative p-2 rounded-full hover:bg-white/10 transition-colors cursor-pointer"
-      aria-label="Notifications"
+      aria-label={t.notificationBell.label}
     >
       <Bell className="w-6 h-6 text-white" />
       {unreadCount > 0 && (

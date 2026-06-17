@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Home, Heart, Eye } from "lucide-react";
 import { type Language } from "@/lib/i18n/setting";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 interface MobileNavBarProps {
   className?: string;
@@ -10,13 +11,15 @@ interface MobileNavBarProps {
   params: { lang: Language };
 }
 
-const TABS = [
-  { key: "feed", href: "feed", Icon: Home, label: "Accueil" },
-  { key: "addcrush", href: "addcrush", Icon: Heart, label: "Secrets" },
-  { key: "matchcrush", href: "matchcrush", Icon: Eye, label: "Admirateurs" },
-];
-
 const MobileNavBar = ({ className, activePage, params }: MobileNavBarProps) => {
+  const { t } = useTranslation();
+
+  const TABS = [
+    { key: "feed", href: "feed", Icon: Home, label: t.nav.home },
+    { key: "addcrush", href: "addcrush", Icon: Heart, label: t.nav.secrets },
+    { key: "matchcrush", href: "matchcrush", Icon: Eye, label: t.nav.admirers },
+  ];
+
   return (
     <nav
       className={`fixed bottom-0 left-0 right-0 z-50 wlm-glass border-t border-white/10 ${className}`}

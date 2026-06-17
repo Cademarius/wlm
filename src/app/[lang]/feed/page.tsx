@@ -5,9 +5,11 @@ import Link from "next/link";
 import { useAuth } from "../components/AuthGuard";
 import { Heart, Eye, ArrowRight } from "lucide-react";
 import { type Language } from "@/lib/i18n/setting";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
   const { lang } = use(params);
+  const { t, format } = useTranslation();
   const { user } = useAuth();
   const [secrets, setSecrets] = useState(0);
   const [admirers, setAdmirers] = useState(0);
@@ -40,14 +42,12 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
         <header>
           <h1 className="text-3xl sm:text-4xl font-bold">
             {firstName ? (
-              <>
-                Salut <span className="wlm-gradient-text">{firstName}</span> 👋
-              </>
+              <>{format(t.feed.greeting, { name: firstName })}</>
             ) : (
-              <>Bienvenue 👋</>
+              <>{t.feed.greetingFallback}</>
             )}
           </h1>
-          <p className="text-white/50 mt-1">Découvre qui t&apos;aime en secret.</p>
+          <p className="text-white/50 mt-1">{t.feed.subtitle}</p>
         </header>
 
         {/* Carte action principale */}
@@ -58,13 +58,12 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
           <div className="h-20 w-20 rounded-full wlm-btn-gradient wlm-glow flex items-center justify-center animate-float">
             <Heart size={40} className="text-white fill-white" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold">Qui t&apos;aime en secret ?</h2>
+          <h2 className="text-xl sm:text-2xl font-bold">{t.feed.actionTitle}</h2>
           <p className="text-white/60 max-w-sm">
-            Ajoute en secret les personnes que tu aimes. Si c&apos;est réciproque,
-            c&apos;est révélé 💘
+            {t.feed.actionDesc}
           </p>
           <span className="wlm-btn-gradient text-white px-6 py-3 rounded-2xl font-semibold flex items-center gap-2">
-            Ajouter en secret <ArrowRight size={18} />
+            {t.feed.actionBtn} <ArrowRight size={18} />
           </span>
         </Link>
 
@@ -75,7 +74,7 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
               <div className="h-10 w-10 rounded-xl wlm-glass flex items-center justify-center">
                 <Heart size={18} className="text-[#FF5C8A]" />
               </div>
-              <span className="text-white/70 text-sm">Mes secrets</span>
+              <span className="text-white/70 text-sm">{t.feed.statSecrets}</span>
             </div>
             {statsLoaded ? (
               <div className="text-4xl font-bold wlm-gradient-text">{secrets}</div>
@@ -88,7 +87,7 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
               <div className="h-10 w-10 rounded-xl wlm-glass flex items-center justify-center">
                 <Eye size={18} className="text-[#B14DFF]" />
               </div>
-              <span className="text-white/70 text-sm">Mes admirateurs</span>
+              <span className="text-white/70 text-sm">{t.feed.statAdmirers}</span>
             </div>
             {statsLoaded ? (
               <div className="text-4xl font-bold wlm-gradient-text">{admirers}</div>
@@ -100,12 +99,12 @@ const Feed = ({ params }: { params: Promise<{ lang: Language }> }) => {
 
         {/* Comment ça marche */}
         <section className="wlm-card p-6">
-          <h3 className="font-semibold mb-4">Comment ça marche</h3>
+          <h3 className="font-semibold mb-4">{t.feed.howTitle}</h3>
           <ol className="space-y-3">
             {[
-              { n: "1", t: "Ajoute un numéro", d: "La personne que tu aimes en secret — même si elle n'est pas inscrite." },
-              { n: "2", t: "C'est 100% secret", d: "Elle ne saura jamais que c'est toi." },
-              { n: "3", t: "Si c'est réciproque…", d: "Vous êtes prévenus tous les deux 💘" },
+              { n: "1", t: t.feed.step1Title, d: t.feed.step1Desc },
+              { n: "2", t: t.feed.step2Title, d: t.feed.step2Desc },
+              { n: "3", t: t.feed.step3Title, d: t.feed.step3Desc },
             ].map((s) => (
               <li key={s.n} className="flex items-start gap-3">
                 <span className="h-7 w-7 shrink-0 rounded-full wlm-btn-gradient flex items-center justify-center text-sm font-bold">

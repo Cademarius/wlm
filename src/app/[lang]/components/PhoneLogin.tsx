@@ -7,6 +7,7 @@ import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { sendOtp, verifyOtp, type OtpChannel } from "@/lib/supabase/auth";
 import { type Language } from "@/lib/i18n/setting";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 interface PhoneLoginProps {
   params: { lang: Language };
@@ -17,6 +18,7 @@ type Step = "phone" | "code";
 
 const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
   const router = useRouter();
+  const { t, format } = useTranslation();
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState<string | undefined>();
   const [code, setCode] = useState("");
@@ -28,7 +30,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
     e.preventDefault();
     setError(null);
     if (!phone || !isValidPhoneNumber(phone)) {
-      setError("Entre un numéro de téléphone valide.");
+      setError(t.auth.invalidPhone);
       return;
     }
     setLoading(true);
@@ -39,7 +41,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
       setError(
         err instanceof Error
           ? err.message
-          : "Impossible d'envoyer le code. Réessaie."
+          : t.auth.sendError
       );
     } finally {
       setLoading(false);
@@ -50,7 +52,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
     e.preventDefault();
     setError(null);
     if (!phone || code.trim().length < 4) {
-      setError("Entre le code reçu.");
+      setError(t.auth.enterCode);
       return;
     }
     setLoading(true);
@@ -59,7 +61,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
       router.push(`/${params.lang}/feed`);
       router.refresh();
     } catch {
-      setError("Code incorrect ou expiré. Réessaie.");
+      setError(t.auth.verifyError);
     } finally {
       setLoading(false);
     }
@@ -72,7 +74,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
     try {
       await sendOtp(phone, channel);
     } catch {
-      setError("Échec du renvoi du code.");
+      setError(t.auth.resendError);
     } finally {
       setLoading(false);
     }
@@ -88,9 +90,9 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
       {step === "phone" ? (
         <form onSubmit={handleSendCode} className="w-full flex flex-col gap-4">
           <div className="text-center">
-            <h2 className="text-lg font-semibold">Découvre qui t&apos;aime en secret</h2>
+            <h2 className="text-lg font-semibold">{t.auth.title}</h2>
             <p className="text-sm text-white/60 mt-1">
-              Entre ton numéro pour recevoir un code de connexion.
+              {t.auth.desc}
             </p>
           </div>
 
@@ -98,7 +100,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             <PhoneInput
               international
               defaultCountry="BJ"
-              placeholder="Ton numéro de téléphone"
+              placeholder={t.auth.phonePlaceholder}
               value={phone}
               onChange={setPhone}
             />
@@ -114,7 +116,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
                   : "bg-white/10 text-white/60 hover:bg-white/20"
               }`}
             >
-              WhatsApp
+              {t.auth.whatsapp}
             </button>
             <button
               type="button"
@@ -125,7 +127,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
                   : "bg-white/10 text-white/60 hover:bg-white/20"
               }`}
             >
-              SMS
+              {t.auth.sms}
             </button>
           </div>
 
@@ -136,16 +138,17 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             disabled={loading}
             className="wlm-btn-gradient wlm-glow hover:brightness-110 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition active:scale-95"
           >
-            {loading ? "Envoi…" : "Recevoir mon code"}
+            {loading ? t.auth.sending : t.auth.getCode}
           </button>
         </form>
       ) : (
         <form onSubmit={handleVerify} className="w-full flex flex-col gap-4">
           <div className="text-center">
-            <h2 className="text-lg font-semibold">Entre ton code</h2>
+            <h2 className="text-lg font-semibold">{t.auth.codeTitle}</h2>
             <p className="text-sm text-white/60 mt-1">
-              Envoyé {channel === "whatsapp" ? "sur WhatsApp" : "par SMS"} au{" "}
-              <span className="text-white">{phone}</span>
+              {channel === "whatsapp"
+                ? format(t.auth.codeDescWhatsapp, { phone: phone ?? "" })
+                : format(t.auth.codeDescSms, { phone: phone ?? "" })}
             </p>
           </div>
 
@@ -166,15 +169,15 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             disabled={loading}
             className="wlm-btn-gradient wlm-glow hover:brightness-110 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition active:scale-95"
           >
-            {loading ? "Vérification…" : "Se connecter"}
+            {loading ? t.auth.verifying : t.auth.login}
           </button>
 
           <div className="flex items-center justify-between text-xs text-white/60">
             <button type="button" onClick={() => setStep("phone")}>
-              ← Changer de numéro
+              {t.auth.changeNumber}
             </button>
             <button type="button" onClick={handleResend} disabled={loading}>
-              Renvoyer le code
+              {t.auth.resend}
             </button>
           </div>
         </form>
@@ -185,7 +188,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
           onClick={onClose}
           className="mt-6 text-xs text-white/40 hover:text-white/70"
         >
-          Fermer
+          {t.auth.close}
         </button>
       )}
     </div>

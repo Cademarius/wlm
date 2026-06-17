@@ -1,9 +1,8 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthGuard";
-import { getTranslation } from '@/lib/i18n/getTranslation';
-import { type Language } from '@/lib/i18n/setting';
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 import UserCard from "../components/UserCard";
 import AdmirerCard, { type AdmirerHints } from "../components/AdmirerCard";
 import PageTransition from "../components/PageTransition";
@@ -27,9 +26,8 @@ interface Admirer {
   user: AdmirerUser | null;
 }
 
-const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
-  const resolvedParams = use(params);
-  const t = getTranslation(resolvedParams.lang);
+const MatchWithACrush = () => {
+  const { t, format } = useTranslation();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   
   const [admirers, setAdmirers] = useState<Admirer[]>([]);
@@ -105,13 +103,13 @@ const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) =>
               <div className="max-w-md mx-auto">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-3">
                   {isAuthenticated
-                    ? "Personne pour l'instant"
-                    : "Découvre qui t'aime en secret"}
+                    ? t.admirers.emptyTitle
+                    : t.admirers.emptyTitleGuest}
                 </h2>
                 <p className="text-white/60 text-base sm:text-lg">
                   {isAuthenticated
-                    ? "Quand quelqu'un t'ajoutera en secret, il apparaîtra ici (flouté). Débloque des indices pour en savoir plus 👀"
-                    : "Connecte-toi pour voir qui t'aime en secret."}
+                    ? t.admirers.emptyDesc
+                    : t.admirers.emptyDescGuest}
                 </p>
               </div>
             </div>
@@ -124,13 +122,11 @@ const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) =>
               <div className="text-center mb-12">
                 <div className="flex items-center justify-center gap-3 mb-4">
                   <h2 className="text-2xl sm:text-3xl font-bold wlm-gradient-text">
-                    👀 Mes admirateurs
+                    {t.admirers.sectionTitle}
                   </h2>
                 </div>
                 <p className="text-white/60 text-base sm:text-lg">
-                  {admirers.length > 1
-                    ? t.matchcrush.admirersPlural.replace("{{count}}", String(admirers.length))
-                    : t.matchcrush.admirers.replace("{{count}}", String(admirers.length))}
+                  {format(admirers.length <= 1 ? t.admirers.count : t.admirers.countPlural, { count: admirers.length })}
                 </p>
               </div>
 
@@ -144,8 +140,8 @@ const MatchWithACrush = ({ params }: { params: Promise<{ lang: Language }> }) =>
                         user={admirer.user}
                         status={admirer.status}
                         statusLabel={{
-                          matched: t.matchcrush.status.matched,
-                          admires: t.matchcrush.status.admires,
+                          matched: t.admirers.status.matched,
+                          admires: t.admirers.status.admires,
                         }}
                         type="admirer"
                         index={index}

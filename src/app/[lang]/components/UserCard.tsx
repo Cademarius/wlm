@@ -4,7 +4,7 @@
 import Image from "next/image";
 import { Heart, MapPin, Calendar, Lock } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
-import { getTranslation } from '@/lib/i18n/getTranslation';
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 interface UserCardProps {
   user: {
@@ -31,7 +31,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
   const router = useRouter();
   const params = useParams();
   const lang = params.lang as string;
-  const t = getTranslation(lang as 'fr' | 'en');
+  const { t, format } = useTranslation();
 
   if (!user) {
     return (
@@ -128,15 +128,15 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
               <Calendar size={16} className="text-[#FF5C8A]/70 flex-shrink-0" />
               <span className="text-sm">
                 {isBlurred
-                  ? (lang === 'fr' ? '•• ans' : '•• years')
-                  : t.addcrush.age.replace("{{count}}", String(user.age))}
+                  ? t.userCard.agePlaceholder
+                  : format(t.userCard.age, { count: user.age })}
               </span>
             </div>
           )}
           {user.location && (
             <div className={`flex items-center gap-2 text-white/70 ${isBlurred ? "blur-sm" : ""}`}>
               <MapPin size={16} className="text-[#FF5C8A]/70 flex-shrink-0" />
-              <span className="text-sm truncate">{isBlurred ? "••••••, ••••••" : user.location}</span>
+              <span className="text-sm truncate">{isBlurred ? t.userCard.locationPlaceholder : user.location}</span>
             </div>
           )}
         </div>
@@ -169,14 +169,14 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
           {isClickable ? (
             <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <span className="text-xs text-[#FF5C8A] font-medium">
-                {lang === 'fr' ? 'Voir plus →' : 'See more →'}
+                {t.userCard.seeMore}
               </span>
             </div>
           ) : (
             <div className="flex items-center gap-1">
               <Lock size={12} className="text-white/40" />
               <span className="text-xs text-white/40 font-medium">
-                Verrouillé
+                {t.userCard.locked}
               </span>
             </div>
           )}

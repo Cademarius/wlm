@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/supabase/AuthProvider";
-
-const GENDERS = [
-  { value: "female", label: "Femme" },
-  { value: "male", label: "Homme" },
-  { value: "other", label: "Autre" },
-];
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 /**
  * Invitation LÉGÈRE et NON bloquante à compléter le minimum utile :
@@ -18,6 +13,12 @@ const GENDERS = [
 export default function ProfileSetup() {
   const { user, isAuthenticated, profile, refresh } = useAuth();
   const pathname = usePathname();
+  const { t } = useTranslation();
+  const GENDERS = [
+    { value: "female", label: t.profileSetup.genderFemale },
+    { value: "male", label: t.profileSetup.genderMale },
+    { value: "other", label: t.profileSetup.genderOther },
+  ];
 
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -59,7 +60,7 @@ export default function ProfileSetup() {
   const save = async () => {
     setError(null);
     if (!name.trim() || !gender || !location.trim()) {
-      setError("Renseigne ton prénom, ton genre et ta ville.");
+      setError(t.profileSetup.incompleteError);
       return;
     }
     setSaving(true);
@@ -78,7 +79,7 @@ export default function ProfileSetup() {
       await refresh();
       setOpen(false);
     } catch {
-      setError("Une erreur est survenue. Réessaie.");
+      setError(t.profileSetup.saveError);
     } finally {
       setSaving(false);
     }
@@ -90,27 +91,26 @@ export default function ProfileSetup() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="wlm-modal w-full max-w-sm rounded-3xl p-6 text-white max-h-[90dvh] overflow-y-auto">
         <h2 className="text-lg font-semibold text-center">
-          Complète ton profil en 10 secondes
+          {t.profileSetup.title}
         </h2>
         <p className="mt-1 text-center text-sm text-white/60">
-          Juste 3 infos — pour révéler ton identité en cas de match 💘 et activer
-          les indices.
+          {t.profileSetup.desc}
         </p>
 
         <div className="mt-5 flex flex-col gap-4">
           <div>
-            <label className="mb-1 block text-sm text-white/80">Prénom</label>
+            <label className="mb-1 block text-sm text-white/80">{t.profileSetup.firstName}</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={40}
-              placeholder="Ton prénom"
+              placeholder={t.profileSetup.firstNamePlaceholder}
               className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-white/80">Genre</label>
+            <label className="mb-1 block text-sm text-white/80">{t.profileSetup.gender}</label>
             <div className="flex gap-2">
               {GENDERS.map((g) => (
                 <button
@@ -130,12 +130,12 @@ export default function ProfileSetup() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-white/80">Ville</label>
+            <label className="mb-1 block text-sm text-white/80">{t.profileSetup.city}</label>
             <input
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               maxLength={60}
-              placeholder="Ex : Cotonou"
+              placeholder={t.profileSetup.cityPlaceholder}
               className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
             />
           </div>
@@ -147,13 +147,13 @@ export default function ProfileSetup() {
             disabled={saving}
             className="rounded-lg bg-[#FF5C8A] py-3 font-semibold transition hover:bg-[#e04370] disabled:opacity-50 active:scale-95"
           >
-            {saving ? "Enregistrement…" : "Enregistrer"}
+            {saving ? t.profileSetup.saving : t.profileSetup.save}
           </button>
           <button
             onClick={dismiss}
             className="text-sm text-white/50 hover:text-white/80"
           >
-            Plus tard
+            {t.profileSetup.later}
           </button>
         </div>
       </div>

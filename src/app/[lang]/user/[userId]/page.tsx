@@ -2,6 +2,7 @@
 
 import React from "react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
+import { format } from "@/lib/i18n/I18nProvider";
 // import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Heart, Users, MapPin, Calendar, User as UserIcon } from "lucide-react";
@@ -170,16 +171,16 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                       {userProfile.age && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
                           <Calendar size={18} className="text-[#FF5C8A]" />
-                          <span>{t.addcrush?.age ? t.addcrush.age.replace('{{count}}', userProfile.age.toString()) : `${userProfile.age} ans`}</span>
+                          <span>{format(t.userCard.age, { count: userProfile.age })}</span>
                         </div>
                       )}
                       {userProfile.gender && (
                         <div className="flex items-center gap-2 text-white/70 justify-center md:justify-start">
                           <UserIcon size={18} className="text-[#FF5C8A]" />
                           <span>
-                            {userProfile.gender === 'male' && (t.settings?.sections?.personalInfo?.gender?.male || 'Homme')}
-                            {userProfile.gender === 'female' && (t.settings?.sections?.personalInfo?.gender?.female || 'Femme')}
-                            {userProfile.gender === 'other' && (t.settings?.sections?.personalInfo?.gender?.other || 'Autre')}
+                            {userProfile.gender === 'male' && t.profile.genderMale}
+                            {userProfile.gender === 'female' && t.profile.genderFemale}
+                            {userProfile.gender === 'other' && t.profile.genderOther}
                           </span>
                         </div>
                       )}
@@ -196,7 +197,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                       <div className="flex gap-6 justify-center md:justify-start">
                         <div className="text-center">
                           <div className="text-2xl font-bold text-[#FF5C8A]">{admirersCount}</div>
-                          <div className="text-xs text-white/60">{t.profile?.stats?.admirers || 'Admirateurs'}</div>
+                          <div className="text-xs text-white/60">{t.nav.admirers}</div>
                         </div>
                       </div>
                     </div>
@@ -210,28 +211,28 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                         className="bg-[#FF5C8A] hover:bg-[#FF3D6D] text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 min-h-[44px]"
                       >
                         <Heart size={20} />
-                        <span className="font-medium">{t.addcrush?.buttonText || 'Ajouter un crush'}</span>
+                        <span className="font-medium">{t.secrets.addBtn}</span>
                       </button>
                     )}
                     
                     {isCrush && !isMatch && (
                       <div className="bg-yellow-500/20 border border-yellow-500/50 text-yellow-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px]">
                         <Heart size={20} className="fill-yellow-400" />
-                        <span className="font-medium">{t.addcrush?.messages?.alreadyAdded || 'Crush ajouté'}</span>
+                        <span className="font-medium">{t.secrets.status.pending}</span>
                       </div>
                     )}
                     
                     {isMatch && (
                       <div className="bg-green-500/20 border-2 border-green-500 text-green-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px]">
                         <Heart size={20} className="fill-green-400" />
-                        <span className="font-bold">{t.addcrush?.status?.matched || 'Match'}</span>
+                        <span className="font-bold">{t.secrets.status.matched}</span>
                       </div>
                     )}
                     
                     {isAdmirer && !isMatch && (
                       <div className="bg-blue-500/20 border border-blue-500/50 text-blue-400 px-6 py-3 rounded-full flex items-center justify-center gap-2 min-h-[44px] text-sm">
                         <Users size={18} />
-                        <span className="font-medium">{t.matchcrush?.status?.admires || 'Vous admire'}</span>
+                        <span className="font-medium">{t.admirers.status.admires}</span>
                       </div>
                     )}
                   </div>
@@ -240,7 +241,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                 {/* Bio */}
                 {userProfile.bio && (
                   <div className="mt-6 pt-6 border-t border-white/10">
-                    <h3 className="text-white font-semibold mb-2">{t.settings?.sections?.about?.title || 'À propos'}</h3>
+                    <h3 className="text-white font-semibold mb-2">{t.publicProfile.about}</h3>
                     <p className="text-white/70 leading-relaxed">{userProfile.bio}</p>
                   </div>
                 )}
@@ -248,7 +249,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
             </div>
           ) : (
             <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl p-8 text-center border border-[#FF5C8A]/30">
-              <p className="text-white/70">{t.userNotFound || t.addcrush?.noResults || 'Utilisateur non trouvé'}</p>
+              <p className="text-white/70">{t.userNotFound || 'Utilisateur non trouvé'}</p>
             </div>
           )}
         </div>

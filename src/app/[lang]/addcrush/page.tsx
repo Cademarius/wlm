@@ -5,7 +5,7 @@ import { use } from "react";
 import AddCrushModal from "../components/AddCrushModal";
 import LoginModal from "../components/login";
 import { useAuth } from "../components/AuthGuard";
-import { getTranslation } from '@/lib/i18n/getTranslation';
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 import { type Language } from '@/lib/i18n/setting';
 import { Heart } from "lucide-react";
 import { CrushListSkeleton } from "../components/SkeletonLoader";
@@ -32,7 +32,7 @@ interface Crush {
 
 const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
   const resolvedParams = use(params);
-  const t = getTranslation(resolvedParams.lang);
+  const { t, format } = useTranslation();
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
 
   const [showAddCrushModal, setShowAddCrushModal] = useState(false);
@@ -120,20 +120,20 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
               <div className="max-w-md mx-auto">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-3">
                   {isAuthenticated
-                    ? "Aucun secret pour l'instant"
-                    : "Découvre qui t'aime en secret"}
+                    ? t.secrets.emptyTitle
+                    : t.secrets.emptyTitleGuest}
                 </h2>
                 <p className="text-white/60 text-base sm:text-lg mb-8">
                   {isAuthenticated
-                    ? "Ajoute quelqu'un que tu aimes en secret. Il ne le saura jamais… sauf si c'est réciproque 💘"
-                    : "Connecte-toi pour ajouter en secret les personnes que tu aimes."}
+                    ? t.secrets.emptyDesc
+                    : t.secrets.emptyDescGuest}
                 </p>
                 <button
                   onClick={handleButtonClick}
                   className="inline-flex items-center justify-center gap-2 wlm-btn-gradient wlm-glow text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-2xl transition active:scale-95 hover:brightness-110 cursor-pointer"
                 >
                   <Heart size={20} className="fill-white" />
-                  Ajouter en secret
+                  {t.secrets.addBtn}
                 </button>
               </div>
             </div>
@@ -147,13 +147,11 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                 <div className="flex items-center justify-center gap-3 mb-3">
                   <Heart className="text-[#FF5C8A] fill-[#FF5C8A]" size={30} />
                   <h2 className="text-2xl sm:text-3xl font-bold wlm-gradient-text">
-                    Mes secrets
+                    {t.secrets.sectionTitle}
                   </h2>
                 </div>
                 <p className="text-white/60 text-base sm:text-lg mb-6">
-                  {crushes.length > 1
-                    ? `${crushes.length} personnes que tu aimes en secret`
-                    : `${crushes.length} personne que tu aimes en secret`}
+                  {format(crushes.length <= 1 ? t.secrets.count : t.secrets.countPlural, { count: crushes.length })}
                 </p>
 
                 <button
@@ -161,7 +159,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                   className="inline-flex items-center justify-center gap-2 wlm-btn-gradient wlm-glow text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-2xl transition active:scale-95 hover:brightness-110 cursor-pointer"
                 >
                   <Heart size={20} className="fill-white" />
-                  Ajouter en secret
+                  {t.secrets.addBtn}
                 </button>
               </div>
 
@@ -175,8 +173,8 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                         user={crush.user}
                         status={crush.status}
                         statusLabel={{
-                          matched: t.addcrush.status.matched,
-                          pending: t.addcrush.status.pending,
+                          matched: t.secrets.status.matched,
+                          pending: t.secrets.status.pending,
                         }}
                         type="crush"
                         index={index}
@@ -200,7 +198,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
                           </div>
                         </div>
                         <p className="text-yellow-400 text-sm font-medium">
-                          En attente — pas encore inscrit(e)
+                          {t.secrets.pending}
                         </p>
                       </div>
                     )

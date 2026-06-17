@@ -10,7 +10,9 @@ import UserProfileButton from "./UserProfileButton";
 import LoginModal from "./login";
 import { useAuth } from "./AuthGuard";
 import NotificationBell from "./NotificationBell";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { defaultAvatar } from "@/lib/avatar";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 type HeaderProps = {
   lang: Language;
@@ -20,15 +22,16 @@ const Header = ({ lang }: HeaderProps) => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   const userImage = user?.image;
   const userName = user?.name;
 
   const NAV_LINKS = [
-    { id: "accueil", label: "Accueil", href: `/${lang}/feed`, icon: Home },
-    { id: "secrets", label: "Secrets", href: `/${lang}/addcrush`, icon: HeartTick },
-    { id: "admirateurs", label: "Admirateurs", href: `/${lang}/matchcrush`, icon: ProfileCircle },
+    { id: "accueil", label: t.nav.home, href: `/${lang}/feed`, icon: Home },
+    { id: "secrets", label: t.nav.secrets, href: `/${lang}/addcrush`, icon: HeartTick },
+    { id: "admirateurs", label: t.nav.admirers, href: `/${lang}/matchcrush`, icon: ProfileCircle },
   ];
 
   return (
@@ -77,6 +80,7 @@ const Header = ({ lang }: HeaderProps) => {
 
         {/* Contrôles desktop */}
         <div className="hidden xl:flex items-center gap-4 flex-shrink-0">
+          <LanguageSwitcher />
           <NotificationBell />
           <UserProfileButton
             onLoginClick={() => setShowLoginModal(true)}
@@ -86,7 +90,8 @@ const Header = ({ lang }: HeaderProps) => {
         </div>
 
         {/* Contrôles mobile/tablette */}
-        <div className="flex items-center gap-3 xl:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
+          <LanguageSwitcher />
           <NotificationBell />
           <button
             onClick={() => {
@@ -94,11 +99,11 @@ const Header = ({ lang }: HeaderProps) => {
               else router.push(`/${lang}/profile`);
             }}
             className="w-9 h-9 rounded-full overflow-hidden border-2 border-[#FF5C8A]/60 active:scale-90 transition shrink-0"
-            aria-label="Mon profil"
+            aria-label={t.nav.profile}
           >
             <Image
               src={userImage || defaultAvatar(user?.profile?.gender)}
-              alt={userName || "Profil"}
+              alt={userName || t.nav.profile}
               width={36}
               height={36}
               className="object-cover w-full h-full"

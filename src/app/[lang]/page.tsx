@@ -42,7 +42,7 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
     <div
       className="relative flex flex-col min-h-screen"
       role="main"
-      aria-label={t.home.pageAriaLabel}
+      aria-label={t.landing.ariaLabel}
     >
       {/* Background optimisé avec Next.js Image - Lazy loading stratégique */}
   <div className="fixed inset-0 -z-10 bg-linear-to-br from-[#1a1d3f] via-[#2a2d5f] to-[#1a1d3f]">
@@ -129,13 +129,12 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
         >
           {/* Titre principal */}
           <h1 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-wide drop-shadow-lg px-2">
-            Qui <span className="wlm-gradient-text">t&apos;aime en secret</span> ?
+            {t.landing.title} <span className="wlm-gradient-text">{t.landing.titleHighlight}</span> ?
           </h1>
 
           {/* Description */}
           <p className="text-white/95 font-medium text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed tracking-wide max-w-2xl mx-auto drop-shadow-md px-4">
-            Ajoute en secret les personnes que tu aimes. Si c&apos;est réciproque,
-            c&apos;est révélé 💘 Sinon, ça reste ton secret.
+            {t.landing.description}
           </p>
           
           {/* CTA Button - plus proéminent sur mobile */}
@@ -147,16 +146,16 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
             <Link href={`/${resolvedParams.lang}/addcrush`} className="inline-block">
               <button
                 className="wlm-btn-gradient wlm-glow hover:brightness-110 transition-all duration-200 text-white font-semibold text-base sm:text-lg md:text-xl px-8 py-3.5 sm:px-10 sm:py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-white/30 cursor-pointer w-full sm:w-auto min-w-[200px] sm:min-w-60"
-                aria-label={t.home.buttonAriaLabel}
+                aria-label={t.landing.ctaAria}
               >
-                Commencer
+                {t.landing.cta}
               </button>
             </Link>
           </motion.div>
 
           {/* Réassurance */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-2">
-            {["🔒 100% secret", "📱 Par numéro", "💘 Réciproque"].map((c) => (
+            {[t.landing.badgeSecret, t.landing.badgePhone, t.landing.badgeReciprocal].map((c) => (
               <span
                 key={c}
                 className="wlm-glass text-white/90 text-xs sm:text-sm px-4 py-2 rounded-full"

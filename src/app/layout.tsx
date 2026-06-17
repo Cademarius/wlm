@@ -18,7 +18,7 @@ import ServiceWorkerWrapper from "@/app/[lang]/components/ServiceWorkerWrapper";
 import InstallPrompt from "@/app/[lang]/components/InstallPrompt";
 import SessionProvider from "@/app/[lang]/components/SessionProvider";
 import AuthGuard from "@/app/[lang]/components/AuthGuard";
-import { languages, type Language } from '@/lib/i18n/setting';
+import { languages, defaultLang, type Language } from '@/lib/i18n/setting';
 import { notFound } from 'next/navigation';
 
 // Génération des paramètres statiques pour i18n
@@ -30,51 +30,44 @@ export function generateStaticParams(): { lang: Language }[] {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://wholikeme.app'),
   title: {
-    default: "WhoLikeMe - Qui t'aime en secret ? Découvre-le.",
-    template: "%s | WhoLikeMe",
+    default: "WLM — Qui t'aime en secret ?",
+    template: "%s | WLM",
   },
   description:
-    "WhoLikeMe est une application sociale pour découvrir si ton crush t'aime en retour. Ajoute ton crush en toute discrétion, s'il te crush aussi c'est un match. Sinon, vois ceux qui t'aiment en secret.",
+    "Ajoute en secret les personnes que tu aimes. Si c'est réciproque, c'est révélé 💘 Sinon, ça reste ton secret.",
   keywords: [
-    "crush secret",
-    "application de rencontre",
+    "aime en secret",
+    "amour réciproque",
     "match réciproque",
-    "crush en retour",
-    "rencontres jeunes",
-    "réseau social amoureux",
     "discrétion",
-    "match love",
+    "Bénin",
     "Afrique francophone",
-    "Europe francophone",
-    "app dating 2025",
-    "crush match app",
     "WLM",
-    "WhoLikeMe",
+    "secret crush",
+    "secretly loves you",
   ],
-  authors: [{ name: "WLM - WhoLikeMe Team" }],
+  authors: [{ name: "WLM" }],
   openGraph: {
     type: "website",
-    locale: "fr_FR",
-    siteName: "WhoLikeMe",
-    title: "Découvre si ton crush t'aime aussi - WhoLikeMe",
+    siteName: "WLM",
+    title: "WLM — Qui t'aime en secret ?",
     description:
-      "Ajoute ton crush de manière anonyme. Si c'est réciproque, c'est un match et vous êtes notifiés. Sinon, vois ceux qui t'aiment en secret.",
+      "Ajoute en secret les personnes que tu aimes. Si c'est réciproque, c'est révélé 💘 Sinon, ça reste ton secret.",
     images: [
       {
         url: "/og-image.webp",
         width: 1200,
         height: 630,
-        alt: "WhoLikeMe - Application de crush secret",
+        alt: "WLM — qui t'aime en secret",
         type: "image/webp",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ajoute ton crush. Si c'est réciproque, c'est un match 💘",
+    title: "WLM — Qui t'aime en secret ?",
     description:
-      "WhoLikeMe t'aide à découvrir en toute discrétion qui te crush. Match réciproque ou secret flouté. L'amour sans pression.",
-    creator: "@wholikeme",
+      "Ajoute en secret les personnes que tu aimes. Si c'est réciproque, c'est révélé 💘",
     images: ["/og-image.webp"],
   },
   manifest: "/manifest.json",
@@ -101,10 +94,13 @@ export default async function RootLayout({
 }: RootLayoutProps) {
   // Resolve params (may be undefined in some contexts)
   const resolvedParams = params ? (await params) : undefined;
-  const lang = resolvedParams?.lang || 'fr'; // fallback vers 'fr' si pas de paramètre
   if (resolvedParams?.lang && !languages.includes(resolvedParams.lang)) {
     notFound();
   }
+  // Le layout racine ne reçoit pas le param de segment enfant `[lang]`.
+  // Les pages étant générées en SSG, on pose la locale par défaut ici et
+  // l'I18nProvider corrige <html lang> côté client selon la locale active.
+  const lang: Language = resolvedParams?.lang || defaultLang;
 
   return (
     <html lang={lang}>

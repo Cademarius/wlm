@@ -4,7 +4,7 @@ import { use, useEffect, useState } from "react";
 import React from "react";
 // Modal component for push notification prompt
 function PushPromptModal({ open, onEnable, onLater }: { open: boolean; onEnable: () => void; onLater: () => void }) {
-  const t = getTranslation(typeof window !== 'undefined' && window.__NEXT_DATA__?.props?.pageProps?.lang || 'fr');
+  const { t } = useTranslation();
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 animate-fade-in">
@@ -48,6 +48,7 @@ function PushPromptModal({ open, onEnable, onLater }: { open: boolean; onEnable:
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from "../components/AuthGuard";
 import { getTranslation } from '@/lib/i18n/getTranslation';
+import { useTranslation, format } from "@/lib/i18n/I18nProvider";
 import { type Language } from '@/lib/i18n/setting';
 import { Bell, Check, CheckCheck, Loader2, Heart, Sparkles, ArrowRight, Clock } from "lucide-react";
 import Image from "next/image";
@@ -351,11 +352,11 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return "À l'instant";
-    if (minutes < 60) return `Il y a ${minutes}min`;
-    if (hours < 24) return `Il y a ${hours}h`;
-    if (days < 7) return `Il y a ${days}j`;
-    return date.toLocaleDateString("fr-FR", {
+    if (minutes < 1) return t.notifications.time.now;
+    if (minutes < 60) return format(t.notifications.time.minutesAgo, { count: minutes });
+    if (hours < 24) return format(t.notifications.time.hoursAgo, { count: hours });
+    if (days < 7) return format(t.notifications.time.daysAgo, { count: days });
+    return date.toLocaleDateString(resolvedParams.lang === "fr" ? "fr-FR" : "en-US", {
       day: "numeric",
       month: "short",
       year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
@@ -417,7 +418,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
         {isAuthLoading ? (
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="text-[#FF5C8A] animate-spin mb-4" size={48} />
-            <p className="text-white/60">Chargement...</p>
+            <p className="text-white/60">{t.common.loading}</p>
           </div>
         ) : !isAuthenticated ? (
           <div className="flex flex-col items-center justify-center">

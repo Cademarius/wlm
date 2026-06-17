@@ -9,17 +9,18 @@ import { type Language } from "@/lib/i18n/setting";
 import Toast from "../components/Toast";
 import { useToast } from "@/hooks/useToast";
 import { defaultAvatar } from "@/lib/avatar";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 type ProfilePageProps = { params: Promise<{ lang: Language }> };
 
-const GENDERS = [
-  { value: "female", label: "Femme" },
-  { value: "male", label: "Homme" },
-  { value: "other", label: "Autre" },
-];
-
 export default function ProfilePage({ params }: ProfilePageProps) {
   const { lang } = use(params);
+  const { t } = useTranslation();
+  const GENDERS = [
+    { value: "female", label: t.profile.genderFemale },
+    { value: "male", label: t.profile.genderMale },
+    { value: "other", label: t.profile.genderOther },
+  ];
   const { user, refresh, signOut } = useAuth();
   const router = useRouter();
   const { toast, success, error, hideToast } = useToast();
@@ -60,11 +61,11 @@ export default function ProfilePage({ params }: ProfilePageProps) {
     if (!file) return;
     const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowed.includes(file.type)) {
-      error("Image JPEG, PNG ou WebP uniquement");
+      error(t.profile.fileTypeError);
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      error("Image trop lourde (max 5 Mo)");
+      error(t.profile.fileSizeError);
       return;
     }
     setSelectedFile(file);
@@ -76,7 +77,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.gender || !form.location.trim()) {
-      error("Renseigne ton prénom, ton genre et ta ville.");
+      error(t.profile.incompleteError);
       return;
     }
     setIsSaving(true);
@@ -132,9 +133,9 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             onClick={() => router.push(`/${lang}/feed`)}
             className="flex items-center gap-2 text-white/60 hover:text-white mb-6 text-sm transition"
           >
-            <ArrowLeft size={18} /> Retour
+            <ArrowLeft size={18} /> {t.profile.back}
           </button>
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6">Mon profil</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6">{t.profile.title}</h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Photo */}
@@ -154,11 +155,11 @@ export default function ProfilePage({ params }: ProfilePageProps) {
                   onClick={() => fileInputRef.current?.click()}
                   className="wlm-glass px-4 py-2 rounded-full text-sm flex items-center gap-2 hover:bg-white/10 transition"
                 >
-                  <Camera size={16} /> Changer la photo
+                  <Camera size={16} /> {t.profile.changePhoto}
                 </button>
                 {previewImage && (
                   <p className="text-[#FF5C8A] text-xs mt-2">
-                    Clique sur Enregistrer pour valider
+                    {t.profile.saveHint}
                   </p>
                 )}
               </div>
@@ -174,17 +175,17 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             {/* Champs */}
             <div className="wlm-card p-6 space-y-5">
               <div>
-                <label className="block text-sm text-white/80 mb-2">Prénom</label>
+                <label className="block text-sm text-white/80 mb-2">{t.profile.firstName}</label>
                 <input
                   value={form.name}
                   onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
                   maxLength={40}
-                  placeholder="Ton prénom"
+                  placeholder={t.profile.firstNamePlaceholder}
                   className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
                 />
               </div>
               <div>
-                <label className="block text-sm text-white/80 mb-2">Genre</label>
+                <label className="block text-sm text-white/80 mb-2">{t.profile.gender}</label>
                 <div className="flex gap-2">
                   {GENDERS.map((g) => (
                     <button
@@ -203,12 +204,12 @@ export default function ProfilePage({ params }: ProfilePageProps) {
                 </div>
               </div>
               <div>
-                <label className="block text-sm text-white/80 mb-2">Ville</label>
+                <label className="block text-sm text-white/80 mb-2">{t.profile.city}</label>
                 <input
                   value={form.location}
                   onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
                   maxLength={60}
-                  placeholder="Ex : Cotonou"
+                  placeholder={t.profile.cityPlaceholder}
                   className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
                 />
               </div>
@@ -220,12 +221,12 @@ export default function ProfilePage({ params }: ProfilePageProps) {
               className="w-full wlm-btn-gradient wlm-glow rounded-2xl py-4 font-semibold flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
             >
               {isUploading ? (
-                "Téléversement…"
+                t.profile.uploading
               ) : isSaving ? (
-                "Enregistrement…"
+                t.profile.saving
               ) : (
                 <>
-                  <Save size={18} /> Enregistrer
+                  <Save size={18} /> {t.profile.save}
                 </>
               )}
             </button>
@@ -239,7 +240,7 @@ export default function ProfilePage({ params }: ProfilePageProps) {
             }}
             className="w-full mt-4 text-white/50 hover:text-white/80 text-sm py-3 flex items-center justify-center gap-2 transition"
           >
-            <LogOut size={16} /> Se déconnecter
+            <LogOut size={16} /> {t.profile.logout}
           </button>
         </main>
       </div>

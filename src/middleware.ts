@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { languages } from '@/lib/i18n/setting';
+import { languages, type Language } from '@/lib/i18n/setting';
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -13,21 +13,18 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Redirection vers une locale si absente
+  // Redirection vers une locale si absente (détection via Accept-Language)
   const isMissingLocale = languages.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
   if (isMissingLocale) {
     const acceptLang = request.headers.get('accept-language') || '';
-    const detectedLang = acceptLang.startsWith('fr') ? 'fr' : 'en';
+    const detectedLang: Language = acceptLang.startsWith('fr') ? 'fr' : 'en';
 
     const newUrl = new URL(`/${detectedLang}${pathname}`, request.url);
     return NextResponse.redirect(newUrl);
   }
-
-  // Plus de vérification de complétion de profil dans le middleware
-  // Le modal s'occupe de tout maintenant
 
   return NextResponse.next();
 }

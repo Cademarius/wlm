@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X, Share } from "lucide-react";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 // Évènement Chrome/Android non typé par défaut
 interface BeforeInstallPromptEvent extends Event {
@@ -26,6 +27,7 @@ function recentlyDismissed(): boolean {
 }
 
 export default function InstallPrompt() {
+  const { t } = useTranslation();
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
   const [showIOSHelp, setShowIOSHelp] = useState(false);
@@ -115,14 +117,14 @@ export default function InstallPrompt() {
             className="h-11 w-11 flex-shrink-0"
           />
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-white">Installe WLM sur ton écran</p>
+            <p className="font-semibold text-white">{t.install.title}</p>
             <p className="mt-0.5 text-sm text-white/60">
-              Accès rapide, plein écran, comme une vraie app.
+              {t.install.desc}
             </p>
           </div>
           <button
             onClick={dismiss}
-            aria-label="Fermer"
+            aria-label={t.install.close}
             className="flex-shrink-0 rounded-full p-1 text-white/40 transition hover:text-white/80"
           >
             <X size={18} />
@@ -132,13 +134,13 @@ export default function InstallPrompt() {
         {showIOSHelp ? (
           <div className="mt-3 rounded-2xl bg-white/5 p-3 text-sm text-white/80">
             <p className="flex items-center gap-2">
-              1. Appuie sur
+              1. {t.install.iosStep1}
               <span className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-0.5">
-                <Share size={15} /> Partager
+                <Share size={15} /> {t.install.iosShare}
               </span>
             </p>
             <p className="mt-2">
-              2. Choisis <span className="font-semibold text-white">« Sur l&apos;écran d&apos;accueil »</span>
+              2. {t.install.iosStep2} <span className="font-semibold text-white">{t.install.iosOption}</span>
             </p>
           </div>
         ) : (
@@ -147,13 +149,13 @@ export default function InstallPrompt() {
               onClick={handleInstall}
               className="wlm-btn-gradient wlm-glow flex-1 rounded-xl py-2.5 font-semibold text-white transition hover:brightness-110 active:scale-95"
             >
-              Installer l&apos;app
+              {t.install.install}
             </button>
             <button
               onClick={dismiss}
               className="rounded-xl px-4 py-2.5 text-sm text-white/60 transition hover:text-white"
             >
-              Plus tard
+              {t.install.later}
             </button>
           </div>
         )}

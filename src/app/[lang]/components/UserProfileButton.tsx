@@ -4,6 +4,7 @@ import { useAuth } from "./AuthGuard";
 import { defaultAvatar } from "@/lib/avatar";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 interface UserProfileButtonProps {
   onProfileClick?: () => void;
@@ -19,8 +20,9 @@ interface UserProfileButtonProps {
  * Sur mobile: affiche un menu déroulant
  */
 export default function UserProfileButton({ onProfileClick, onLoginClick, userImage, userName }: UserProfileButtonProps) {
+  const { t } = useTranslation();
   const { user, isAuthenticated, isLoading, signOut } = useAuth();
-  
+
   // Utiliser les props si disponibles, sinon fallback sur user de AuthGuard
   const displayImage = userImage || user?.image;
   const displayName = userName || user?.name;
@@ -55,11 +57,11 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
       <button
         className="w-12 h-12 rounded-full overflow-hidden transition-all duration-300 hover:scale-110 cursor-pointer border-2 border-transparent hover:border-[#FF5C8A] shadow-lg hover:shadow-[#FF5C8A]/50"
         onClick={handleClick}
-        aria-label="Profil utilisateur"
+        aria-label={t.profileButton.userProfile}
       >
         <Image
           src={displayImage || defaultAvatar(user?.profile?.gender)}
-          alt={displayName || "Avatar utilisateur"}
+          alt={displayName || t.profileButton.avatarAlt}
           width={50}
           height={50}
           className="object-cover"
@@ -77,7 +79,7 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
             onClick={() => router.push(`/${lang}/profile`)}
             className="w-full px-4 py-2 text-left text-white hover:bg-[#FF5C8A]/20 transition-colors duration-200 cursor-pointer"
           >
-            Mon profil
+            {t.profileButton.myProfile}
           </button>
           <button
             onClick={async () => {
@@ -99,7 +101,7 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
             }}
             className="w-full px-4 py-2 text-left text-white hover:bg-[#FF5C8A]/20 transition-colors duration-200 cursor-pointer"
           >
-            Se déconnecter
+            {t.profileButton.logout}
           </button>
         </div>
       )}

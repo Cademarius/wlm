@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle, XCircle, AlertCircle, X } from "lucide-react";
 import { useEffect } from "react";
+import { useTranslation } from "@/lib/i18n/I18nProvider";
 
 type ToastType = "success" | "error" | "warning" | "info";
 
@@ -48,6 +49,7 @@ export default function Toast({
   onClose,
   duration = 4000,
 }: ToastProps) {
+  const { t } = useTranslation();
   const config = toastConfig[type];
   const Icon = config.icon;
 
@@ -90,7 +92,7 @@ export default function Toast({
             <button
               onClick={onClose}
               className="flex-shrink-0 text-white/70 hover:text-white transition-colors duration-200 mt-0.5"
-              aria-label="Fermer"
+              aria-label={t.common.close}
             >
               <X size={18} />
             </button>
