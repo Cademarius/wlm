@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireSelf } from '@/lib/supabase/serverAuth';
 
 export async function GET(request: Request) {
   try {
@@ -13,6 +14,10 @@ export async function GET(request: Request) {
         { status: 400 }
       );
     }
+
+    // Auth requise (n'importe quel utilisateur connecté)
+    const { error: authError, authUser } = await requireSelf();
+    if (authError) return authError;
 
     // Créer un client Supabase côté serveur avec la clé SERVICE_ROLE
     // Cette clé contourne les politiques RLS pour les opérations serveur
@@ -49,7 +54,14 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json({ user });
+    // Confidentialité : ne jamais exposer le numéro/email d'un AUTRE utilisateur
+    const safe = user as Record<string, unknown>;
+    if (user.id !== authUser.id) {
+      delete safe.phone;
+      delete safe.email;
+    }
+
+    return NextResponse.json({ user: safe });
 
   } catch (error) {
     console.error('Error in get-user API:', error);

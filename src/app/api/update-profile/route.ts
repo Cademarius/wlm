@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireSelf } from "@/lib/supabase/serverAuth";
 
 // Créer le client Supabase avec la clé de service
 const supabaseAdmin = createClient(
@@ -24,6 +25,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const { error: authError } = await requireSelf(userId);
+    if (authError) return authError;
 
     // Validation de l'âge
     if (age !== null && age !== undefined) {

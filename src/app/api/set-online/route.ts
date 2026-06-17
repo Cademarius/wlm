@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireSelf } from '@/lib/supabase/serverAuth';
 
 export async function POST(request: Request) {
   const { userId, is_online } = await request.json();
@@ -7,6 +8,9 @@ export async function POST(request: Request) {
   if (!userId || typeof is_online !== 'boolean') {
     return NextResponse.json({ error: 'userId and is_online are required' }, { status: 400 });
   }
+
+  const { error: authError } = await requireSelf(userId);
+  if (authError) return authError;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

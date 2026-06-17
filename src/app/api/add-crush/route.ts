@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { sendPushNotification } from "@/lib/sendPushNotification";
 import { sendSecretAdmirerInvite } from "@/lib/sendSecretAdmirerInvite";
+import { requireSelf } from "@/lib/supabase/serverAuth";
 
 /**
  * Ajoute "quelqu'un qu'on aime en secret" PAR NUMÉRO (E.164), même si la
@@ -25,6 +26,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const { error: authError } = await requireSelf(userId);
+    if (authError) return authError;
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

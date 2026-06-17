@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireSelf } from '@/lib/supabase/serverAuth';
 
 export async function POST(request: Request) {
   const { userId } = await request.json();
 
-  console.log('[PING-ONLINE] called with userId:', userId);
-
   if (!userId) {
-    console.log('[PING-ONLINE] missing userId');
     return NextResponse.json({ error: 'userId is required' }, { status: 400 });
   }
+
+  const { error: authError } = await requireSelf(userId);
+  if (authError) return authError;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

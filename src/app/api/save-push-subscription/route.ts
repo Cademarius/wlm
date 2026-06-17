@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireSelf } from '@/lib/supabase/serverAuth';
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +12,9 @@ export async function POST(req: NextRequest) {
       console.log('[API] Missing userId or subscription.endpoint', { userId, subscription });
       return NextResponse.json({ error: 'Missing userId or subscription.endpoint' }, { status: 400 });
     }
+
+    const { error: authError } = await requireSelf(userId);
+    if (authError) return authError;
     
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

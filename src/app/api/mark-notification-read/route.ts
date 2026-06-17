@@ -1,26 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireSelf } from "@/lib/supabase/serverAuth";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { notificationId, userId } = body;
+    const { notificationId } = body;
 
-    if (!notificationId && !userId) {
-      return NextResponse.json(
-        { error: "notificationId or userId is required" },
-        { status: 400 }
-      );
-    }
+    // Auth : on agit uniquement sur les notifications de l'utilisateur connecté
+    const { error: authError, authUser } = await requireSelf();
+    if (authError) return authError;
 
     const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
 
     if (notificationId) {
-      // Marquer une notification spécifique comme lue
+      // Marquer une notification spécifique comme lue (si elle m'appartient)
       const { error } = await supabase
         .from("notifications")
         .update({ is_read: true })
-        .eq("id", notificationId);
+        .eq("id", notificationId)
+        .eq("user_id", authUser.id);
 
       if (error) {
         console.error("Error marking notification as read:", error);
@@ -29,12 +28,12 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
-    } else if (userId) {
-      // Marquer toutes les notifications de l'utilisateur comme lues
+    } else {
+      // Marquer toutes mes notifications comme lues
       const { error } = await supabase
         .from("notifications")
         .update({ is_read: true })
-        .eq("user_id", userId)
+        .eq("user_id", authUser.id)
         .eq("is_read", false);
 
       if (error) {

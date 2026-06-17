@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { requireSelf } from "@/lib/supabase/serverAuth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,6 +13,9 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const { error: authError } = await requireSelf(userId);
+    if (authError) return authError;
 
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
