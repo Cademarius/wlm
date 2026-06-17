@@ -70,19 +70,19 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-32 sm:w-40 md:w-48 lg:w-52"
+          className="flex items-center gap-3"
         >
           <Image
-            src="/images/branding/wholikeme-desktop-logo.webp"
-            alt={t.home.logoAlt}
-            width={211}
-            height={100}
+            src="/icon.svg"
+            alt="WLM"
+            width={56}
+            height={56}
+            className="h-12 w-12 sm:h-14 sm:w-14"
             priority
-            loading="eager"
-            fetchPriority="high"
-            quality={90}
-            className="w-full h-auto"
           />
+          <span className="text-4xl sm:text-5xl font-extrabold wlm-gradient-text tracking-tight">
+            WLM
+          </span>
         </motion.div>
       </header>
 

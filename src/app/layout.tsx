@@ -108,16 +108,17 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+        <link rel="icon" href="/favicon.png" sizes="192x192" type="image/png" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="manifest" href="/manifest.json" />
         {/* Theme color pour tous les navigateurs et PWA */}
-        <meta name="theme-color" content="#FF5C8A" />
-        <meta name="msapplication-TileColor" content="#FF5C8A" />
-        <meta name="msapplication-navbutton-color" content="#FF5C8A" />
+        <meta name="msapplication-TileColor" content="#1a1033" />
+        <meta name="msapplication-navbutton-color" content="#1a1033" />
         {/* Apple iOS */}
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="/icon512_rounded.png" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
       </head>
       <body className={`${mulish.className} min-h-screen antialiased`}>
         <SessionProvider>

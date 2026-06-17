@@ -80,14 +80,9 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
 
   return (
     <div className="wlm-modal p-6 rounded-3xl w-full max-w-sm mx-auto flex flex-col items-center text-white max-h-[90dvh] overflow-y-auto">
-      <div className="mb-6">
-        <Image
-          src="/images/branding/wholikeme-desktop-logo.webp"
-          alt="WLM"
-          width={140}
-          height={54}
-          priority
-        />
+      <div className="mb-6 flex items-center gap-2">
+        <Image src="/icon.svg" alt="WLM" width={36} height={36} className="h-9 w-9" priority />
+        <span className="text-2xl font-extrabold wlm-gradient-text tracking-tight">WLM</span>
       </div>
 
       {step === "phone" ? (

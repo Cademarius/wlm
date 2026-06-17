@@ -37,25 +37,20 @@ const Header = ({ lang }: HeaderProps) => {
         {/* Logo */}
         <Link
           href={`/${lang}/feed`}
-          className="flex-shrink-0 cursor-pointer active:scale-95 transition-transform duration-150"
-          aria-label="WhoLikeMe"
+          className="flex items-center gap-2 flex-shrink-0 active:scale-95 transition-transform duration-150"
+          aria-label="WLM"
         >
           <Image
-            src="/images/branding/wholikeme-desktop-logo.webp"
-            alt="WhoLikeMe Logo"
-            width={211}
-            height={80}
-            className="hidden xl:block h-12 w-auto"
+            src="/icon.svg"
+            alt="WLM"
+            width={40}
+            height={40}
+            className="h-8 w-8 sm:h-9 sm:w-9"
             priority
           />
-          <Image
-            src="/images/branding/wholikeme-mobile-logo.webp"
-            alt="WhoLikeMe Logo"
-            width={79}
-            height={24}
-            className="xl:hidden h-6 sm:h-7 w-auto"
-            priority
-          />
+          <span className="text-xl sm:text-2xl font-extrabold wlm-gradient-text tracking-tight">
+            WLM
+          </span>
         </Link>
 
         {/* Navigation desktop */}
