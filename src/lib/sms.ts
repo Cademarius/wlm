@@ -6,12 +6,13 @@
  * WhatsApp, le SMS autorise le texte libre — pas de template à faire approuver.
  *
  * Choix du provider (au runtime, selon les variables présentes) :
- *   1. Vonage  si VONAGE_API_KEY + VONAGE_API_SECRET
- *   2. Twilio  si TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + (FROM | MESSAGING_SERVICE)
- *   3. sinon   → mode STUB (log, rien envoyé) pour ne pas bloquer le dev.
+ *   1. Termii  si TERMII_API_KEY                       ← recommandé Bénin/Afrique de l'Ouest
+ *   2. Vonage  si VONAGE_API_KEY + VONAGE_API_SECRET
+ *   3. Twilio  si TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + (FROM | MESSAGING_SERVICE)
+ *   4. sinon   → mode STUB (log, rien envoyé) pour ne pas bloquer le dev.
  *
- * Vonage est recommandé pour le Bénin / l'Afrique de l'Ouest (inscription qui
- * passe mieux que Twilio, bonne couverture). L'appelant ne change jamais.
+ * Termii est conçu pour l'Afrique de l'Ouest : l'inscription et la livraison y
+ * passent là où Twilio/Vonage bloquent les comptes. L'appelant ne change jamais.
  */
 
 export interface SmsResult {
@@ -27,6 +28,9 @@ function toE164(phone: string): string {
 export async function sendSms(toPhone: string, body: string): Promise<SmsResult> {
   const to = toE164(toPhone);
 
+  if (process.env.TERMII_API_KEY) {
+    return sendViaTermii(to, body);
+  }
   if (process.env.VONAGE_API_KEY && process.env.VONAGE_API_SECRET) {
     return sendViaVonage(to, body);
   }
@@ -39,9 +43,43 @@ export async function sendSms(toPhone: string, body: string): Promise<SmsResult>
   }
 
   console.log(
-    `[SMS STUB] → ${to} : "${body}" — configure VONAGE_* ou TWILIO_* pour envoyer pour de vrai.`
+    `[SMS STUB] → ${to} : "${body}" — configure TERMII_API_KEY (recommandé), ` +
+      `VONAGE_* ou TWILIO_* pour envoyer pour de vrai.`
   );
   return { sent: false, stub: true };
+}
+
+// --- Termii (api.ng.termii.com) — recommandé Afrique de l'Ouest -------------
+async function sendViaTermii(to: string, body: string): Promise<SmsResult> {
+  const apiKey = process.env.TERMII_API_KEY as string;
+  const from = process.env.TERMII_FROM || "N-Alert"; // sender ID (défaut générique Termii)
+
+  try {
+    const res = await fetch("https://api.ng.termii.com/api/sms/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // Termii attend le numéro international SANS le "+".
+        to: to.replace(/[^\d]/g, ""),
+        from,
+        sms: body,
+        type: "plain",
+        channel: "generic",
+        api_key: apiKey,
+      }),
+    });
+
+    const data = (await res.json().catch(() => ({}))) as {
+      message_id?: string;
+      message?: string;
+    };
+    if (res.ok && data.message_id) return { sent: true };
+    const err = data.message || `statut Termii ${res.status}`;
+    console.error("[SMS Termii] échec d'envoi:", err);
+    return { sent: false, error: err };
+  } catch (e) {
+    return { sent: false, error: e instanceof Error ? e.message : "unknown" };
+  }
 }
 
 // --- Vonage (rest.nexmo.com) -------------------------------------------------

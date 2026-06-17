@@ -74,7 +74,7 @@ Au lieu d'un provider OTP intégré (Twilio Verify…), on utilise un **Auth Hoo
 
 **Côté canaux** (au moins un pour livrer réellement ; sinon mode stub = log) :
 - **WhatsApp** (prioritaire) : app WhatsApp Cloud API (Meta) → `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID` + un **template d'authentification** approuvé → `WHATSAPP_OTP_TEMPLATE` (+ `WHATSAPP_OTP_LANG`).
-- **SMS** (repli) : **Vonage** (`VONAGE_API_KEY`, `VONAGE_API_SECRET`, `VONAGE_FROM`) recommandé pour le Bénin, ou Twilio (`TWILIO_*`). Provider choisi automatiquement selon les variables présentes.
+- **SMS** (repli) : **Termii** (`TERMII_API_KEY`, `TERMII_FROM`) **recommandé pour le Bénin** (inscription qui passe là où Twilio/Vonage bloquent), sinon Vonage (`VONAGE_*`) ou Twilio (`TWILIO_*`). Provider choisi automatiquement (Termii > Vonage > Twilio). **Ces providers sont appelés par notre hook, pas par Supabase** — donc pas besoin qu'ils figurent dans la liste de providers de Supabase.
 
 WhatsApp s'active dès que ses variables sont là — **sans changer le code**. L'app (`signInWithOtp`/`verifyOtp`) est inchangée.
 
