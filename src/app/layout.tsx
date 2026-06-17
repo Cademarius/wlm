@@ -15,6 +15,7 @@ const mulish = localFont({
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../../src/globals.css";
 import ServiceWorkerWrapper from "@/app/[lang]/components/ServiceWorkerWrapper";
+import InstallPrompt from "@/app/[lang]/components/InstallPrompt";
 import SessionProvider from "@/app/[lang]/components/SessionProvider";
 import AuthGuard from "@/app/[lang]/components/AuthGuard";
 import { languages, type Language } from '@/lib/i18n/setting';
@@ -128,6 +129,7 @@ export default async function RootLayout({
             </main>
           </AuthGuard>
           <ServiceWorkerWrapper />
+          <InstallPrompt />
           <Analytics />
           <SpeedInsights />
         </SessionProvider>
