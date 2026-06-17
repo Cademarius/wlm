@@ -5,8 +5,13 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: #1a1033;
+  --foreground: #ffffff;
+  /* Palette WLM — nuit romantique */
+  --wlm-pink: #ff5c8a;
+  --wlm-purple: #b14dff;
+  --wlm-bg-1: #1a1033;
+  --wlm-bg-2: #2a0e3f;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -119,7 +124,57 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background:
+      radial-gradient(1100px 600px at 82% -12%, rgba(177, 77, 255, 0.28), transparent 60%),
+      radial-gradient(1000px 520px at -12% 112%, rgba(255, 92, 138, 0.20), transparent 58%),
+      linear-gradient(160deg, #1a1033 0%, #220d3a 55%, #2a0e3f 100%);
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+}
+
+/* ===== Design system WLM (nuit romantique) ===== */
+@layer utilities {
+  /* Texte en dégradé rose→violet (titres, accents) */
+  .wlm-gradient-text {
+    background-image: linear-gradient(90deg, var(--wlm-pink), var(--wlm-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    /* Évite le scintillement du texte découpé pendant les transforms/animations */
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    will-change: auto;
+  }
+  /* Verre dépoli (glassmorphism) */
+  .wlm-glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+  }
+  /* Carte moderne avec profondeur */
+  .wlm-card {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.5);
+  }
+  /* Bouton dégradé signature */
+  .wlm-btn-gradient {
+    background: linear-gradient(90deg, var(--wlm-pink), var(--wlm-purple));
+  }
+  /* Halo lumineux rose */
+  .wlm-glow {
+    box-shadow: 0 0 28px rgba(255, 92, 138, 0.45);
+  }
+  /* Style unifié pour TOUS les modals du site */
+  .wlm-modal {
+    background-image: linear-gradient(to bottom, #2a1550, #1a1033);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.6);
   }
 }
 
@@ -454,5 +509,176 @@ img.rounded-full {
   .modal-backdrop,
   .modal-content {
     animation: none;
+  }
+}
+
+/* ===== Champ téléphone (react-phone-number-input) — thème sombre =====
+   Placé hors @layer pour l'emporter sur le style.css importé de la lib. */
+.wlm-phone-input {
+  border-radius: 0.5rem;
+  transition: box-shadow 0.15s ease;
+}
+.wlm-phone-input:focus-within {
+  box-shadow: 0 0 0 2px #FF5C8A;
+}
+.wlm-phone-input .PhoneInputInput {
+  background: transparent;
+  color: #fff;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.wlm-phone-input .PhoneInputInput:focus {
+  outline: none;
+  box-shadow: none;
+}
+.wlm-phone-input .PhoneInputInput::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+.wlm-phone-input .PhoneInputCountrySelect {
+  color: #fff;
+}
+.wlm-phone-input .PhoneInputCountrySelect option {
+  color: #111;
+}
+
+/* =====================================================================
+   Normalisation des comportements navigateur par défaut (UI/UX)
+   Hors @layer pour primer sur les styles par défaut / libs importées.
+   ===================================================================== */
+
+/* Sélection de texte aux couleurs de la marque */
+::selection {
+  background: rgba(255, 92, 138, 0.35);
+  color: #fff;
+}
+
+/* Focus accessible et élégant : anneau rose au clavier, rien à la souris.
+   (le box-shadow suit le border-radius de chaque élément) */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 92, 138, 0.75);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Autofill Chrome : plus de fond blanc/jaune sur le thème sombre */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.10) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+/* Champs nombre : retirer les flèches disgracieuses */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Placeholders cohérents */
+input::placeholder,
+textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Scrollbar discrète, thème sombre */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* =====================================================================
+   Contrôles natifs (select, checkbox, radio, date…) au thème sombre
+   ===================================================================== */
+
+/* Rend TOUS les contrôles natifs sombres (menus déroulants, cases, dates, scrollbars) */
+:root { color-scheme: dark; }
+
+/* Cases à cocher & radios aux couleurs de la marque */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--wlm-pink);
+  width: 1.15rem;
+  height: 1.15rem;
+  cursor: pointer;
+}
+
+/* Classe prête à l'emploi pour un <select> harmonisé */
+.wlm-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(255, 255, 255, 0.10);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  padding: 0.65rem 2.2rem 0.65rem 0.9rem;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='0.6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  cursor: pointer;
+}
+.wlm-select option {
+  background: #1a1033;
+  color: #fff;
+}
+
+/* =====================================================================
+   Optimisations MOBILE
+   ===================================================================== */
+
+/* Empêche le scroll horizontal parasite */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* iOS : un champ < 16px provoque un zoom auto au focus → on force 16px sur mobile */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Hauteur réelle sur mobile (barre d'URL dynamique) */
+.min-h-dvh { min-height: 100dvh; }
+
+/* Tap targets confortables sur petits écrans */
+@media (max-width: 640px) {
+  button,
+  a[role="button"],
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
   }
 }

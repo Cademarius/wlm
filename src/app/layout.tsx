@@ -1,5 +1,17 @@
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next"
+
+const mulish = localFont({
+  src: [
+    { path: "../../fonts/Mulish-Regular.ttf", weight: "400", style: "normal" },
+    { path: "../../fonts/Mulish-Medium.ttf", weight: "500", style: "normal" },
+    { path: "../../fonts/Mulish-SemiBold.ttf", weight: "600", style: "normal" },
+    { path: "../../fonts/Mulish-Bold.ttf", weight: "700", style: "normal" },
+    { path: "../../fonts/Mulish-ExtraBold.ttf", weight: "800", style: "normal" },
+  ],
+  display: "swap",
+});
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../../src/globals.css";
 import ServiceWorkerWrapper from "@/app/[lang]/components/ServiceWorkerWrapper";
@@ -73,7 +85,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#FF4F81", // Rose du site pour la barre d'état PWA
+  viewportFit: "cover", // gère les encoches / safe-areas (PWA plein écran)
+  themeColor: "#1a1033", // barre d'état assortie au fond sombre
 };
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -106,7 +119,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icon512_rounded.png" />
       </head>
-      <body className="min-h-screen bg-background antialiased">
+      <body className={`${mulish.className} min-h-screen antialiased`}>
         <SessionProvider>
           <AuthGuard>
             <main className="relative flex min-h-screen flex-col">

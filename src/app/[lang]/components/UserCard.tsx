@@ -68,7 +68,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-2xl overflow-hidden border border-[#FF4F81]/20 transition-all duration-500 transform ${
+      className={`group relative bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl overflow-hidden border border-[#FF4F81]/20 transition-all duration-500 transform ${
         isClickable 
           ? "hover:border-[#FF4F81]/60 hover:shadow-2xl hover:shadow-[#FF4F81]/30 hover:scale-[1.03] active:scale-[0.98] cursor-pointer" 
           : "cursor-not-allowed opacity-90"
@@ -90,7 +90,7 @@ export default function UserCard({ user, status, statusLabel, type, index = 0 }:
               isClickable ? "group-hover:border-[#FF4F81] group-hover:shadow-[#FF4F81]/50" : ""
             }`}>
               <Image
-                src={user.image || "/images/users/avatar.webp"}
+                src={user.image || "/images/users/avatar.svg"}
                 alt={user.name || "User"}
                 width={80}
                 height={80}

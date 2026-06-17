@@ -15,10 +15,10 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createServerSupabaseClient();
 
-    // Récupérer tous les crushs de l'utilisateur
+    // Récupérer tous les secrets de l'utilisateur (par numéro)
     const { data: crushes, error } = await supabase
       .from("crushes")
-      .select("id, crush_name, status, created_at")
+      .select("id, crush_phone, crush_name, status, created_at")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
@@ -30,19 +30,21 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Pour chaque crush, récupérer les informations de l'utilisateur correspondant
+    // Pour chaque secret, retrouver l'utilisateur correspondant via son NUMÉRO (s'il est inscrit)
     const crushesWithUserInfo = await Promise.all(
       (crushes || []).map(async (crush) => {
         const { data: user } = await supabase
           .from("users")
           .select("id, name, email, image, age, location, is_online, last_seen")
-          .eq("email", crush.crush_name)
-          .single();
+          .eq("phone", crush.crush_phone)
+          .maybeSingle();
 
         return {
           id: crush.id,
           status: crush.status,
           created_at: crush.created_at,
+          crush_phone: crush.crush_phone,
+          label: crush.crush_name,
           user: user || null,
         };
       })

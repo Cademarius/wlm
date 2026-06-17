@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import { useAuth } from "@/lib/supabase/AuthProvider";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -9,49 +9,46 @@ interface AuthGuardProps {
 }
 
 /**
- * Composant pour protéger les routes et gérer l'authentification
- * Utilisez ce composant pour wrapper les pages qui nécessitent une authentification
+ * Protège l'app et gère la présence "en ligne".
+ * S'appuie sur l'auth Supabase (via AuthProvider).
  */
 export default function AuthGuard({ children, onUnauthenticated }: AuthGuardProps) {
-  // Ping online toutes les 30s si connecté
-  const { data: session, status } = useSession();
+  const { user, isLoading, isAuthenticated } = useAuth();
+  const userId = user?.id;
+
+  // Ping "en ligne" toutes les 30s tant que connecté.
   useEffect(() => {
+    if (!isAuthenticated || !userId) return;
+
     let interval: NodeJS.Timeout | null = null;
     const ping = async () => {
-      if (status === "authenticated" && session?.user?.id) {
-        console.log('[PING-ONLINE] frontend ping for userId:', session.user.id);
-        await fetch("/api/ping-online", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: session.user.id }),
-        });
-      }
+      await fetch("/api/ping-online", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
     };
-    if (status === "authenticated" && session?.user?.id) {
-      ping();
-      interval = setInterval(() => ping(), 30000);
-    }
+
+    ping();
+    interval = setInterval(ping, 30000);
+
     return () => {
       if (interval) clearInterval(interval);
-      // Ping offline à l'unmount
-      if (status === "authenticated" && session?.user?.id) {
-        fetch("/api/set-online", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: session.user.id, is_online: false }),
-        });
-      }
+      fetch("/api/set-online", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, is_online: false }),
+      });
     };
-  }, [status, session]);
+  }, [isAuthenticated, userId]);
 
   useEffect(() => {
-    if (status === "unauthenticated" && onUnauthenticated) {
+    if (!isLoading && !isAuthenticated && onUnauthenticated) {
       onUnauthenticated();
     }
-  }, [status, onUnauthenticated]);
+  }, [isLoading, isAuthenticated, onUnauthenticated]);
 
-  // Afficher un loader pendant la vérification
-  if (status === "loading") {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF4F81]"></div>
@@ -62,15 +59,5 @@ export default function AuthGuard({ children, onUnauthenticated }: AuthGuardProp
   return <>{children}</>;
 }
 
-/**
- * Hook personnalisé pour obtenir l'utilisateur connecté
- */
-export function useAuth() {
-  const { data: session, status } = useSession();
-  
-  return {
-    user: session?.user,
-    isLoading: status === "loading",
-    isAuthenticated: status === "authenticated",
-  };
-}
+// Ré-export pour compatibilité : les composants importent `useAuth` depuis "./AuthGuard".
+export { useAuth } from "@/lib/supabase/AuthProvider";

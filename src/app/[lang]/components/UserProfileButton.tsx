@@ -1,6 +1,5 @@
 "use client";
 
-import { signOut } from "next-auth/react";
 import { useAuth } from "./AuthGuard";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -19,7 +18,7 @@ interface UserProfileButtonProps {
  * Sur mobile: affiche un menu déroulant
  */
 export default function UserProfileButton({ onProfileClick, onLoginClick, userImage, userName }: UserProfileButtonProps) {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading, signOut } = useAuth();
   
   // Utiliser les props si disponibles, sinon fallback sur user de AuthGuard
   const displayImage = userImage || user?.image;
@@ -58,7 +57,7 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
         aria-label="Profil utilisateur"
       >
         <Image
-          src={displayImage || "/images/users/avatar.webp"}
+          src={displayImage || "/images/users/avatar.svg"}
           alt={displayName || "Avatar utilisateur"}
           width={50}
           height={50}
@@ -71,7 +70,7 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
         <div className="lg:hidden absolute right-0 mt-2 w-48 bg-[#1C1F3F] rounded-lg shadow-xl border border-[#FF4F81]/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
           <div className="p-3 border-b border-white/10">
             <p className="text-white font-medium truncate">{displayName}</p>
-            <p className="text-white/60 text-sm truncate">{user?.email}</p>
+            <p className="text-white/60 text-sm truncate">{user?.phone}</p>
           </div>
           <button
             onClick={() => router.push(`/${lang}/profile`)}
@@ -94,7 +93,8 @@ export default function UserProfileButton({ onProfileClick, onLoginClick, userIm
               } catch (err) {
                 console.error('Erreur lors de la mise à jour du statut offline:', err);
               }
-              await signOut({ callbackUrl: "/" });
+              await signOut();
+              router.push(`/${lang}`);
             }}
             className="w-full px-4 py-2 text-left text-white hover:bg-[#FF4F81]/20 transition-colors duration-200 cursor-pointer"
           >

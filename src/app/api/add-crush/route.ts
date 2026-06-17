@@ -1,190 +1,206 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { sendPushNotification } from '@/lib/sendPushNotification';
+import { sendPushNotification } from "@/lib/sendPushNotification";
+import { sendSecretAdmirerInvite } from "@/lib/sendSecretAdmirerInvite";
 
+/**
+ * Ajoute "quelqu'un qu'on aime en secret" PAR NUMÉRO (E.164), même si la
+ * personne n'est pas encore inscrite. Détecte un match réciproque fiable
+ * (basé sur le numéro), et notifie. La relance WhatsApp des non-inscrits
+ * est gérée à part (voir tâche relance virale).
+ */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, crushUserId } = body;
+    const { userId, crushPhone, crushUserId, crushLabel } = body as {
+      userId?: string;
+      crushPhone?: string;
+      crushUserId?: string;
+      crushLabel?: string;
+    };
 
-    if (!userId || !crushUserId) {
+    if (!userId || (!crushPhone && !crushUserId)) {
       return NextResponse.json(
-        { error: "userId and crushUserId are required" },
-        { status: 400 }
-      );
-    }
-
-    // Vérifier qu'on n'essaie pas de se crush soi-même
-    if (userId === crushUserId) {
-      return NextResponse.json(
-        { error: "Vous ne pouvez pas vous ajouter vous-même !" },
+        { error: "userId et un numéro (ou crushUserId) sont requis" },
         { status: 400 }
       );
     }
 
     const supabase = await createServerSupabaseClient();
 
-    // Récupérer les informations du crush (nom et email pour identification)
-    const { data: crushUser, error: crushError } = await supabase
-      .from("users")
-      .select("id, name, email")
-      .eq("id", crushUserId)
-      .single();
-
-    if (crushError || !crushUser) {
-      return NextResponse.json(
-        { error: "Utilisateur non trouvé" },
-        { status: 404 }
-      );
+    // Résoudre le numéro cible : soit fourni directement, soit via l'id d'un inscrit
+    let phone = crushPhone?.trim();
+    if (!phone && crushUserId) {
+      const { data: target } = await supabase
+        .from("users")
+        .select("phone")
+        .eq("id", crushUserId)
+        .maybeSingle();
+      if (!target?.phone) {
+        return NextResponse.json(
+          { error: "Cette personne n'a pas de numéro vérifié." },
+          { status: 400 }
+        );
+      }
+      phone = target.phone;
+    }
+    if (!phone) {
+      return NextResponse.json({ error: "Numéro cible manquant" }, { status: 400 });
     }
 
-    // Vérifier si ce crush existe déjà
-    const { data: existingCrush } = await supabase
-      .from("crushes")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("crush_name", crushUser.email) // On utilise l'email comme identifiant unique
-      .single();
-
-    if (existingCrush) {
-      return NextResponse.json(
-        { error: "Vous avez déjà ajouté cette personne à vos crushs" },
-        { status: 409 }
-      );
-    }
-
-    // Récupérer les informations de l'utilisateur qui ajoute le crush
-    const { data: currentUser } = await supabase
+    // Utilisateur courant (son numéro + son quota)
+    const { data: currentUser, error: currentErr } = await supabase
       .from("users")
-      .select("name")
+      .select("id, phone, name, crush_slots")
       .eq("id", userId)
       .single();
 
-    // Ajouter le crush
+    if (currentErr || !currentUser) {
+      return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
+    }
+
+    // On ne peut pas s'aimer soi-même 🙂
+    if (currentUser.phone && currentUser.phone === phone) {
+      return NextResponse.json(
+        { error: "Tu ne peux pas t'ajouter toi-même !" },
+        { status: 400 }
+      );
+    }
+
+    // Quota de slots (gratuit = crush_slots, défaut 5)
+    const { count: existingCount } = await supabase
+      .from("crushes")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId);
+
+    const slots = currentUser.crush_slots ?? 5;
+    if ((existingCount ?? 0) >= slots) {
+      return NextResponse.json(
+        { error: "limite_atteinte", slots },
+        { status: 402 }
+      );
+    }
+
+    // Insérer le secret (l'index unique (user_id, crush_phone) bloque les doublons)
     const { data: newCrush, error: insertError } = await supabase
       .from("crushes")
       .insert({
         user_id: userId,
-        crush_name: crushUser.email,
+        crush_phone: phone,
+        crush_name: crushLabel?.trim() || null,
         status: "pending",
       })
       .select()
       .single();
 
     if (insertError) {
-      return NextResponse.json(
-        { error: "Erreur lors de l'ajout du crush" },
-        { status: 500 }
-      );
+      if (insertError.code === "23505") {
+        return NextResponse.json(
+          { error: "Tu as déjà ajouté ce numéro." },
+          { status: 409 }
+        );
+      }
+      console.error("Erreur insertion crush:", insertError);
+      return NextResponse.json({ error: "Échec de l'ajout" }, { status: 500 });
     }
 
-    // Créer une notification pour la personne ajoutée
-    await supabase
-      .from("notifications")
-      .insert({
-        user_id: crushUserId,
+    // La cible est-elle déjà inscrite ?
+    const { data: targetUser } = await supabase
+      .from("users")
+      .select("id, name")
+      .eq("phone", phone)
+      .maybeSingle();
+
+    let isMatch = false;
+
+    if (targetUser) {
+      // Notifier la cible : "quelqu'un t'aime en secret" (sans révéler qui)
+      await supabase.from("notifications").insert({
+        user_id: targetUser.id,
         type: "new_crush",
-        title: "Nouveau crush !",
-        title_en: "New crush!",
-        message: `Un utilisateur crush sur vous 💕`,
-        message_en: `Someone has a crush on you 💕`,
+        title: "👀 Quelqu'un t'aime en secret",
+        title_en: "👀 Someone likes you in secret",
+        message: "Inscris ton crush pour savoir si c'est réciproque 💘",
+        message_en: "Add your crush to find out if it's mutual 💘",
         from_user_id: userId,
         is_read: false,
       });
-    // Envoi push pour la notification "new_crush"
-    await sendPushNotification(crushUserId, {
-      title: "Nouveau crush !",
-      body: `Un utilisateur crush sur vous 💕`
-    });
+      await sendPushNotification(targetUser.id, {
+        title: "👀 Quelqu'un t'aime en secret",
+        body: "Découvre si c'est réciproque 💘",
+      });
 
-    // Vérifier si c'est un match (l'autre personne nous a déjà ajouté)
-    const { data: reverseCrush } = await supabase
-      .from("crushes")
-      .select("id, user_id")
-      .eq("user_id", crushUserId)
-      .eq("crush_name", (await supabase
-        .from("users")
-        .select("email")
-        .eq("id", userId)
-        .single()
-      ).data?.email || "")
-      .single();
-
-    if (reverseCrush) {
-      // C'est un match ! Créer l'entrée dans la table matches
-      const [user1, user2] = [userId, crushUserId].sort();
-      
-      await supabase
-        .from("matches")
-        .insert({
-          user1_id: user1,
-          user2_id: user2,
-        });
-
-  // 23505 = duplicate key (match déjà existant)
-
-      // Mettre à jour le statut des deux crushs à "matched"
-      await supabase
+      // Réciprocité : la cible a-t-elle un secret sur MON numéro ?
+      const { data: reverseCrush } = await supabase
         .from("crushes")
-        .update({ status: "matched" })
-        .eq("id", newCrush.id);
+        .select("id")
+        .eq("user_id", targetUser.id)
+        .eq("crush_phone", currentUser.phone ?? "")
+        .maybeSingle();
 
-      await supabase
-        .from("crushes")
-        .update({ status: "matched" })
-        .eq("id", reverseCrush.id);
+      if (reverseCrush && currentUser.phone) {
+        isMatch = true;
 
-      // Créer une notification de match pour les deux utilisateurs
-      await supabase
-        .from("notifications")
-        .insert([
+        // Créer le match (ids triés pour éviter les doublons symétriques)
+        const [user1, user2] = [userId, targetUser.id].sort();
+        await supabase.from("matches").insert({ user1_id: user1, user2_id: user2 });
+
+        // Passer les deux secrets en "matched"
+        await supabase.from("crushes").update({ status: "matched" }).eq("id", newCrush.id);
+        await supabase.from("crushes").update({ status: "matched" }).eq("id", reverseCrush.id);
+
+        // Notifier les deux (révélation)
+        await supabase.from("notifications").insert([
           {
             user_id: userId,
             type: "new_match",
-            title: "C'est un match ! 🎉",
-            title_en: "It's a match! 🎉",
-            message: `Vous et ${crushUser.name} vous êtes mutuellement ajoutés !`,
-            message_en: `You and ${crushUser.name} have mutually added each other!`,
-            from_user_id: crushUserId,
+            title: "💘 C'est réciproque !",
+            title_en: "💘 It's mutual!",
+            message: `${targetUser.name || "Quelqu'un"} t'aime aussi en secret !`,
+            message_en: `${targetUser.name || "Someone"} likes you back!`,
+            from_user_id: targetUser.id,
             is_read: false,
           },
           {
-            user_id: crushUserId,
+            user_id: targetUser.id,
             type: "new_match",
-            title: "C'est un match ! 🎉",
-            title_en: "It's a match! 🎉",
-            message: `Vous et ${currentUser?.name || "quelqu'un"} vous êtes mutuellement ajoutés !`,
-            message_en: `You and ${currentUser?.name || "someone"} have mutually added each other!`,
+            title: "💘 C'est réciproque !",
+            title_en: "💘 It's mutual!",
+            message: `${currentUser.name || "Quelqu'un"} t'aime aussi en secret !`,
+            message_en: `${currentUser.name || "Someone"} likes you back!`,
             from_user_id: userId,
             is_read: false,
           },
         ]);
-      // Envoi push pour les notifications de match
-      await sendPushNotification(userId, {
-        title: "C'est un match ! 🎉",
-        body: `Vous et ${crushUser.name} vous êtes mutuellement ajoutés !`
-      });
-      await sendPushNotification(crushUserId, {
-        title: "C'est un match ! 🎉",
-        body: `Vous et ${currentUser?.name || "quelqu'un"} vous êtes mutuellement ajoutés !`
-      });
-
-      return NextResponse.json({
-        success: true,
-        match: true,
-        message: "🎉 C'est un match ! Vous vous êtes mutuellement ajoutés !",
-      });
+        await sendPushNotification(userId, {
+          title: "💘 C'est réciproque !",
+          body: `${targetUser.name || "Quelqu'un"} t'aime aussi en secret !`,
+        });
+        await sendPushNotification(targetUser.id, {
+          title: "💘 C'est réciproque !",
+          body: `${currentUser.name || "Quelqu'un"} t'aime aussi en secret !`,
+        });
+      }
+    } else {
+      // Cible non inscrite → invitation virale par WhatsApp (anti-spam intégré).
+      // On ne révèle jamais l'identité de l'admirateur.
+      try {
+        await sendSecretAdmirerInvite(phone);
+      } catch (e) {
+        console.error("Invite virale échouée:", e);
+      }
     }
 
     return NextResponse.json({
       success: true,
-      match: false,
-      message: "Crush ajouté avec succès !",
+      match: isMatch,
+      registered: !!targetUser,
+      message: isMatch
+        ? "💘 C'est réciproque !"
+        : "Ajouté en secret 🤫",
     });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+  } catch (e) {
+    console.error("Erreur add-crush:", e);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

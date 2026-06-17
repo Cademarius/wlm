@@ -1,17 +1,19 @@
-import ProfileCompletionModal from './components/ProfileCompletionModal';
+import AppChrome from './components/AppChrome';
+import ProfileSetup from './components/ProfileSetup';
+import { type Language } from '@/lib/i18n/setting';
 
 export default async function LangLayout({
   children,
-  params
+  params,
 }: {
   children: React.ReactNode;
   params: Promise<{ lang: string }>;
 }) {
-  const resolvedParams = await params;
+  const { lang } = await params;
   return (
     <>
-      {children}
-      <ProfileCompletionModal lang={resolvedParams.lang} />
+      <AppChrome lang={lang as Language}>{children}</AppChrome>
+      <ProfileSetup />
     </>
   );
 }

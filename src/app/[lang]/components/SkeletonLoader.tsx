@@ -48,7 +48,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // Composant de Skeleton pour une carte de crush (UserCard)
 export const CrushCardSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-2xl p-6 border border-[#FF4F81]/20 overflow-hidden relative">
+    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF4F81]/20 overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       
@@ -115,7 +115,7 @@ export const CrushListSkeleton: React.FC<CrushListSkeletonProps> = ({ count = 6 
 // Composant de Skeleton pour le header de profile
 export const ProfileHeaderSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-4 sm:mb-6 border border-[#FF4F81]/30 shadow-2xl overflow-hidden relative">
+    <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-4 sm:mb-6 border border-[#FF4F81]/30 shadow-2xl overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       
@@ -155,7 +155,7 @@ export const ProfileHeaderSkeleton: React.FC = () => {
 // Composant de Skeleton pour les sections de profile
 export const ProfileSectionSkeleton: React.FC = () => {
   return (
-    <div className="bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF4F81]/20 overflow-hidden relative">
+    <div className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF4F81]/20 overflow-hidden relative">
       {/* Shimmer effect overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
       

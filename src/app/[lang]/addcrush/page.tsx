@@ -2,17 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { use } from "react";
-import MobileNavBar from "../components/mobile-nav-bar";
 import AddCrushModal from "../components/AddCrushModal";
-import WelcomeModal from "../components/welcome";
-import Image from 'next/image';
 import LoginModal from "../components/login";
 import { useAuth } from "../components/AuthGuard";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
 import { Heart } from "lucide-react";
 import { CrushListSkeleton } from "../components/SkeletonLoader";
-import Header from "../components/header";
 import UserCard from "../components/UserCard";
 import PageTransition from "../components/PageTransition";
 
@@ -29,6 +25,8 @@ interface Crush {
   id: string;
   status: string;
   created_at: string;
+  crush_phone: string;
+  label: string | null;
   user: CrushUser | null;
 }
 
@@ -39,23 +37,9 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
 
   const [showAddCrushModal, setShowAddCrushModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [crushes, setCrushes] = useState<Crush[]>([]);
   const [isLoadingCrushes, setIsLoadingCrushes] = useState(false);
   const [isContentReady, setIsContentReady] = useState(false);
-
-  const handleOpenWelcomeModal = () => {
-    setShowWelcomeModal(true);
-  };
-
-  const handleCloseWelcomeModal = () => {
-    setShowWelcomeModal(false);
-    localStorage.setItem("beginner", "true");
-  };
-
-  const handleCloseWelcomeModalWithoutCookie = () => {
-    setShowWelcomeModal(false);
-  };
 
   const handleButtonClick = () => {
     if (isAuthenticated && user?.id) {
@@ -86,13 +70,6 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
   };
 
   useEffect(() => {
-    const beginner = localStorage.getItem("beginner");
-    if (!beginner) {
-      handleOpenWelcomeModal();
-    }
-  }, []);
-
-  useEffect(() => {
     if (isAuthenticated && user?.id) {
       fetchCrushes();
     }
@@ -113,18 +90,8 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
   }, [isAuthLoading, isLoadingCrushes]);
 
   return (
-    <div
-      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
-      style={{
-        backgroundImage: "url('/images/ui/bg-pattern.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
-      }}
-    >
+    <div className="w-full min-h-screen flex flex-col text-white">
       
-    <Header lang={resolvedParams.lang} />
       
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 mb-20 xl:mb-0 overflow-y-auto">
         {/* Afficher le loader pendant que l'authentification se charge */}
@@ -142,49 +109,31 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
         ) : /* Si l'utilisateur n'est pas connecté OU n'a pas de crushes, afficher l'état initial */
         !isAuthenticated || crushes.length === 0 ? (
           <PageTransition>
-            <div className="flex flex-col items-center justify-center" style={{ opacity: isContentReady ? 1 : 0, transition: 'opacity 0.3s ease-in' }}>
-              <div className="relative w-full aspect-[4/3] max-w-2xl mx-auto mb-12">
-                <Image
-                  src="/images/ui/illustration.svg"
-                  alt={t.addcrush.illustrationAlt}
-                  fill
-                  className="object-contain animate-float"
-                  priority
-                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 75vw, 50vw"
-                />
+            <div className="flex flex-col items-center justify-center text-center min-h-[68vh]" style={{ opacity: isContentReady ? 1 : 0, transition: 'opacity 0.3s ease-in' }}>
+              <div className="relative mb-8">
+                <div className="absolute inset-0 blur-3xl bg-[#FF5C8A]/30 rounded-full" />
+                <div className="relative h-24 w-24 rounded-full wlm-btn-gradient wlm-glow flex items-center justify-center animate-float">
+                  <Heart size={44} className="text-white fill-white" />
+                </div>
               </div>
-              
-              <div className="text-center max-w-2xl mx-auto">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-white">
-                  {!isAuthenticated ? t.addcrush.titleNotAuthenticated : t.addcrush.title}
-                </h2>
-                
-                <p className="text-gray-300 text-base sm:text-lg lg:text-xl mb-8">
-                  {!isAuthenticated 
-                    ? t.addcrush.descriptionNotAuthenticated
-                    : t.addcrush.description}
-                </p>
 
+              <div className="max-w-md mx-auto">
+                <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+                  {isAuthenticated
+                    ? "Aucun secret pour l'instant"
+                    : "Découvre qui t'aime en secret"}
+                </h2>
+                <p className="text-white/60 text-base sm:text-lg mb-8">
+                  {isAuthenticated
+                    ? "Ajoute quelqu'un que tu aimes en secret. Il ne le saura jamais… sauf si c'est réciproque 💘"
+                    : "Connecte-toi pour ajouter en secret les personnes que tu aimes."}
+                </p>
                 <button
                   onClick={handleButtonClick}
-                  className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
-                  aria-label={t.addcrush.buttonAriaLabel}
+                  className="inline-flex items-center justify-center gap-2 wlm-btn-gradient wlm-glow text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-2xl transition active:scale-95 hover:brightness-110 cursor-pointer"
                 >
-                  <svg 
-                    className="w-6 h-6" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  {t.addcrush.buttonText}
+                  <Heart size={20} className="fill-white" />
+                  Ajouter en secret
                 </button>
               </div>
             </div>
@@ -195,57 +144,67 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
             <div style={{ opacity: isContentReady ? 1 : 0, transition: 'opacity 0.3s ease-in' }}>
               {/* Header Section */}
               <div className="text-center mb-12">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <Heart className="text-[#FF4F81]" size={36} />
-                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
-                    {t.addcrush.titleWithContent}
+                <div className="flex items-center justify-center gap-3 mb-3">
+                  <Heart className="text-[#FF5C8A] fill-[#FF5C8A]" size={30} />
+                  <h2 className="text-2xl sm:text-3xl font-bold wlm-gradient-text">
+                    Mes secrets
                   </h2>
                 </div>
                 <p className="text-white/60 text-base sm:text-lg mb-6">
                   {crushes.length > 1
-                    ? t.addcrush.crushesAddedPlural.replace("{{count}}", String(crushes.length))
-                    : t.addcrush.crushesAdded.replace("{{count}}", String(crushes.length))}
+                    ? `${crushes.length} personnes que tu aimes en secret`
+                    : `${crushes.length} personne que tu aimes en secret`}
                 </p>
-                
+
                 <button
                   onClick={handleButtonClick}
-                  className="inline-flex items-center justify-center gap-2 bg-[#FF4F81] text-white font-medium text-lg px-8 py-4 rounded-xl shadow-lg hover:bg-[#e04370] transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#FF4F81] focus:ring-opacity-50 cursor-pointer"
-                  aria-label={t.addcrush.buttonAriaLabel}
+                  className="inline-flex items-center justify-center gap-2 wlm-btn-gradient wlm-glow text-white font-semibold text-base sm:text-lg px-8 py-4 rounded-2xl transition active:scale-95 hover:brightness-110 cursor-pointer"
                 >
-                  <svg 
-                    className="w-6 h-6" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M12 4v16m8-8H4"
-                    />
-                  </svg>
-                  {t.addcrush.buttonText}
+                  <Heart size={20} className="fill-white" />
+                  Ajouter en secret
                 </button>
               </div>
 
               {/* Crushes List Section */}
               <div className="mt-12">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {crushes.map((crush, index) => (
-                    <UserCard
-                      key={crush.id}
-                      user={crush.user}
-                      status={crush.status}
-                      statusLabel={{
-                        matched: t.addcrush.status.matched,
-                        pending: t.addcrush.status.pending,
-                      }}
-                      type="crush"
-                      index={index}
-                    />
-                  ))}
+                  {crushes.map((crush, index) =>
+                    crush.user ? (
+                      <UserCard
+                        key={crush.id}
+                        user={crush.user}
+                        status={crush.status}
+                        statusLabel={{
+                          matched: t.addcrush.status.matched,
+                          pending: t.addcrush.status.pending,
+                        }}
+                        type="crush"
+                        index={index}
+                      />
+                    ) : (
+                      /* Secret vers une personne pas (encore) inscrite */
+                      <div
+                        key={crush.id}
+                        className="bg-gradient-to-br from-white/[0.08] to-white/[0.03] rounded-2xl p-6 border border-[#FF4F81]/20 flex flex-col gap-3"
+                        style={{ animation: `slideInUp 0.5s ease-out ${index * 0.1}s both` }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-14 h-14 rounded-full bg-[#FF4F81]/15 flex items-center justify-center text-2xl">
+                            🤫
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-white font-semibold truncate">
+                              {crush.label || crush.crush_phone}
+                            </p>
+                            <p className="text-white/40 text-xs">{crush.crush_phone}</p>
+                          </div>
+                        </div>
+                        <p className="text-yellow-400 text-sm font-medium">
+                          En attente — pas encore inscrit(e)
+                        </p>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
@@ -253,7 +212,6 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
         )}
       </main>
 
-      <MobileNavBar className="block xl:hidden" activePage="addcrush" params={{ lang: resolvedParams.lang }} />
       
       {/* Modal de recherche et ajout de crush */}
       {isAuthenticated && user?.id && (
@@ -262,7 +220,7 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
           handleClose={() => setShowAddCrushModal(false)}
           currentUserId={user.id}
           onCrushAdded={fetchCrushes}
-          existingCrushes={crushes.map(c => c.user).filter((u): u is CrushUser => !!u)}
+          existingPhones={crushes.map((c) => c.crush_phone)}
         />
       )}
       
@@ -270,14 +228,6 @@ const AddACrush = ({ params }: { params: Promise<{ lang: Language }> }) => {
       <LoginModal 
         showLoginModal={showLoginModal}
         handleCloseLoginModal={() => setShowLoginModal(false)}
-        params={{ lang: resolvedParams.lang }}
-      />
-      
-      {/* Modal de bienvenue */}
-      <WelcomeModal
-        showWelcomeModal={showWelcomeModal}
-        handleCloseWelcomeModal={handleCloseWelcomeModal}
-        handleCloseWelcomeModalWithoutCookie={handleCloseWelcomeModalWithoutCookie}
         params={{ lang: resolvedParams.lang }}
       />
     </div>

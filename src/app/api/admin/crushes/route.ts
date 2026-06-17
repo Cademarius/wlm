@@ -1,17 +1,14 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/lib/auth';
+import { getServerAuthUser, isAdminPhone } from '@/lib/supabase/serverAuth';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   try {
-    const session = await auth();
-    
-    if (!session?.user?.email) {
+    const authUser = await getServerAuthUser();
+    if (!authUser) {
       return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
-
-    const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
-    if (!adminEmails.includes(session.user.email)) {
+    if (!isAdminPhone(authUser.phone)) {
       return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 

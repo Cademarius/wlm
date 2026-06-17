@@ -6,8 +6,6 @@ import { getTranslation } from '@/lib/i18n/getTranslation';
 import Image from "next/image";
 import { Heart, Users, MapPin, Calendar, User as UserIcon } from "lucide-react";
 import { type Language } from '@/lib/i18n/setting';
-import HeaderComponent from "../../components/header";
-import MobileNavBar from "../../components/mobile-nav-bar";
 import { ProfileHeaderSkeleton } from "../../components/SkeletonLoader";
 import { useAuth } from "../../components/AuthGuard";
 
@@ -129,17 +127,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
   }
 
   return (
-    <div 
-      className="min-h-screen bg-[#1C1F3F] flex flex-col"
-      style={{
-        backgroundImage: "url('/images/ui/bg-pattern.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
-      }}
-    >
-  <HeaderComponent lang={lang} />
+    <div className="min-h-screen flex flex-col text-white">
       
       <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12 mb-20 xl:mb-0 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
@@ -147,7 +135,7 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
           {isLoading ? (
             <ProfileHeaderSkeleton />
           ) : userProfile ? (
-            <div className="bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 border border-[#FF4F81]/30 relative overflow-hidden animate-[slideInUp_0.4s_ease-out]">
+            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl sm:rounded-3xl p-6 sm:p-8 mb-6 border border-[#FF4F81]/30 relative overflow-hidden animate-[slideInUp_0.4s_ease-out]">
               {/* Effet de brillance */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4F81]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
               
@@ -155,9 +143,9 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
                 <div className="flex flex-col md:flex-row items-center gap-6">
                   {/* Avatar */}
                   <div className="relative">
-                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-[#FF4F81] bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F]">
+                    <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-4 border-[#FF4F81] bg-gradient-to-br from-white/[0.08] to-white/[0.03]">
                       <Image
-                        src={userProfile.image || "/images/users/avatar.webp"}
+                        src={userProfile.image || "/images/users/avatar.svg"}
                         alt={userProfile.name || "User"}
                         width={256}
                         height={256}
@@ -259,14 +247,13 @@ export default function UserProfilePage({ params }: UserProfilePageProps) {
               </div>
             </div>
           ) : (
-            <div className="bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-2xl p-8 text-center border border-[#FF4F81]/30">
+            <div className="bg-gradient-to-r from-white/[0.08] to-white/[0.03] rounded-2xl p-8 text-center border border-[#FF4F81]/30">
               <p className="text-white/70">{t.userNotFound || t.addcrush?.noResults || 'Utilisateur non trouvé'}</p>
             </div>
           )}
         </div>
       </main>
       
-      <MobileNavBar className="block xl:hidden" activePage="" params={{ lang }} />
     </div>
   );
 }

@@ -1,7 +1,8 @@
 // Types TypeScript pour Supabase
 export interface User {
   id: string;
-  email: string;
+  email: string | null;
+  phone: string | null;
   name: string | null;
   age: number | null;
   image: string | null;
@@ -10,6 +11,8 @@ export interface User {
   location: string | null;
   gender?: 'male' | 'female' | 'other' | null;
   google_id: string | null;
+  crush_slots?: number;
+  profile_completion_skips?: number;
   created_at: string;
   updated_at: string;
   is_online?: boolean;
@@ -18,7 +21,8 @@ export interface User {
 export interface Crush {
   id: string;
   user_id: string;
-  crush_name: string;
+  crush_name: string | null;
+  crush_phone: string | null;
   status: 'pending' | 'matched' | 'revealed';
   created_at: string;
   updated_at: string;

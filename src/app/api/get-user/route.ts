@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     // Récupérer l'utilisateur par email ou par userId
     let query = supabase
       .from('users')
-      .select('id, email, name, age, image, bio, interests, location, gender, created_at, is_online');
+      .select('id, email, phone, name, age, image, bio, interests, location, gender, crush_slots, profile_completion_skips, created_at, is_online');
     
     if (userId) {
       query = query.eq('id', userId);

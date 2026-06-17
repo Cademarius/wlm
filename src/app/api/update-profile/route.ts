@@ -16,11 +16,11 @@ const supabaseAdmin = createClient(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-  const { email, name, age, bio, interests, location, image, gender } = body;
+  const { userId, email, name, age, bio, interests, location, image, gender } = body;
 
-    if (!email) {
+    if (!userId && !email) {
       return NextResponse.json(
-        { error: "Email is required" },
+        { error: "userId (or email) is required" },
         { status: 400 }
       );
     }
@@ -77,10 +77,10 @@ export async function POST(request: NextRequest) {
       updateData.image = image;
     }
 
-    const { data: updatedUser, error: updateError } = await supabaseAdmin
-      .from("users")
-      .update(updateData)
-      .eq("email", email)
+    const baseQuery = supabaseAdmin.from("users").update(updateData);
+    const { data: updatedUser, error: updateError } = await (
+      userId ? baseQuery.eq("id", userId) : baseQuery.eq("email", email)
+    )
       .select()
       .single();
 

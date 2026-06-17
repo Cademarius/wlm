@@ -1,246 +1,247 @@
 "use client";
 
-import React from "react";
+import React, { use, useState, useEffect, useRef } from "react";
 import { useAuth } from "../components/AuthGuard";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
 import Image from "next/image";
-import { Edit2, Heart, Users, Settings, LogOut } from "lucide-react";
-import { getTranslation } from '@/lib/i18n/getTranslation';
-import { type Language } from '@/lib/i18n/setting';
-import HeaderComponent from "../components/header";
-import MobileNavBar from "../components/mobile-nav-bar";
-import { ProfileHeaderSkeleton, ProfileSectionSkeleton } from "../components/SkeletonLoader";
+import { Camera, Save, ArrowLeft, LogOut } from "lucide-react";
+import { type Language } from "@/lib/i18n/setting";
+import Toast from "../components/Toast";
+import { useToast } from "@/hooks/useToast";
 
-type ProfilePageProps = {
-  params: Promise<{ lang: Language }>;
-};
+type ProfilePageProps = { params: Promise<{ lang: Language }> };
+
+const GENDERS = [
+  { value: "female", label: "Femme" },
+  { value: "male", label: "Homme" },
+  { value: "other", label: "Autre" },
+];
 
 export default function ProfilePage({ params }: ProfilePageProps) {
-  const { user } = useAuth();
+  const { lang } = use(params);
+  const { user, refresh, signOut } = useAuth();
   const router = useRouter();
-  const [lang, setLang] = React.useState<Language>('fr');
-  const [crushesCount, setCrushesCount] = React.useState(0);
-  const [admirersCount, setAdmirersCount] = React.useState(0);
-  // const [matchesCount, setMatchesCount] = React.useState(0);
-  const [isLoadingStats, setIsLoadingStats] = React.useState(true);
-  const [isInitialLoad, setIsInitialLoad] = React.useState(true);
+  const { toast, success, error, hideToast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
-    params.then(p => setLang(p.lang));
-  }, [params]);
+  const [form, setForm] = useState({ name: "", gender: "", location: "", image: "" });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const t = getTranslation(lang);
-
-  React.useEffect(() => {
-    const fetchStats = async () => {
-      if (!user?.id) return;
-
-      setIsLoadingStats(true);
+  useEffect(() => {
+    if (!user?.id) return;
+    (async () => {
       try {
-        // Fetch crushes
-        const crushesResponse = await fetch(`/api/get-crushes?userId=${user.id}`);
-        const crushesData = await crushesResponse.json();
-        if (crushesResponse.ok) {
-          setCrushesCount(crushesData.count || 0);
-          // Compter les matches (status === "matched")
-          // const matches = crushesData.crushes.filter((c: { status: string }) => c.status === "matched");
-          // setMatchesCount(matches.length);
+        const res = await fetch(`/api/get-user?userId=${user.id}`);
+        const data = await res.json();
+        if (res.ok && data.user) {
+          setForm({
+            name: data.user.name || "",
+            gender: ["male", "female", "other"].includes(data.user.gender)
+              ? data.user.gender
+              : "",
+            location: data.user.location || "",
+            image: data.user.image || "",
+          });
         }
-
-        // Fetch admirers
-        const admirersResponse = await fetch(`/api/get-admirers?userId=${user.id}`);
-        const admirersData = await admirersResponse.json();
-        if (admirersResponse.ok) {
-          setAdmirersCount(admirersData.count || 0);
-        }
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      } finally {
-        // Délai minimum pour une meilleure UX
-        setTimeout(() => {
-          setIsLoadingStats(false);
-          setIsInitialLoad(false);
-        }, 300);
+      } catch {
+        // ignore
       }
-    };
-
-    fetchStats();
+    })();
   }, [user?.id]);
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const allowed = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowed.includes(file.type)) {
+      error("Image JPEG, PNG ou WebP uniquement");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      error("Image trop lourde (max 5 Mo)");
+      return;
+    }
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setPreviewImage(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.gender || !form.location.trim()) {
+      error("Renseigne ton prénom, ton genre et ta ville.");
+      return;
+    }
+    setIsSaving(true);
+    try {
+      let imageUrl = form.image;
+      if (selectedFile) {
+        setIsUploading(true);
+        const fd = new FormData();
+        fd.append("file", selectedFile);
+        fd.append("userId", user.id);
+        const up = await fetch("/api/upload-avatar", { method: "POST", body: fd });
+        const upData = await up.json();
+        if (!up.ok) throw new Error(upData.error || "Upload échoué");
+        imageUrl = upData.imageUrl;
+        setIsUploading(false);
+      }
+      const res = await fetch("/api/update-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          name: form.name.trim(),
+          gender: form.gender,
+          location: form.location.trim(),
+          image: imageUrl,
+        }),
+      });
+      if (!res.ok) throw new Error("Sauvegarde échouée");
+      await refresh();
+      setPreviewImage(null);
+      setSelectedFile(null);
+      setForm((p) => ({ ...p, image: imageUrl }));
+      success("Profil enregistré 🎉");
+    } catch (err) {
+      error(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setIsSaving(false);
+      setIsUploading(false);
+    }
+  };
 
   return (
-    <div 
-      className="min-h-screen bg-[#1C1F3F] flex flex-col"
-      style={{
-        backgroundImage: "url('/images/ui/bg-pattern.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
-      }}
-    >
-      <HeaderComponent lang={lang} />
-      
-      <main className="flex-1 py-6 sm:py-8 xl:py-12 px-4 sm:px-6 xl:px-12 mb-20 xl:mb-0 overflow-y-auto">
-        <div className="max-w-6xl mx-auto">
-        {/* Profile Header */}
-        {isLoadingStats ? (
-          <ProfileHeaderSkeleton />
-        ) : (
-        <div className="bg-gradient-to-r from-[#2A2E5A] to-[#1C1F3F] rounded-2xl sm:rounded-3xl p-4 sm:p-8 mb-4 sm:mb-6 border border-[#FF4F81]/30 animate-[slideInUp_0.4s_ease-out] relative overflow-hidden">
-          {/* Effet de brillance au hover */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FF4F81]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-          
-          <div className="relative flex flex-col md:flex-row items-center gap-4 sm:gap-6 group">
-            {/* Avatar */}
-            <div className="relative">
-              <button
-                className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-[#FF4F81] transition-all duration-300 group-hover:border-[#FF3D6D] group-hover:scale-105 bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] p-0"
-                style={{ outline: 'none', border: 'none' }}
-                aria-label="Modifier la photo de profil"
-                onClick={() => router.push(`/${lang}/profile/settings`)}
-              >
+    <>
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
+      <div className="min-h-screen flex flex-col text-white">
+        <main className="flex-1 w-full max-w-xl mx-auto px-4 sm:px-6 py-8 mb-24 xl:mb-8">
+          <button
+            onClick={() => router.push(`/${lang}/feed`)}
+            className="flex items-center gap-2 text-white/60 hover:text-white mb-6 text-sm transition"
+          >
+            <ArrowLeft size={18} /> Retour
+          </button>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-6">Mon profil</h1>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Photo */}
+            <div className="wlm-card p-6 flex items-center gap-5">
+              <div className="relative h-24 w-24 rounded-full overflow-hidden border-2 border-[#FF5C8A] shrink-0">
                 <Image
-                  src={user.image || "/images/users/avatar.webp"}
-                  alt={user.name || "User"}
-                  width={256}
-                  height={256}
-                  quality={95}
-                  priority
-                  sizes="(max-width: 640px) 96px, 128px"
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
-                  style={{
-                    imageRendering: '-webkit-optimize-contrast',
-                    backfaceVisibility: 'hidden',
-                    transform: 'translateZ(0)',
-                  }}
+                  src={previewImage || form.image || user.image || "/images/users/avatar.svg"}
+                  alt="Photo de profil"
+                  width={96}
+                  height={96}
+                  className="object-cover w-full h-full"
                 />
-              </button>
-              <button 
-                className="absolute bottom-0 right-0 bg-[#FF4F81] p-2 rounded-full shadow-lg hover:bg-[#FF3D6D] active:scale-90 transition-all duration-200 cursor-pointer touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center hover:rotate-12"
-                aria-label="Edit profile picture"
-                onClick={() => router.push(`/${lang}/profile/settings`)}
-              >
-                <Edit2 size={16} className="text-white sm:w-5 sm:h-5" />
-              </button>
-            </div>
-
-            {/* User Info */}
-            <div className="flex-1 text-center md:text-left w-full">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">{user.name}</h1>
-              <p className="text-sm sm:text-base text-white/70 mb-3 sm:mb-4 truncate px-2">{user.email}</p>
-              
-              {/* Stats supprimées pour éviter la répétition */}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="w-full md:w-auto md:self-start flex flex-col sm:flex-row gap-2 sm:gap-3">
-              {/* Settings Button */}
-              <button 
-                onClick={() => router.push(`/${lang}/profile/settings`)}
-                className="bg-white/10 hover:bg-white/20 active:bg-white/30 text-white px-4 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 touch-manipulation min-h-[44px]"
-                aria-label={t.settings.title}
-              >
-                <Settings size={18} className="sm:w-5 sm:h-5" />
-                <span className="text-sm sm:text-base font-medium">{t.settings.title}</span>
-              </button>
-              
-              {/* Logout Button - Only on XL screens */}
-              <button 
-                onClick={async () => {
-                  // Mettre à jour le statut en ligne à false avant de déconnecter
-                  try {
-                    const userId = user?.id;
-                    if (userId) {
-                      await fetch('/api/set-online', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId, is_online: false }),
-                      });
-                    }
-                  } catch (err) {
-                    console.error('Erreur lors de la mise à jour du statut offline:', err);
-                  }
-                  await signOut({ callbackUrl: `/${lang}` });
-                }}
-                className="hidden xl:flex bg-red-500/20 hover:bg-red-500/30 active:bg-red-500/40 text-red-400 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 px-4 py-3 rounded-full items-center justify-center gap-2 transition-all duration-200 cursor-pointer active:scale-95 min-h-[44px]"
-                aria-label={t.header.logout}
-              >
-                <LogOut size={18} />
-                <span className="text-sm sm:text-base font-medium">{t.header.logout}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-        )}
-
-          {/* Profile Sections */}
-          {isInitialLoad ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div style={{ animation: 'fadeIn 0.4s ease-out 0.1s both' }}>
-                <ProfileSectionSkeleton />
               </div>
-              <div style={{ animation: 'fadeIn 0.4s ease-out 0.2s both' }}>
-                <ProfileSectionSkeleton />
+              <div>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="wlm-glass px-4 py-2 rounded-full text-sm flex items-center gap-2 hover:bg-white/10 transition"
+                >
+                  <Camera size={16} /> Changer la photo
+                </button>
+                {previewImage && (
+                  <p className="text-[#FF5C8A] text-xs mt-2">
+                    Clique sur Enregistrer pour valider
+                  </p>
+                )}
               </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                onChange={handleImageChange}
+                className="hidden"
+              />
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {/* My Crushes */}
-              <div 
-                className="relative bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF4F81]/20 hover:border-[#FF4F81]/50 hover:shadow-lg hover:shadow-[#FF4F81]/20 transition-all duration-300 cursor-pointer active:scale-[0.98] transform hover:scale-[1.02] touch-manipulation group overflow-hidden"
-                onClick={() => router.push(`/${lang}/addcrush`)}
-                style={{ animation: 'slideInUp 0.4s ease-out 0.1s both' }}
-              >
-                {/* Effet de brillance au hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                    <div className="bg-[#FF4F81]/20 p-2.5 sm:p-3 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FF4F81]/30 group-hover:rotate-12">
-                      <Heart className="text-[#FF4F81] transition-all duration-300 group-hover:fill-[#FF4F81] group-hover:scale-110" size={20} />
-                    </div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-[#FF4F81] transition-colors duration-300">{t.profile.stats.crushes}</h2>
-                  </div>
-                  <p className="text-sm sm:text-base text-white/60 mb-3 group-hover:text-white/80 transition-colors duration-300">{t.profile.actions.viewCrushes}</p>
-                  <div className="mt-3 sm:mt-4 text-3xl sm:text-4xl font-bold text-[#FF4F81] transition-all duration-300 group-hover:scale-110 transform-gpu">
-                    {crushesCount}
-                  </div>
+
+            {/* Champs */}
+            <div className="wlm-card p-6 space-y-5">
+              <div>
+                <label className="block text-sm text-white/80 mb-2">Prénom</label>
+                <input
+                  value={form.name}
+                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                  maxLength={40}
+                  placeholder="Ton prénom"
+                  className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-white/80 mb-2">Genre</label>
+                <div className="flex gap-2">
+                  {GENDERS.map((g) => (
+                    <button
+                      key={g.value}
+                      type="button"
+                      onClick={() => setForm((p) => ({ ...p, gender: g.value }))}
+                      className={`flex-1 rounded-lg py-2.5 text-sm font-medium transition ${
+                        form.gender === g.value
+                          ? "wlm-btn-gradient text-white"
+                          : "bg-white/10 text-white/70 hover:bg-white/20"
+                      }`}
+                    >
+                      {g.label}
+                    </button>
+                  ))}
                 </div>
               </div>
-
-              {/* My Admirers */}
-              <div 
-                className="relative bg-gradient-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl sm:rounded-2xl p-5 sm:p-6 border border-[#FF4F81]/20 hover:border-[#FF4F81]/50 hover:shadow-lg hover:shadow-[#FF4F81]/20 transition-all duration-300 cursor-pointer active:scale-[0.98] transform hover:scale-[1.02] touch-manipulation group overflow-hidden"
-                onClick={() => router.push(`/${lang}/matchcrush`)}
-                style={{ animation: 'slideInUp 0.4s ease-out 0.2s both' }}
-              >
-                {/* Effet de brillance au hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
-                
-                <div className="relative">
-                  <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                    <div className="bg-[#FF4F81]/20 p-2.5 sm:p-3 rounded-full transition-all duration-300 group-hover:scale-110 group-hover:bg-[#FF4F81]/30 group-hover:rotate-12">
-                      <Users className="text-[#FF4F81] transition-all duration-300 group-hover:scale-110" size={20} />
-                    </div>
-                    <h2 className="text-lg sm:text-xl font-bold text-white group-hover:text-[#FF4F81] transition-colors duration-300">{t.profile.stats.admirers}</h2>
-                  </div>
-                  <p className="text-sm sm:text-base text-white/60 mb-3 group-hover:text-white/80 transition-colors duration-300">{t.profile.actions.viewAdmirers}</p>
-                  <div className="mt-3 sm:mt-4 text-3xl sm:text-4xl font-bold text-[#FF4F81] transition-all duration-300 group-hover:scale-110 transform-gpu">
-                    {admirersCount}
-                  </div>
-                </div>
+              <div>
+                <label className="block text-sm text-white/80 mb-2">Ville</label>
+                <input
+                  value={form.location}
+                  onChange={(e) => setForm((p) => ({ ...p, location: e.target.value }))}
+                  maxLength={60}
+                  placeholder="Ex : Cotonou"
+                  className="w-full rounded-lg bg-white/10 px-4 py-3 placeholder-white/40 outline-none focus:ring-2 focus:ring-[#FF5C8A]"
+                />
               </div>
             </div>
-          )}
-        </div>
-      </main>
-      
-      <MobileNavBar className="block xl:hidden" activePage="profile" params={{ lang }} />
-    </div>
+
+            <button
+              type="submit"
+              disabled={isSaving || isUploading}
+              className="w-full wlm-btn-gradient wlm-glow rounded-2xl py-4 font-semibold flex items-center justify-center gap-2 transition active:scale-95 disabled:opacity-50"
+            >
+              {isUploading ? (
+                "Téléversement…"
+              ) : isSaving ? (
+                "Enregistrement…"
+              ) : (
+                <>
+                  <Save size={18} /> Enregistrer
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Déconnexion */}
+          <button
+            onClick={async () => {
+              await signOut();
+              router.push(`/${lang}`);
+            }}
+            className="w-full mt-4 text-white/50 hover:text-white/80 text-sm py-3 flex items-center justify-center gap-2 transition"
+          >
+            <LogOut size={16} /> Se déconnecter
+          </button>
+        </main>
+      </div>
+    </>
   );
 }

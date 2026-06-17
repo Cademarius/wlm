@@ -6,7 +6,9 @@ import Link from "next/link";
 // import { use } from "react";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
-import { use } from 'react';
+import { use, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from './components/AuthGuard';
 
 // Constants d'animation
 const ANIMATION_CONFIG = {
@@ -18,67 +20,23 @@ const ANIMATION_CONFIG = {
   }
 };
 
-import type { TargetAndTransition } from "framer-motion";
-
-// Types pour les illustrations
-type Illustration = {
-  src: string;
-  alt: string;
-  styles: string;
-  width: number;
-  height: number;
-  animation: TargetAndTransition;
-};
-
-// Configuration des illustrations
-const illustrations: Illustration[] = [
-  { 
-    src: "/images/ui/top-left-illustration.webp",
-    alt: "Illustration Haut Gauche",
-    styles: "top-[14%] left-[5%] md:left-[10%] lg:left-[12%] xl:left-[15%]",
-    width: 220,
-    height: 220,
-    animation: { 
-      scale: [1, 1.05, 1],
-      y: [0, -10, 0]
-    }
-  },
-  { 
-    src: "/images/ui/top-right-illustration.webp",
-    alt: "Illustration Haut Droite",
-    styles: "top-[14%] right-[5%] md:right-[10%] lg:right-[12%] xl:right-[15%]",
-    width: 220,
-    height: 220,
-    animation: { 
-      scale: [1, 1.05, 1],
-      y: [0, 10, 0]
-    }
-  },
-  { 
-    src: "/images/ui/bottom-left-illustration.webp",
-    alt: "Illustration Bas Gauche",
-    styles: "bottom-[25%] left-[5%] md:left-[10%] lg:left-[12%] xl:left-[15%]",
-    width: 220,
-    height: 220,
-    animation: { 
-      scale: [1, 1.1, 1]
-    }
-  },
-  { 
-    src: "/images/ui/bottom-right-illustration.webp",
-    alt: "Illustration Bas Droite",
-    styles: "bottom-[25%] right-[5%] md:right-[10%] lg:right-[12%] xl:right-[15%]",
-    width: 220,
-    height: 220,
-    animation: { 
-      rotate: [-5, 5, -5]
-    }
-  }
-];
+import { Heart } from "lucide-react";
 
 export default function Page({ params }: { params: Promise<{ lang: Language }> }) {
   const resolvedParams = use(params);
   const t = getTranslation(resolvedParams.lang);
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  // Un utilisateur connecté va directement dans l'app (pas de page marketing)
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      router.replace(`/${resolvedParams.lang}/feed`);
+    }
+  }, [isLoading, isAuthenticated, resolvedParams.lang, router]);
+
+  // Évite le "flash" de la page marketing pour un utilisateur déjà connecté
+  if (isLoading || isAuthenticated) return null;
 
   return (
     <div
@@ -128,50 +86,37 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
         </motion.div>
       </header>
 
-      {/* Illustrations d'arrière-plan */}
-      <div className="absolute inset-0 pointer-events-none z-10" aria-hidden="true">
-        {illustrations.map(({ src, alt, styles, animation, width, height }, index) => {
-          // Les 2 premières (top-left et top-right) visibles sur mobile, les 2 autres cachées
-          const isTopIllustration = index < 2;
-          const mobileVisibilityClass = isTopIllustration ? 'block' : 'hidden sm:block';
-          
-          return (
-            <motion.div
-              key={index}
-              className={`absolute ${styles} ${mobileVisibilityClass}`}
-              animate={animation}
-              transition={ANIMATION_CONFIG.transition}
-              style={{
-                willChange: 'transform',
-                backfaceVisibility: 'hidden',
-                WebkitBackfaceVisibility: 'hidden',
-                transform: 'translate3d(0, 0, 0)',
-              }}
-            >
-              <div className={`relative ${
-                isTopIllustration 
-                  ? 'w-[18vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-40 min-w-[70px]'
-                  : 'w-[16vw] sm:w-[14vw] md:w-[12vw] lg:w-[10vw] max-w-[180px] min-w-20'
-              } aspect-square opacity-70 sm:opacity-80 md:opacity-100`}>
-                <Image 
-                  src={src} 
-                  alt={alt} 
-                  width={width}
-                  height={height}
-                  className="object-contain w-full h-full"
-                  priority={index < 2}
-                  loading={index < 2 ? "eager" : "lazy"}
-                  quality={75}
-                  style={{
-                    transform: 'translateZ(0)',
-                    backfaceVisibility: 'hidden',
-                    WebkitBackfaceVisibility: 'hidden',
-                  }}
-                />
-              </div>
-            </motion.div>
-          );
-        })}
+      {/* Décorations modernes : halos dégradés + cœurs subtils */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        <motion.div
+          className="absolute -top-24 -left-24 w-72 h-72 rounded-full bg-[#FF5C8A]/25 blur-3xl"
+          animate={{ y: [0, 24, 0], scale: [1, 1.1, 1] }}
+          transition={{ ...ANIMATION_CONFIG.transition, duration: 5 }}
+        />
+        <motion.div
+          className="absolute top-1/3 -right-28 w-80 h-80 rounded-full bg-[#B14DFF]/25 blur-3xl"
+          animate={{ y: [0, -28, 0] }}
+          transition={{ ...ANIMATION_CONFIG.transition, duration: 6 }}
+        />
+        <motion.div
+          className="absolute -bottom-20 left-1/4 w-64 h-64 rounded-full bg-[#FF5C8A]/20 blur-3xl"
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{ ...ANIMATION_CONFIG.transition, duration: 7 }}
+        />
+        <motion.div
+          className="absolute top-[16%] left-[8%] text-white/15"
+          animate={{ y: [0, -12, 0] }}
+          transition={{ ...ANIMATION_CONFIG.transition, duration: 4 }}
+        >
+          <Heart size={34} className="fill-current" />
+        </motion.div>
+        <motion.div
+          className="absolute bottom-[20%] right-[10%] text-white/15"
+          animate={{ y: [0, 12, 0], rotate: [-6, 6, -6] }}
+          transition={{ ...ANIMATION_CONFIG.transition, duration: 5 }}
+        >
+          <Heart size={44} className="fill-current" />
+        </motion.div>
       </div>
 
       {/* Contenu principal - optimisé pour mobile */}
@@ -183,13 +128,14 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
           transition={{ duration: 0.7, delay: 0.2 }}
         >
           {/* Titre principal */}
-          <h1 className="text-white font-bold font-poppins text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-wide drop-shadow-lg px-2 antialiased">
-            {t.home.title}
+          <h1 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight tracking-wide drop-shadow-lg px-2">
+            Qui <span className="wlm-gradient-text">t&apos;aime en secret</span> ?
           </h1>
-          
+
           {/* Description */}
-          <p className="text-white/95 font-medium font-poppins text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed tracking-wide max-w-2xl mx-auto drop-shadow-md px-4 antialiased">
-            {t.home.description}
+          <p className="text-white/95 font-medium text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed tracking-wide max-w-2xl mx-auto drop-shadow-md px-4">
+            Ajoute en secret les personnes que tu aimes. Si c&apos;est réciproque,
+            c&apos;est révélé 💘 Sinon, ça reste ton secret.
           </p>
           
           {/* CTA Button - plus proéminent sur mobile */}
@@ -200,13 +146,25 @@ export default function Page({ params }: { params: Promise<{ lang: Language }> }
           >
             <Link href={`/${resolvedParams.lang}/addcrush`} className="inline-block">
               <button
-                className="bg-[#FF4F81] hover:bg-[#e04370] active:bg-[#d03d64] transition-all duration-200 text-white font-semibold text-base sm:text-lg md:text-xl px-8 py-3.5 sm:px-10 sm:py-4 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-white/30 cursor-pointer w-full sm:w-auto min-w-[200px] sm:min-w-60"
+                className="wlm-btn-gradient wlm-glow hover:brightness-110 transition-all duration-200 text-white font-semibold text-base sm:text-lg md:text-xl px-8 py-3.5 sm:px-10 sm:py-4 rounded-2xl focus:outline-none focus:ring-4 focus:ring-white/30 cursor-pointer w-full sm:w-auto min-w-[200px] sm:min-w-60"
                 aria-label={t.home.buttonAriaLabel}
               >
-                {t.home.buttonText}
+                Commencer
               </button>
             </Link>
           </motion.div>
+
+          {/* Réassurance */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-2">
+            {["🔒 100% secret", "📱 Par numéro", "💘 Réciproque"].map((c) => (
+              <span
+                key={c}
+                className="wlm-glass text-white/90 text-xs sm:text-sm px-4 py-2 rounded-full"
+              >
+                {c}
+              </span>
+            ))}
+          </div>
 
           {/* Indicateur subtil pour scroller (optionnel) */}
           <motion.div

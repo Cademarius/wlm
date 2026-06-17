@@ -46,8 +46,6 @@ function PushPromptModal({ open, onEnable, onLater }: { open: boolean; onEnable:
   );
 }
 import { createClient } from '@/lib/supabase/client';
-import HeaderComponent from "../components/header";
-import MobileNavBar from "../components/mobile-nav-bar";
 import { useAuth } from "../components/AuthGuard";
 import { getTranslation } from '@/lib/i18n/getTranslation';
 import { type Language } from '@/lib/i18n/setting';
@@ -378,17 +376,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
   const unreadCount = notifications.filter((n) => !n.is_read).length;
 
   return (
-    <div 
-      className="w-full min-h-screen flex flex-col text-white bg-[#1C1F3F]"
-      style={{ 
-        backgroundImage: "url('/images/ui/bg-pattern.webp')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed"
-      }}
-    >
-      <HeaderComponent lang={resolvedParams.lang} />
+    <div className="w-full min-h-screen flex flex-col text-white">
       <PushPromptModal open={showPushModal} onEnable={handleEnablePush} onLater={handleLaterPush} />
 
   <main className="flex-1 w-full max-w-5xl mx-auto px-2 sm:px-4 lg:px-8 py-6 sm:py-10 mb-20 xl:mb-0 overflow-y-auto">
@@ -538,7 +526,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                     <div
                       key={notification.id}
                       onClick={() => !notification.is_read && markAsRead(notification.id)}
-                      className={`bg-linear-to-br from-[#2A2E5A] to-[#1C1F3F] rounded-xl p-4 sm:p-6 border transition-all duration-300 cursor-pointer ${
+                      className={`bg-linear-to-br from-white/[0.08] to-white/[0.03] rounded-xl p-4 sm:p-6 border transition-all duration-300 cursor-pointer ${
                         !notification.is_read
                           ? "border-[#FF4F81]/50 hover:border-[#FF4F81] shadow-lg shadow-[#FF4F81]/10"
                           : "border-white/10 hover:border-white/20"
@@ -579,7 +567,7 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
                             <div className="flex items-center gap-2 mb-2 sm:mb-3">
                               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-[#FF4F81]/30">
                                 <Image
-                                  src={fromUser.image || "/images/users/avatar.webp"}
+                                  src={fromUser.image || "/images/users/avatar.svg"}
                                   alt={fromUser.name}
                                   width={32}
                                   height={32}
@@ -629,7 +617,6 @@ const NotificationsPage = ({ params }: { params: Promise<{ lang: Language }> }) 
         )}
       </main>
 
-      <MobileNavBar className="block xl:hidden" activePage="notifications" params={{ lang: resolvedParams.lang }} />
     </div>
   );
 };
