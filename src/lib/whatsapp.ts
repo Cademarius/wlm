@@ -15,6 +15,76 @@ export interface WhatsAppResult {
   error?: string;
 }
 
+/**
+ * Envoie un code OTP par WhatsApp via un template de catégorie « Authentication »
+ * (approuvé par Meta). Le code part dans le corps ET dans le bouton "copier le
+ * code" — structure standard des templates d'authentification.
+ *
+ * Sans config (WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID) → mode STUB (log).
+ * Le nom du template vient de WHATSAPP_OTP_TEMPLATE, la langue de WHATSAPP_OTP_LANG.
+ */
+export async function sendWhatsAppOtp(
+  toPhone: string,
+  code: string
+): Promise<WhatsAppResult> {
+  const token = process.env.WHATSAPP_TOKEN;
+  const phoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+  const templateName = process.env.WHATSAPP_OTP_TEMPLATE;
+  const lang = process.env.WHATSAPP_OTP_LANG || "fr";
+  const to = toPhone.replace(/[^\d]/g, "");
+
+  if (!token || !phoneId || !templateName) {
+    console.log(
+      `[WhatsApp OTP STUB] code → ${toPhone} — configure WHATSAPP_TOKEN + ` +
+        `WHATSAPP_PHONE_NUMBER_ID + WHATSAPP_OTP_TEMPLATE pour envoyer pour de vrai.`
+    );
+    return { sent: false, stub: true };
+  }
+
+  try {
+    const res = await fetch(
+      `https://graph.facebook.com/v21.0/${phoneId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to,
+          type: "template",
+          template: {
+            name: templateName,
+            language: { code: lang },
+            components: [
+              {
+                type: "body",
+                parameters: [{ type: "text", text: code }],
+              },
+              {
+                type: "button",
+                sub_type: "url",
+                index: "0",
+                parameters: [{ type: "text", text: code }],
+              },
+            ],
+          },
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("[WhatsApp OTP] échec d'envoi:", err);
+      return { sent: false, error: err };
+    }
+    return { sent: true };
+  } catch (e) {
+    return { sent: false, error: e instanceof Error ? e.message : "unknown" };
+  }
+}
+
 export async function sendWhatsAppTemplate(
   toPhone: string,
   templateName: string,
