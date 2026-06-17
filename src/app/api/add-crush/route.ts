@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 import { sendPushNotification } from "@/lib/sendPushNotification";
 import { sendSecretAdmirerInvite } from "@/lib/sendSecretAdmirerInvite";
 import { requireSelf } from "@/lib/supabase/serverAuth";
@@ -30,11 +30,7 @@ export async function POST(request: NextRequest) {
     const { error: authError } = await requireSelf(userId);
     if (authError) return authError;
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { persistSession: false } }
-    );
+    const supabase = createServiceClient();
 
     // Résoudre le numéro cible : soit fourni directement, soit via l'id d'un inscrit
     let phone = crushPhone?.trim();

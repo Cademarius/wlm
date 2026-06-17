@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createServiceClient } from '@/lib/supabase/service';
 import { requireSelf } from '@/lib/supabase/serverAuth';
 
 export async function POST(request: Request) {
@@ -12,10 +12,7 @@ export async function POST(request: Request) {
   const { error: authError } = await requireSelf(userId);
   if (authError) return authError;
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
+  const supabase = createServiceClient();
 
   const now = new Date();
   const { error } = await supabase

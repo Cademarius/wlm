@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 import { requireSelf } from "@/lib/supabase/serverAuth";
 
 export async function POST(request: NextRequest) {
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const { error: authError, authUser } = await requireSelf();
     if (authError) return authError;
 
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } });
+    const supabase = createServiceClient();
 
     if (notificationId) {
       // Marquer une notification spécifique comme lue (si elle m'appartient)

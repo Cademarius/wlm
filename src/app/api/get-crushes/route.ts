@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 import { requireSelf } from "@/lib/supabase/serverAuth";
 
 export async function GET(request: NextRequest) {
@@ -17,11 +17,7 @@ export async function GET(request: NextRequest) {
     const { error: authError } = await requireSelf(userId);
     if (authError) return authError;
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { persistSession: false } }
-    );
+    const supabase = createServiceClient();
 
     // Récupérer tous les secrets de l'utilisateur (par numéro)
     const { data: crushes, error } = await supabase
