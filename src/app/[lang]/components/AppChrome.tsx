@@ -21,7 +21,8 @@ export default function AppChrome({
 
   const isLanding = /^\/[a-zA-Z-]+\/?$/.test(pathname); // /fr ou /fr/
   const isAdmin = pathname.includes("/admin");
-  if (isLanding || isAdmin) return <>{children}</>;
+  const isBeta = pathname.includes("/beta"); // landing bêta autonome
+  if (isLanding || isAdmin || isBeta) return <>{children}</>;
 
   let activePage = "";
   if (pathname.includes("/feed")) activePage = "feed";

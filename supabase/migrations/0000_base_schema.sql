@@ -128,6 +128,18 @@ create table if not exists public.viral_invites (
 );
 
 -- ---------------------------------------------------------------------
+-- Inscriptions bêta-testeurs (liste d'attente avant lancement)
+-- ---------------------------------------------------------------------
+create table if not exists public.beta_signups (
+  id uuid primary key default gen_random_uuid(),
+  name text,
+  phone text unique not null,
+  city text,
+  source text,
+  created_at timestamptz not null default now()
+);
+
+-- ---------------------------------------------------------------------
 -- Création auto du profil à l'inscription par téléphone
 -- ---------------------------------------------------------------------
 create or replace function public.handle_new_auth_user()
