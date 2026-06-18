@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
-import { sendOtp, verifyOtp, type OtpChannel } from "@/lib/supabase/auth";
+import { sendOtp, verifyOtp } from "@/lib/supabase/auth";
 import { type Language } from "@/lib/i18n/setting";
 import { useTranslation } from "@/lib/i18n/I18nProvider";
 
@@ -22,7 +22,6 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
   const [step, setStep] = useState<Step>("phone");
   const [phone, setPhone] = useState<string | undefined>();
   const [code, setCode] = useState("");
-  const [channel, setChannel] = useState<OtpChannel>("whatsapp");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,7 +34,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
     }
     setLoading(true);
     try {
-      await sendOtp(phone, channel);
+      await sendOtp(phone);
       setStep("code");
     } catch (err) {
       setError(
@@ -72,7 +71,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
     setError(null);
     setLoading(true);
     try {
-      await sendOtp(phone, channel);
+      await sendOtp(phone);
     } catch {
       setError(t.auth.resendError);
     } finally {
@@ -106,31 +105,6 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
             />
           </div>
 
-          <div className="flex items-center justify-center gap-4 text-xs">
-            <button
-              type="button"
-              onClick={() => setChannel("whatsapp")}
-              className={`px-4 py-1.5 rounded-full transition ${
-                channel === "whatsapp"
-                  ? "wlm-btn-gradient text-white"
-                  : "bg-white/10 text-white/60 hover:bg-white/20"
-              }`}
-            >
-              {t.auth.whatsapp}
-            </button>
-            <button
-              type="button"
-              onClick={() => setChannel("sms")}
-              className={`px-4 py-1.5 rounded-full transition ${
-                channel === "sms"
-                  ? "wlm-btn-gradient text-white"
-                  : "bg-white/10 text-white/60 hover:bg-white/20"
-              }`}
-            >
-              {t.auth.sms}
-            </button>
-          </div>
-
           {error && <p className="text-sm text-[#FF5C8A] text-center">{error}</p>}
 
           <button
@@ -146,9 +120,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
           <div className="text-center">
             <h2 className="text-lg font-semibold">{t.auth.codeTitle}</h2>
             <p className="text-sm text-white/60 mt-1">
-              {channel === "whatsapp"
-                ? format(t.auth.codeDescWhatsapp, { phone: phone ?? "" })
-                : format(t.auth.codeDescSms, { phone: phone ?? "" })}
+              {format(t.auth.codeDesc, { phone: phone ?? "" })}
             </p>
           </div>
 

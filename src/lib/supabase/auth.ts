@@ -2,22 +2,18 @@ import { createClient } from './client';
 
 /**
  * Auth WLM par numéro de téléphone (international, format E.164 : +<indicatif><numéro>).
- * Livraison du code par WhatsApp en priorité (channel 'whatsapp'), repli SMS possible.
- * En dev, sans provider configuré, lire le code dans le dashboard Supabase (Auth > Logs).
+ * Le canal de livraison est décidé côté serveur par le hook Supabase « Send SMS »
+ * (WhatsApp en priorité car moins cher, repli SMS si échec) — l'utilisateur n'a
+ * donc rien à choisir.
  */
-
-export type OtpChannel = 'whatsapp' | 'sms';
 
 /**
  * Envoie un code OTP au numéro (E.164, ex: +22990000000 ou +33612345678).
  * Crée le compte automatiquement s'il n'existe pas (shouldCreateUser par défaut).
  */
-export async function sendOtp(phone: string, channel: OtpChannel = 'whatsapp') {
+export async function sendOtp(phone: string) {
   const supabase = createClient();
-  const { error } = await supabase.auth.signInWithOtp({
-    phone,
-    options: { channel },
-  });
+  const { error } = await supabase.auth.signInWithOtp({ phone });
   if (error) throw error;
 }
 
