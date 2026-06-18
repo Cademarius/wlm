@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/service";
 
+/** Nombre d'inscrits bêta (preuve sociale, lecture via service_role). */
+export async function GET() {
+  try {
+    const supabase = createServiceClient();
+    const { count, error } = await supabase
+      .from("beta_signups")
+      .select("*", { count: "exact", head: true });
+    if (error) throw error;
+    return NextResponse.json({ count: count ?? 0 });
+  } catch {
+    return NextResponse.json({ count: 0 });
+  }
+}
+
 /**
  * Inscription d'un bêta-testeur (liste d'attente publique).
  * Pas d'authentification : page marketing ouverte. On stocke le numéro

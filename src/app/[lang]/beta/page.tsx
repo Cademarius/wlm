@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -33,6 +33,37 @@ export default function BetaPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [count, setCount] = useState<number | null>(null);
+
+  // Compteur live des inscrits (preuve sociale).
+  useEffect(() => {
+    fetch("/api/beta-signup")
+      .then((r) => r.json())
+      .then((d) => setCount(typeof d.count === "number" ? d.count : null))
+      .catch(() => {});
+  }, []);
+
+  const handleShare = async () => {
+    const url =
+      typeof window !== "undefined"
+        ? window.location.href
+        : "https://wlm-two.vercel.app/fr/beta";
+    const text = "💘 Découvre qui t'aime en secret. Rejoins la bêta de WLM 👉";
+    try {
+      if (typeof navigator !== "undefined" && navigator.share) {
+        await navigator.share({ title: "WLM", text, url });
+        return;
+      }
+    } catch {
+      /* l'utilisateur a annulé — on tombe sur WhatsApp */
+    }
+    if (typeof window !== "undefined") {
+      window.open(
+        `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
+        "_blank"
+      );
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +84,7 @@ export default function BetaPage() {
         throw new Error(d.error || "Une erreur est survenue. Réessaie.");
       }
       setDone(true);
+      setCount((c) => (c ?? 0) + 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue. Réessaie.");
     } finally {
@@ -86,6 +118,21 @@ export default function BetaPage() {
           Ajoute en secret les personnes que tu aimes. Si c&apos;est réciproque, c&apos;est
           révélé. Sinon, ça reste ton secret.
         </p>
+
+        {/* Compteur live (preuve sociale) */}
+        {count !== null && (
+          <p className="mt-4 flex items-center gap-2 rounded-full bg-white/5 px-4 py-1.5 text-sm font-semibold">
+            {count > 0 ? (
+              <>
+                <span className="text-[#FF5C8A]">🔥</span>
+                Déjà <span className="wlm-gradient-text">{count.toLocaleString("fr-FR")}</span>{" "}
+                {count <= 1 ? "inscrit" : "inscrits"}
+              </>
+            ) : (
+              <>✨ Sois parmi les tout premiers</>
+            )}
+          </p>
+        )}
 
         {/* Comment ça marche */}
         <div className="mt-8 grid w-full gap-3 sm:grid-cols-3">
@@ -163,6 +210,16 @@ export default function BetaPage() {
                   Rejoindre le groupe WhatsApp
                 </a>
               )}
+
+              <div className="mt-4 border-t border-white/10 pt-4">
+                <p className="text-xs text-white/60">Fais découvrir WLM à tes amis 👀</p>
+                <button
+                  onClick={handleShare}
+                  className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 font-semibold text-white transition hover:bg-white/10 active:scale-95"
+                >
+                  📲 Partager
+                </button>
+              </div>
             </div>
           )}
         </div>
