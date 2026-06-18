@@ -77,7 +77,7 @@ export default function BetaPage() {
 
         {/* Hero */}
         <span className="mt-6 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-xs font-semibold text-white/80">
-          Accès anticipé · Bêta privée 🇧🇯
+          Accès anticipé · Bêta privée 🌍
         </span>
         <h1 className="mt-4 text-center text-3xl font-bold leading-tight sm:text-4xl">
           Découvre qui <span className="wlm-gradient-text">t&apos;aime en secret</span> 💘
@@ -121,7 +121,7 @@ export default function BetaPage() {
                 <input
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  placeholder="Ta ville (ex : Cotonou)"
+                  placeholder="Ta ville"
                   className="rounded-lg bg-white/10 px-3 py-3 text-white outline-none placeholder:text-white/40"
                 />
                 <div className="wlm-phone-input rounded-lg bg-white/10 px-3 py-3">
