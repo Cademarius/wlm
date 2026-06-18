@@ -196,19 +196,26 @@ export default function BetaPage() {
             <div className="text-center">
               <div className="text-4xl">🎉</div>
               <h2 className="mt-2 text-xl font-bold">Bienvenue dans la bêta !</h2>
-              <p className="mt-2 text-sm text-white/70">
-                Tu fais partie des premiers. Rejoins le groupe WhatsApp pour être prévenu(e)
-                au lancement et recevoir tes avantages.
-              </p>
-              {GROUP_URL && (
-                <a
-                  href={GROUP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="wlm-btn-gradient wlm-glow mt-5 inline-block w-full rounded-xl py-3 font-semibold text-white transition hover:brightness-110 active:scale-95"
-                >
-                  Rejoindre le groupe WhatsApp
-                </a>
+              {GROUP_URL ? (
+                <>
+                  <p className="mt-2 text-sm text-white/70">
+                    <strong className="text-white">Dernière étape</strong> : rejoins le groupe
+                    WhatsApp. C&apos;est là qu&apos;on annonce le lancement et tes avantages.
+                  </p>
+                  <a
+                    href={GROUP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="wlm-btn-gradient wlm-glow mt-5 inline-block w-full rounded-xl py-3 font-semibold text-white transition hover:brightness-110 active:scale-95"
+                  >
+                    Rejoindre le groupe WhatsApp
+                  </a>
+                </>
+              ) : (
+                <p className="mt-2 text-sm text-white/70">
+                  C&apos;est noté ! On te préviendra sur <strong className="text-white">WhatsApp</strong>{" "}
+                  dès le lancement 💬
+                </p>
               )}
 
               <div className="mt-4 border-t border-white/10 pt-4">
