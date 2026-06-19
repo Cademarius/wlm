@@ -6,13 +6,14 @@
  * WhatsApp, le SMS autorise le texte libre — pas de template à faire approuver.
  *
  * Choix du provider (au runtime, selon les variables présentes) :
- *   1. Termii  si TERMII_API_KEY                       ← recommandé Bénin/Afrique de l'Ouest
- *   2. Vonage  si VONAGE_API_KEY + VONAGE_API_SECRET
- *   3. Twilio  si TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + (FROM | MESSAGING_SERVICE)
- *   4. sinon   → mode STUB (log, rien envoyé) pour ne pas bloquer le dev.
+ *   1. LeTexto si LETEXTO_API_KEY                       ← provider béninois (recommandé)
+ *   2. Termii  si TERMII_API_KEY                        ← Afrique de l'Ouest
+ *   3. Vonage  si VONAGE_API_KEY + VONAGE_API_SECRET
+ *   4. Twilio  si TWILIO_ACCOUNT_SID + TWILIO_AUTH_TOKEN + (FROM | MESSAGING_SERVICE)
+ *   5. sinon   → mode STUB (log, rien envoyé) pour ne pas bloquer le dev.
  *
- * Termii est conçu pour l'Afrique de l'Ouest : l'inscription et la livraison y
- * passent là où Twilio/Vonage bloquent les comptes. L'appelant ne change jamais.
+ * LeTexto (apis.letexto.com) est local au Bénin : inscription/KYC et livraison
+ * MTN/Moov y passent là où Twilio/Vonage bloquent. L'appelant ne change jamais.
  */
 
 export interface SmsResult {
@@ -28,6 +29,9 @@ function toE164(phone: string): string {
 export async function sendSms(toPhone: string, body: string): Promise<SmsResult> {
   const to = toE164(toPhone);
 
+  if (process.env.LETEXTO_API_KEY) {
+    return sendViaLetexto(to, body);
+  }
   if (process.env.TERMII_API_KEY) {
     return sendViaTermii(to, body);
   }
@@ -43,10 +47,46 @@ export async function sendSms(toPhone: string, body: string): Promise<SmsResult>
   }
 
   console.log(
-    `[SMS STUB] → ${to} : "${body}" — configure TERMII_API_KEY (recommandé), ` +
-      `VONAGE_* ou TWILIO_* pour envoyer pour de vrai.`
+    `[SMS STUB] → ${to} : "${body}" — configure LETEXTO_API_KEY (recommandé Bénin), ` +
+      `TERMII_API_KEY, VONAGE_* ou TWILIO_* pour envoyer pour de vrai.`
   );
   return { sent: false, stub: true };
+}
+
+// --- LeTexto (apis.letexto.com) — provider béninois, recommandé -------------
+async function sendViaLetexto(to: string, body: string): Promise<SmsResult> {
+  const apiKey = process.env.LETEXTO_API_KEY as string;
+  const from = process.env.LETEXTO_FROM || "WLM"; // nom d'expéditeur (≤ 11 caractères)
+
+  try {
+    const res = await fetch("https://apis.letexto.com/v1/messages/send", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        // LeTexto attend le numéro international SANS le "+".
+        to: to.replace(/[^\d]/g, ""),
+        content: body,
+      }),
+    });
+
+    const data = (await res.json().catch(() => ({}))) as {
+      statut?: string;
+      id?: string;
+      message?: string | string[];
+    };
+    if (res.ok && (data.statut === "submitted" || data.id)) return { sent: true };
+    const err = Array.isArray(data.message)
+      ? data.message.join("; ")
+      : data.message || `statut LeTexto ${res.status}`;
+    console.error("[SMS LeTexto] échec d'envoi:", err);
+    return { sent: false, error: err };
+  } catch (e) {
+    return { sent: false, error: e instanceof Error ? e.message : "unknown" };
+  }
 }
 
 // --- Termii (api.ng.termii.com) — recommandé Afrique de l'Ouest -------------
