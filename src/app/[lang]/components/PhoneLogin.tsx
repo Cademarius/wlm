@@ -2,12 +2,17 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { sendOtp, verifyOtp } from "@/lib/supabase/auth";
 import { type Language } from "@/lib/i18n/setting";
 import { useTranslation } from "@/lib/i18n/I18nProvider";
+
+// Mode pré-lancement : tant que la livraison du code OTP n'est pas active
+// (Termii/WhatsApp), on n'ouvre pas l'inscription et on renvoie vers la bêta.
+const PRELAUNCH = process.env.NEXT_PUBLIC_PRELAUNCH === "1";
 
 interface PhoneLoginProps {
   params: { lang: Language };
@@ -86,7 +91,20 @@ const PhoneLogin: React.FC<PhoneLoginProps> = ({ params, onClose }) => {
         <span className="text-2xl font-extrabold wlm-gradient-text tracking-tight">WLM</span>
       </div>
 
-      {step === "phone" ? (
+      {PRELAUNCH ? (
+        <div className="w-full flex flex-col items-center gap-4 text-center">
+          <div className="text-4xl">🚀</div>
+          <h2 className="text-lg font-semibold">{t.auth.prelaunchTitle}</h2>
+          <p className="text-sm text-white/60">{t.auth.prelaunchDesc}</p>
+          <Link
+            href={`/${params.lang}/beta`}
+            onClick={onClose}
+            className="wlm-btn-gradient wlm-glow w-full rounded-xl py-3 font-semibold text-white transition hover:brightness-110 active:scale-95"
+          >
+            {t.auth.prelaunchCta}
+          </Link>
+        </div>
+      ) : step === "phone" ? (
         <form onSubmit={handleSendCode} className="w-full flex flex-col gap-4">
           <div className="text-center">
             <h2 className="text-lg font-semibold">{t.auth.title}</h2>

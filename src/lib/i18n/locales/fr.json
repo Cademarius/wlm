@@ -124,6 +124,9 @@
   "auth": {
     "title": "Découvre qui t'aime en secret",
     "desc": "Entre ton numéro pour recevoir un code de connexion.",
+    "prelaunchTitle": "Lancement officiel bientôt",
+    "prelaunchDesc": "Les inscriptions ne sont pas encore ouvertes. Rejoins la liste bêta pour être prévenu(e) en premier et recevoir tes avantages.",
+    "prelaunchCta": "Rejoindre la liste bêta",
     "phonePlaceholder": "Ton numéro de téléphone",
     "sending": "Envoi…",
     "getCode": "Recevoir mon code",

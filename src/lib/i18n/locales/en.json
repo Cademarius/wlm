@@ -124,6 +124,9 @@
   "auth": {
     "title": "Find out who secretly loves you",
     "desc": "Enter your number to receive a login code.",
+    "prelaunchTitle": "Official launch coming soon",
+    "prelaunchDesc": "Sign-ups aren't open yet. Join the beta list to be notified first and get your perks.",
+    "prelaunchCta": "Join the beta list",
     "phonePlaceholder": "Your phone number",
     "sending": "Sending…",
     "getCode": "Get my code",

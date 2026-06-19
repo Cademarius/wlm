@@ -1,0 +1,61 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF5C8A"/>
+      <stop offset="1" stop-color="#B14DFF"/>
+    </linearGradient>
+    <linearGradient id="heart" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFD9E6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- fond -->
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="96" cy="110" r="70" fill="#ffffff" opacity="0.08"/>
+  <circle cx="430" cy="420" r="95" fill="#ffffff" opacity="0.07"/>
+
+  <!-- étincelles -->
+  <g fill="#ffffff" opacity="0.9">
+    <path d="M92 312 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5z"/>
+    <circle cx="120" cy="190" r="4"/>
+  </g>
+
+  <!-- épaules / vêtement -->
+  <path d="M132 512 q124 -150 248 0 z" fill="#ffffff" opacity="0.96"/>
+  <!-- cou -->
+  <rect x="232" y="338" width="48" height="60" rx="22" fill="#B9794D"/>
+
+  <!-- cheveux arrière -->
+  <path d="M150 262 q0 -162 106 -162 q106 0 106 162 q0 64 -22 112 l-26 -8 q14 -52 14 -104 q0 -118 -72 -118 q-72 0 -72 118 q0 52 14 104 l-26 8 q-22 -48 -22 -112z" fill="#241B36"/>
+
+  <!-- visage -->
+  <ellipse cx="256" cy="256" rx="92" ry="104" fill="#C9885A"/>
+
+  <!-- oreilles -->
+  <circle cx="168" cy="262" r="15" fill="#C9885A"/>
+  <circle cx="344" cy="262" r="15" fill="#C9885A"/>
+
+  <!-- frange -->
+  <path d="M166 206 q14 -106 90 -106 q76 0 90 106 q-42 -40 -90 -40 q-48 0 -90 40z" fill="#2E2243"/>
+
+  <!-- joues -->
+  <ellipse cx="204" cy="294" rx="19" ry="11" fill="#FF7DA5" opacity="0.5"/>
+  <ellipse cx="308" cy="294" rx="19" ry="11" fill="#FF7DA5" opacity="0.5"/>
+
+  <!-- sourcils -->
+  <path d="M200 232 q16 -9 32 -3" stroke="#241B36" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M280 229 q16 -6 32 3" stroke="#241B36" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- oeil gauche ouvert -->
+  <ellipse cx="216" cy="258" rx="11" ry="14" fill="#241B36"/>
+  <circle cx="220" cy="253" r="4" fill="#ffffff"/>
+  <!-- clin d'oeil droit -->
+  <path d="M280 260 q16 -13 32 0" stroke="#241B36" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+  <!-- sourire -->
+  <path d="M224 306 q32 28 64 0" stroke="#241B36" stroke-width="7" fill="none" stroke-linecap="round"/>
+
+  <!-- coeur flottant -->
+  <path d="M398 92 c11 -17 41 -11 41 13 c0 20 -30 35 -41 45 c-11 -10 -41 -25 -41 -45 c0 -24 30 -30 41 -13z" fill="url(#heart)"/>
+</svg>

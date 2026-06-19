@@ -1,0 +1,36 @@
+============================================================
+MARIA — AVATAR WLM : PROMPTS POUR GÉNÉRATEUR D'IMAGES IA
+============================================================
+Outils gratuits : Bing / Copilot Image Creator (DALL·E 3), Canva, Leonardo.ai
+Format : carré 1:1 (photo de profil). Génère 4 images, garde la meilleure.
+
+------------------------------------------------------------
+PROMPT 1 — STYLE 3D ANIMÉ (RECOMMANDÉ POUR UNE MASCOTTE)
+------------------------------------------------------------
+3D animated character portrait of "Maria", a friendly young West African woman, around 23 years old, warm radiant smile with a playful wink, big expressive eyes, glowing brown skin, stylish dark hair, approachable and trustworthy cupid matchmaker vibe (not flirty). Head and shoulders, centered, facing camera. Background: smooth pink-to-purple gradient (#FF5C8A to #B14DFF) with soft floating hearts and sparkles, gentle bokeh. Soft studio lighting, vibrant, clean, modern, Pixar Disney style, high detail, 1:1 square. No text, no watermark.
+
+------------------------------------------------------------
+PROMPT 2 — STYLE RÉALISTE / PHOTO
+------------------------------------------------------------
+Photorealistic portrait of "Maria", a beautiful friendly West African woman, around 23 years old, warm genuine smile and a subtle playful wink, glowing brown skin, elegant dark hair, kind confident eyes, approachable matchmaker energy. Head and shoulders, looking at camera, centered. Background: soft pink-to-purple gradient (#FF5C8A to #B14DFF) with blurred floating hearts and sparkles, dreamy bokeh. Soft beauty lighting, sharp focus on face, professional, 1:1 square. No text, no watermark.
+
+------------------------------------------------------------
+NEGATIVE PROMPT (si l'outil le permet, ex. Leonardo)
+------------------------------------------------------------
+text, watermark, logo, extra fingers, deformed hands, blurry face, low quality, oversexualized, cleavage, nsfw, multiple people
+
+------------------------------------------------------------
+BRIEF DE MARQUE
+------------------------------------------------------------
+- Couleurs : rose #FF5C8A vers violet #B14DFF (dégradé WLM)
+- Ambiance : chaleureuse, fun, confiance, romantique mais PAS aguicheuse
+  (Maria = complice / cupidon, pas un profil de drague)
+- Cadrage : visage centré pour rester beau une fois recadré en cercle
+
+------------------------------------------------------------
+ASTUCES
+------------------------------------------------------------
+1. Cohérence : une fois LA bonne image trouvée, réutilise-la comme image de
+   référence (seed) pour toutes les suivantes -> même visage à chaque post.
+2. Varie les détails (tenue, fond, pose) mais garde le visage identique.
+3. Recadre en carré et vérifie le rendu en cercle avant de publier.
